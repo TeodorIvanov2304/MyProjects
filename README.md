@@ -5,7 +5,7 @@ This repository will showcase a variety of software projects I’ve worked on or
 
 🚀 The main technologies I use:
 - 💻 C# / .NET (ASP.NET Core, Entity Framework)
-- 🌐 JavaScript / TypeScript
+- 🌐 JavaScript
 - 🗄️ SQL & Databases
 - 🎨 HTML & CSS
 - ⚙️ Git & GitHub
