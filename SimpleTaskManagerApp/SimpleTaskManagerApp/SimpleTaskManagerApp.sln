@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTaskManagerApp", "Sim
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTaskManagerApp.Data", "SimpleTaskManagerApp.Data\SimpleTaskManagerApp.Data.csproj", "{0D05D9A2-B1A7-4EAC-9F32-C34EBC4F4066}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTaskManagerApp.Data.Models", "SimpleTaskManagerApp.Data.Models\SimpleTaskManagerApp.Data.Models.csproj", "{746FB8E2-8225-47FF-A196-F636F5414889}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTaskManagerApp.Common", "SimpleTaskManagerApp.Common\SimpleTaskManagerApp.Common.csproj", "{47C33D66-1721-4A94-A3C3-2C1D5AC533A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{0D05D9A2-B1A7-4EAC-9F32-C34EBC4F4066}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D05D9A2-B1A7-4EAC-9F32-C34EBC4F4066}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D05D9A2-B1A7-4EAC-9F32-C34EBC4F4066}.Release|Any CPU.Build.0 = Release|Any CPU
+		{746FB8E2-8225-47FF-A196-F636F5414889}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{746FB8E2-8225-47FF-A196-F636F5414889}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{746FB8E2-8225-47FF-A196-F636F5414889}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{746FB8E2-8225-47FF-A196-F636F5414889}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47C33D66-1721-4A94-A3C3-2C1D5AC533A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47C33D66-1721-4A94-A3C3-2C1D5AC533A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47C33D66-1721-4A94-A3C3-2C1D5AC533A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47C33D66-1721-4A94-A3C3-2C1D5AC533A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

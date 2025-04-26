@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SimpleTaskManagerApp.Common\SimpleTaskManagerApp.Common.csproj" />
     <ProjectReference Include="..\SimpleTaskManagerApp.Data\SimpleTaskManagerApp.Data.csproj" />
   </ItemGroup>
 

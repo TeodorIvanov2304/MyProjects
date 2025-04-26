@@ -12,4 +12,8 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleTaskManagerApp.Data.Models\SimpleTaskManagerApp.Data.Models.csproj" />
+  </ItemGroup>
+
 </Project>

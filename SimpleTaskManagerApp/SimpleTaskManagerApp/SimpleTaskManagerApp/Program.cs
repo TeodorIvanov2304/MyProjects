@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SimpleTaskManagerApp.Data;
+using SimpleTaskManagerApp.Data.Models;
 
 namespace SimpleTaskManagerApp
 {
@@ -19,7 +20,7 @@ namespace SimpleTaskManagerApp
 
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-			builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+			builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
 				.AddEntityFrameworkStores<TaskManagerDbContext>();
 			builder.Services.AddControllersWithViews();
 

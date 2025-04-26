@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SimpleTaskManagerApp.Data.Models;
 
 namespace SimpleTaskManagerApp.Data
 {
-	public class TaskManagerDbContext : IdentityDbContext
+	public class TaskManagerDbContext : IdentityDbContext<ApplicationUser>
 	{
 		public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options)
 			: base(options)
