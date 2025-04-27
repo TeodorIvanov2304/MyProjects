@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SimpleTaskManagerApp.Data.Models.Models
 {
-    public class AppTask
+	public class AppTask
     {
         [Key]
         [Required]
@@ -36,6 +35,14 @@ namespace SimpleTaskManagerApp.Data.Models.Models
         [Required]
         [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; } = null!;
+
+		[Required]
+		[Comment("Status identifier")]
+		public int StatusId { get; set; }
+
+		[Required]
+		[ForeignKey(nameof(StatusId))]
+		public Status Status { get; set; } = null!;
 
     }
 }

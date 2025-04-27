@@ -12,5 +12,6 @@ namespace SimpleTaskManagerApp.Data
 		}
 
 		public virtual DbSet<AppTask> AppTasks { get; set; }
+		public virtual DbSet<Status> Statuses { get; set; }
 	}
 }
