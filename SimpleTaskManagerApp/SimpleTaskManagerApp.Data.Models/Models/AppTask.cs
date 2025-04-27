@@ -1,23 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static SimpleTaskManagerApp.Common.EntityValidationConstants;
 
 namespace SimpleTaskManagerApp.Data.Models.Models
 {
 	public class AppTask
     {
-        [Key]
-        [Required]
-        [Comment("Unique task identifier")]
-        public Guid Id { get; set; }
+
+		[Key]
+		[Required]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+		//The DB will generate new GUID, to avoid conflict of responsibilities with EF
+		[Comment("Unique task identifier")]
+		public Guid Id { get; set; }
 
         [Required]
-        [MaxLength(100)]
+        [MaxLength(AppTaskTitleMaxLength)]
         [Comment("Task title")]
         public string Title { get; set; } = null!;
 
         [Required]
-        [MaxLength(800)]
+        [MaxLength(AppTaskDescriptionMaxLength)]
         [Comment("Task description")]
         public string Description { get; set; } = null!;
 

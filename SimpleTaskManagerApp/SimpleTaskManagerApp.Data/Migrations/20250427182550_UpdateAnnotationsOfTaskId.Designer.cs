@@ -12,8 +12,8 @@ using SimpleTaskManagerApp.Data;
 namespace SimpleTaskManagerApp.Data.Migrations
 {
     [DbContext(typeof(TaskManagerDbContext))]
-    [Migration("20250427172710_StatuSeed")]
-    partial class StatusSeed
+    [Migration("20250427182550_UpdateAnnotationsOfTaskId")]
+    partial class UpdateAnnotationsOfTaskId
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
