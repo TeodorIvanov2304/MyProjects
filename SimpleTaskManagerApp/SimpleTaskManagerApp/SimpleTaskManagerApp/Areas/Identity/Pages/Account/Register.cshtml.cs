@@ -12,11 +12,11 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
-using SimpleTaskManagerApp.Data.Models;
+using SimpleTaskManagerApp.Data.Models.Models;
 
 namespace SimpleTaskManagerApp.Areas.Identity.Pages.Account
 {
-	public class RegisterModel : PageModel
+    public class RegisterModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;

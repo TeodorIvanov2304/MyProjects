@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using SimpleTaskManagerApp.Data.Models;
+using SimpleTaskManagerApp.Data.Models.Models;
 
 namespace SimpleTaskManagerApp.Areas.Identity.Pages.Account
 {

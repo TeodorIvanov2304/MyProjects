@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SimpleTaskManagerApp.Data;
-using SimpleTaskManagerApp.Data.Models;
+using SimpleTaskManagerApp.Data.Models.Models;
 
 namespace SimpleTaskManagerApp
 {
-	public class Program
+    public class Program
 	{
 		public static void Main(string[] args)
 		{
