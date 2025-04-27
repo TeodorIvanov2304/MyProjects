@@ -10,5 +10,7 @@ namespace SimpleTaskManagerApp.Data
 			: base(options)
 		{
 		}
+
+		public virtual DbSet<AppTask> AppTasks { get; set; }
 	}
 }
