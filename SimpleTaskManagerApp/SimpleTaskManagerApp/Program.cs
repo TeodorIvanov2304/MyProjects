@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SimpleTaskManagerApp.Data;
+using SimpleTaskManagerApp.Data.Data.Repositories;
+using SimpleTaskManagerApp.Data.Data.Repositories.Interfaces;
 using SimpleTaskManagerApp.Data.Models.Models;
 
 namespace SimpleTaskManagerApp
@@ -17,6 +19,9 @@ namespace SimpleTaskManagerApp
 			//Add Postgre
 			builder.Services.AddDbContext<TaskManagerDbContext>(options =>
 				options.UseNpgsql(connectionString));
+
+			//Add ITaskRepository
+			builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

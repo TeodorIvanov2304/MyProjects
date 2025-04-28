@@ -16,8 +16,4 @@
     <ProjectReference Include="..\SimpleTaskManagerApp.Data.Models\SimpleTaskManagerApp.Data.Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\Repositories\" />
-  </ItemGroup>
-
 </Project>
