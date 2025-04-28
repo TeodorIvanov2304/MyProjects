@@ -3,13 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTaskManagerApp", "SimpleTaskManagerApp\SimpleTaskManagerApp.csproj", "{F7F7481C-D366-4CEA-959D-93B04AF87127}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleTaskManagerApp", "SimpleTaskManagerApp\SimpleTaskManagerApp.csproj", "{F7F7481C-D366-4CEA-959D-93B04AF87127}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTaskManagerApp.Data", "SimpleTaskManagerApp.Data\SimpleTaskManagerApp.Data.csproj", "{0D05D9A2-B1A7-4EAC-9F32-C34EBC4F4066}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleTaskManagerApp.Data", "SimpleTaskManagerApp.Data\SimpleTaskManagerApp.Data.csproj", "{0D05D9A2-B1A7-4EAC-9F32-C34EBC4F4066}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTaskManagerApp.Data.Models", "SimpleTaskManagerApp.Data.Models\SimpleTaskManagerApp.Data.Models.csproj", "{746FB8E2-8225-47FF-A196-F636F5414889}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleTaskManagerApp.Data.Models", "SimpleTaskManagerApp.Data.Models\SimpleTaskManagerApp.Data.Models.csproj", "{746FB8E2-8225-47FF-A196-F636F5414889}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTaskManagerApp.Common", "SimpleTaskManagerApp.Common\SimpleTaskManagerApp.Common.csproj", "{47C33D66-1721-4A94-A3C3-2C1D5AC533A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleTaskManagerApp.Common", "SimpleTaskManagerApp.Common\SimpleTaskManagerApp.Common.csproj", "{47C33D66-1721-4A94-A3C3-2C1D5AC533A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTaskManagerApp.ViewModels", "SimpleTaskManagerApp.ViewModels\SimpleTaskManagerApp.ViewModels.csproj", "{CB97C7D8-2DF4-441C-B8EA-E005A8E16F8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTaskManagerApp.Services.Data", "SimpleTaskManagerApp.Services.Data\SimpleTaskManagerApp.Services.Data.csproj", "{6BB079D0-A63B-44EE-8B85-04A463A0EB1B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{47C33D66-1721-4A94-A3C3-2C1D5AC533A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47C33D66-1721-4A94-A3C3-2C1D5AC533A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47C33D66-1721-4A94-A3C3-2C1D5AC533A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB97C7D8-2DF4-441C-B8EA-E005A8E16F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB97C7D8-2DF4-441C-B8EA-E005A8E16F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB97C7D8-2DF4-441C-B8EA-E005A8E16F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB97C7D8-2DF4-441C-B8EA-E005A8E16F8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BB079D0-A63B-44EE-8B85-04A463A0EB1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BB079D0-A63B-44EE-8B85-04A463A0EB1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BB079D0-A63B-44EE-8B85-04A463A0EB1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BB079D0-A63B-44EE-8B85-04A463A0EB1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,8 +10,8 @@ namespace SimpleTaskManagerApp.Data.Models.Models
 
 		[Key]
 		[Required]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		//The DB will generate new GUID, to avoid conflict of responsibilities with EF
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Comment("Unique task identifier")]
 		public Guid Id { get; set; }
 

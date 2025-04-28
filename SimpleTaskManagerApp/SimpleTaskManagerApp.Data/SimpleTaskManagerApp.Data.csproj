@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SimpleTaskManagerApp.Data.Models\SimpleTaskManagerApp.Data.Models.csproj" />
+    <ProjectReference Include="..\SimpleTaskManagerApp.ViewModels\SimpleTaskManagerApp.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>
