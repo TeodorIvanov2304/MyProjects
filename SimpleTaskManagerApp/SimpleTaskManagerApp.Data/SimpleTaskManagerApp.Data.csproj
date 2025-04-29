@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SimpleTaskManagerApp.Common\SimpleTaskManagerApp.Common.csproj" />
     <ProjectReference Include="..\SimpleTaskManagerApp.Data.Models\SimpleTaskManagerApp.Data.Models.csproj" />
-    <ProjectReference Include="..\SimpleTaskManagerApp.ViewModels\SimpleTaskManagerApp.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>
