@@ -4,6 +4,8 @@ using SimpleTaskManagerApp.Data;
 using SimpleTaskManagerApp.Data.Data.Repositories;
 using SimpleTaskManagerApp.Data.Data.Repositories.Interfaces;
 using SimpleTaskManagerApp.Data.Models.Models;
+using SimpleTaskManagerApp.Services.Data.Interfaces;
+using SimpleTaskManagerApp.Services.Data;
 
 namespace SimpleTaskManagerApp
 {
@@ -20,13 +22,21 @@ namespace SimpleTaskManagerApp
 			builder.Services.AddDbContext<TaskManagerDbContext>(options =>
 				options.UseNpgsql(connectionString));
 
-			//Add ITaskRepository
+			//Register ITaskRepository
 			builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+
+			//Register AppTaskService
+			builder.Services.AddScoped<IAppTaskService, AppTaskService>();
 
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-			builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+			builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+					
+					//Deactivate email confirmation during development
+					options.SignIn.RequireConfirmedAccount = false
+			)
 				.AddEntityFrameworkStores<TaskManagerDbContext>();
+
 			builder.Services.AddControllersWithViews();
 
 			var app = builder.Build();
