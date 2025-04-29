@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SimpleTaskManagerApp.Data\SimpleTaskManagerApp.Data.csproj" />
     <ProjectReference Include="..\SimpleTaskManagerApp.ViewModels\SimpleTaskManagerApp.ViewModels.csproj" />
   </ItemGroup>
 
