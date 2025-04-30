@@ -1,19 +1,27 @@
 ﻿using SimpleTaskManagerApp.Data.Data.Repositories.Interfaces;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.AppTask;
-using SimpleTaskManagerApp.Data.Models.Models;
 
 namespace SimpleTaskManagerApp.Services.Data
 {
 	public class AppTaskService : IAppTaskService
 	{
 		private readonly ITaskRepository _taskRepository;
+		private readonly IStatusService _statusService;
+		
 
-        public AppTaskService(ITaskRepository taskRepository)
+        public AppTaskService(ITaskRepository taskRepository, IStatusService statusService)
         {
             this._taskRepository = taskRepository;
+			this._statusService = statusService;
         }
-        public async Task<IEnumerable<AppTaskListViewModel>> GetAllTasksAsync()
+
+		public Task CreateAsync(AppTaskCreateViewModel model, string userId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public async Task<IEnumerable<AppTaskListViewModel>> GetAllTasksAsync()
 		{
 			var tasks = await _taskRepository.GetAllTasksAsync();
 
@@ -27,6 +35,20 @@ namespace SimpleTaskManagerApp.Services.Data
 					DueDate = t.DueDate.ToString()!
 				})
 				.ToList();
+		}
+
+		public async Task<AppTaskCreateViewModel> GetCreateViewModelAsync()
+		{
+			var statuses = await this._statusService.GetAllStatusesAsync();
+
+			return new AppTaskCreateViewModel
+			{
+				Statuses = statuses.Select(s => new AppTaskStatusViewModel
+				{
+					Id = s.Id,
+					Name = s.Name
+				})
+			};
 		}
 	}
 }

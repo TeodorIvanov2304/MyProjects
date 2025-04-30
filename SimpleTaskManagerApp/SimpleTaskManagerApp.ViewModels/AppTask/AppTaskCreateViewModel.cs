@@ -24,6 +24,6 @@ namespace SimpleTaskManagerApp.ViewModels.AppTask
 		[Display(Name = "Status")]
 		public Guid StatusId { get; set; }
 
-		public virtual IEnumerable<TaskStatusViewModel> Statuses { get; set; } = new List<TaskStatusViewModel>();
+		public virtual IEnumerable<AppTaskStatusViewModel> Statuses { get; set; } = new List<AppTaskStatusViewModel>();
 	}
 }

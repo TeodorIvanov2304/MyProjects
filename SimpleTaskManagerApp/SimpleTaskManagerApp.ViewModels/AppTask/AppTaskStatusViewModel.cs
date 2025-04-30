@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimpleTaskManagerApp.ViewModels.AppTask
 {
-	public class TaskStatusViewModel
+	public class AppTaskStatusViewModel
 	{
 		public int Id { get; set; }
 		public string Name { get; set; } = null!;
