@@ -9,7 +9,9 @@
 		public const byte ApplicationUserLastNameMaxLength = 250;
 
 		//AppTask
+		public const byte AppTaskTitleMinLength = 3;
 		public const byte AppTaskTitleMaxLength = 100;
+		public const int AppTaskDescriptionMinLength = 10;
 		public const int AppTaskDescriptionMaxLength = 800;
 	}
 }
