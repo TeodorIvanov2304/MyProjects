@@ -12,6 +12,7 @@
 		<tr>
 			<th>Title</th>
 			<th>Status</th>
+			<th>CreatedAt</th>
 			<th>Due Date</th>
 			<th>Actions</th>
 		</tr>
@@ -22,6 +23,7 @@
 			<tr>
 				<td>@task.Title</td>
 				<td>@task.StatusName</td>
+				<td>@task.CreatedAt</td>
 				<td>@task.DueDate</td>
 				<td>
 					<a asp-action="Details" asp-route-id="@task.Id" class="btn btn-sm btn-info">Details</a>

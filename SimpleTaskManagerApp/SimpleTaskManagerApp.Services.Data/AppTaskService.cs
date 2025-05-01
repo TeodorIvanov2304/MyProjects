@@ -4,6 +4,7 @@ using SimpleTaskManagerApp.Data.Data.Repositories.Interfaces;
 using SimpleTaskManagerApp.Data.Models.Models;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.AppTask;
+using static SimpleTaskManagerApp.Common.EntityValidationConstants;
 
 namespace SimpleTaskManagerApp.Services.Data
 {
@@ -39,7 +40,7 @@ namespace SimpleTaskManagerApp.Services.Data
 		public async Task<IEnumerable<AppTaskListViewModel>> GetAllTasksAsync()
 		{
 			//Split the query in two, because EF cannot
-			//translate ToString("yyyy-MM-dd") in SQL.
+			//translate ToString("Date-format") in SQL.
 			var tasksRaw = await this._dbContext.AppTasks
 				.Include(t => t.Status)
 				.AsNoTracking()
@@ -52,7 +53,8 @@ namespace SimpleTaskManagerApp.Services.Data
 					Id = t.Id.ToString(),
 					Title = t.Title,
 					StatusName = t.Status.Name,
-					DueDate = t.DueDate?.ToString("MM/dd/yyyy HH:mm") ?? "N/A"
+					CreatedAt = t.CreatedAt.ToString(AllDateFormat),
+					DueDate = t.DueDate?.ToString(AllDateFormat) ?? "N/A"
 				})
 				.ToList();
 

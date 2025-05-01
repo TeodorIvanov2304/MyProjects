@@ -8,6 +8,8 @@
 
 		public string StatusName { get; set; } = null!;
 
+		public string CreatedAt { get; set; } = null!;
+
 		public string DueDate { get; set; } = null!;
 	}
 }

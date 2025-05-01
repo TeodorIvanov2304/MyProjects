@@ -13,5 +13,8 @@
 		public const byte AppTaskTitleMaxLength = 100;
 		public const int AppTaskDescriptionMinLength = 10;
 		public const int AppTaskDescriptionMaxLength = 800;
+
+		//Date format
+		public const string AllDateFormat = "MM/dd/yyyy HH:mm";
 	}
 }
