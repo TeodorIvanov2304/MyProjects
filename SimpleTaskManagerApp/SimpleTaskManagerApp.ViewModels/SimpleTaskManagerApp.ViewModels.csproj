@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleTaskManagerApp.Common\SimpleTaskManagerApp.Common.csproj" />
+  </ItemGroup>
+
 </Project>

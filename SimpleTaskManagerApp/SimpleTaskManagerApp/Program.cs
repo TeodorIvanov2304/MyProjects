@@ -28,6 +28,9 @@ namespace SimpleTaskManagerApp
 			//Register AppTaskService
 			builder.Services.AddScoped<IAppTaskService, AppTaskService>();
 
+			//Register StatusService
+			builder.Services.AddScoped<IStatusService, StatusTaskService>();
+
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 			builder.Services.AddDefaultIdentity<ApplicationUser>(options =>

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using SimpleTaskManagerApp.Services.Data;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
+using SimpleTaskManagerApp.ViewModels.AppTask;
+using System.Security.Claims;
 
 namespace SimpleTaskManagerApp.Controllers
 {
@@ -29,6 +31,24 @@ namespace SimpleTaskManagerApp.Controllers
 		{
 			var model = await this._appTaskService.GetCreateViewModelAsync();
 			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Create(AppTaskCreateViewModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				model.Statuses = (await _appTaskService.GetCreateViewModelAsync()).Statuses;
+
+				return View(model);
+			}
+
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+			await _appTaskService.CreateAsync(model, userId);
+
+			return RedirectToAction(nameof(Index));
 		}
 	}
 }

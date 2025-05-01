@@ -17,12 +17,12 @@ namespace SimpleTaskManagerApp.ViewModels.AppTask
 
 		[Required]
 		[Display(Name ="Due Date")]
-		[DataType(DataType.Date)]
+		[DataType(DataType.DateTime)]
 		public DateTime DueDate { get; set; }
 
 		[Required]
 		[Display(Name = "Status")]
-		public Guid StatusId { get; set; }
+		public int StatusId { get; set; }
 
 		public virtual IEnumerable<AppTaskStatusViewModel> Statuses { get; set; } = new List<AppTaskStatusViewModel>();
 	}
