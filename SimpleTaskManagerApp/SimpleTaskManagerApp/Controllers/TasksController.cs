@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SimpleTaskManagerApp.Services.Data;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.AppTask;
 using System.Security.Claims;
@@ -49,6 +48,20 @@ namespace SimpleTaskManagerApp.Controllers
 			await _appTaskService.CreateAsync(model, userId);
 
 			return RedirectToAction(nameof(Index));
+		}
+
+
+		//CreatePartial
+		[HttpGet]
+		[Authorize]
+		public async Task<IActionResult> CreatePartial()
+		{
+			var model = new AppTaskCreateViewModel
+			{
+				Statuses = (await _appTaskService.GetCreateViewModelAsync()).Statuses
+			};
+
+			return PartialView("_CreatePartial", model);
 		}
 	}
 }
