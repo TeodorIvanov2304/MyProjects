@@ -1,6 +1,7 @@
 ﻿@using SimpleTaskManagerApp.ViewModels.AppTask
 @model AppTaskCreateViewModel
 
+
 <h2>Create Task</h2>
 
 <form asp-action="Create" method="post">
@@ -18,7 +19,8 @@
 	</div>
 
 	<div class="form-floating mb-3">
-		<input asp-for="DueDate" class="form-control" />
+		@* Add JS Flatpickr to input*@
+		<input asp-for="DueDate" class="form-control datepicker"/>
 		<label asp-for="DueDate"></label>
 		<span asp-validation-for="DueDate" class="text-danger"></span>
 	</div>
@@ -32,6 +34,18 @@
 	<button type="submit" class="btn btn-primary">Create</button>
 </form>
 
+
+
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+
+	@* JS for Flatpickr *@
+	<script>
+		flatpickr(".datepicker", {
+			enableTime: true,
+			dateFormat: "Y-m-d H:i",
+			time_24hr: true
+		});
+	</script>
+
 }

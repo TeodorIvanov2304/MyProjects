@@ -18,6 +18,7 @@ namespace SimpleTaskManagerApp.ViewModels.AppTask
 		[Required]
 		[Display(Name ="Due Date")]
 		[DataType(DataType.DateTime)]
+		[DisplayFormat(DataFormatString = AllDateFormat, ApplyFormatInEditMode = true)]
 		public DateTime DueDate { get; set; }
 
 		[Required]

@@ -6,7 +6,11 @@
     <title>@ViewData["Title"] - SimpleTaskManagerApp</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/SimpleTaskManagerApp.styles.css" asp-append-version="true" />
+	@* Add JS Flatpickr calendar *@
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	@* Add Flatpickr green theme *@
+	<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_green.css">
+	<link rel="stylesheet" href="~/SimpleTaskManagerApp.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
@@ -48,6 +52,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+	@* Add Flatpickr *@
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
