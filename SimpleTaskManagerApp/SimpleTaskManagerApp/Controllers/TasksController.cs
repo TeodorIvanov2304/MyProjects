@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace SimpleTaskManagerApp.Controllers
 {
-	public class TasksController : Controller
+	public class TasksController : BaseController
 	{
 		private readonly IAppTaskService _appTaskService;
 		private readonly IStatusService _statusService;
@@ -60,6 +60,7 @@ namespace SimpleTaskManagerApp.Controllers
 			{
 				Statuses = (await _appTaskService.GetCreateViewModelAsync()).Statuses
 			};
+
 
 			return PartialView("_CreatePartial", model);
 		}
