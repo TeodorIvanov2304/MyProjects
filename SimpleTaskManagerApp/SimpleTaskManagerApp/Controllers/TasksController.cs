@@ -44,14 +44,14 @@ namespace SimpleTaskManagerApp.Controllers
 				return View(model);
 			}
 
-			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+			var userId = GetCurrentUserId();
 			await _appTaskService.CreateAsync(model, userId);
 
 			return RedirectToAction(nameof(Index));
 		}
 
 
-		//CreatePartial
+		//GET CreatePartial
 		[HttpGet]
 		[Authorize]
 		public async Task<IActionResult> CreatePartial()
@@ -63,6 +63,24 @@ namespace SimpleTaskManagerApp.Controllers
 
 
 			return PartialView("_CreatePartial", model);
+		}
+
+		//POST CreatePartial
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> CreatePartial(AppTaskCreateViewModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+
+				model.Statuses = (IEnumerable<AppTaskStatusViewModel>)await this._statusService.GetAllStatusesAsync();
+
+				return PartialView("_CreatePartial", model);
+			}
+
+			await _appTaskService.CreateAsync(model, GetCurrentUserId());
+			return Ok(); 
 		}
 	}
 }

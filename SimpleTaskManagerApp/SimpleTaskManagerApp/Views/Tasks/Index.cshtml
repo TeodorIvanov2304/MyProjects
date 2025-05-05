@@ -7,9 +7,9 @@
 
 <h1 class="mt-4">All Tasks</h1>
 
-@* Modal button *@
+@* Modal button + Bootstrap icon*@
 <button id="load-create-form" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createTaskModal">
-	+ Create Task
+	<i class="bi bi-plus-circle"></i> Create Task
 </button>
 
 <table class="table table-bordered rounded border-dark border-2">
@@ -86,16 +86,23 @@
 			e.preventDefault();
 
 			var form = $(this);
+			var token = $('input[name="__RequestVerificationToken"]', form).val();
 			$.ajax({
 				type: 'POST',
-				url: '/Tasks/Create',
+				url: '/Tasks/CreatePartial',
 				data: form.serialize(),
+				headers: {
+					'RequestVerificationToken': token
+				},
 				success: function () {
 					$('#createTaskModal').modal('hide');
 					showToast("Task added!");
 					location.reload();
 				},
-				error: function () {
+					error: function (xhr, status, error) {
+					console.error("Status:", status);
+					console.error("Error:", error);
+					console.error("Response:", xhr.responseText);
 					showToast("Something went wrong!");
 				}
 			});

@@ -1,7 +1,8 @@
 ﻿@using SimpleTaskManagerApp.ViewModels.AppTask
 @model AppTaskCreateViewModel
 
-<form asp-action="Create" method="post">
+<form id="createTaskForm" asp-action="CreatePartial" method="post">
+
 	@Html.AntiForgeryToken()
 	<div class="form-floating mb-3">
 		<input asp-for="Title" class="form-control" />
