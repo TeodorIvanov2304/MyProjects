@@ -15,7 +15,7 @@ function setupCreateButton() {
             .then(response => response.text())
             .then(html => {
                 document.getElementById("modal-form-container").innerHTML = html;
-                initFlatpickr(); // Flatpickr за датите
+                initFlatpickr(); // Flatpickr for the dates
             });
     });
 }
