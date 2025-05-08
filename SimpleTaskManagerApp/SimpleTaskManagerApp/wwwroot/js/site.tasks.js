@@ -1,9 +1,12 @@
-﻿
-// INIT FUNCTIONS
+﻿// INIT FUNCTIONS
 
 document.addEventListener("DOMContentLoaded", function () {
     setupCreateButton();
     setupCreateFormSubmit();
+
+    //Init Edit functionality
+    setupEditButton();
+    setupEditFormSubmit();
 });
 
 
@@ -43,6 +46,50 @@ function setupCreateFormSubmit() {
                 console.error("Error:", error);
                 console.error("Response:", xhr.responseText);
                 showToast("Something went wrong!");
+            }
+        });
+    });
+}
+
+
+// EDIT TASK HANDLERS
+
+// Load Edit form into modal
+function setupEditButton() {
+    $(document).on('click', '.load-edit-form', function () {
+        var taskId = $(this).data('task-id');
+        fetch(`/Tasks/EditPartial?id=${taskId}`)
+            .then(response => response.text())
+            .then(html => {
+                $('#edit-modal-form-container').html(html);
+                $('#editTaskModal').modal('show');
+                initFlatpickr(); // Flatpickr for the edit form
+            });
+    });
+}
+
+// Submit Edit form via AJAX
+function setupEditFormSubmit() {
+    $(document).on('submit', '#editTaskForm', function (e) {
+        e.preventDefault();
+
+        var form = $(this);
+        var token = $('input[name="__RequestVerificationToken"]', form).val();
+        $.ajax({
+            type: 'POST',
+            url: '/Tasks/EditPartial',
+            data: form.serialize(),
+            headers: {
+                'RequestVerificationToken': token
+            },
+            success: function () {
+                $('#editTaskModal').modal('hide');
+                showToast("Task updated!");
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                console.error("Edit error:", error);
+                showToast("Failed to update task.");
             }
         });
     });
