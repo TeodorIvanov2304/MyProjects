@@ -13,14 +13,14 @@ namespace SimpleTaskManagerApp.Services.Data
 		private readonly ITaskRepository _taskRepository;
 		private readonly IStatusService _statusService;
 		private readonly TaskManagerDbContext _dbContext;
-		
 
-        public AppTaskService(ITaskRepository taskRepository, IStatusService statusService, TaskManagerDbContext dbContext)
-        {
-            this._taskRepository = taskRepository;
+
+		public AppTaskService(ITaskRepository taskRepository, IStatusService statusService, TaskManagerDbContext dbContext)
+		{
+			this._taskRepository = taskRepository;
 			this._statusService = statusService;
 			this._dbContext = dbContext;
-        }
+		}
 
 		public async Task CreateAsync(AppTaskCreateViewModel model, string userId)
 		{
@@ -37,15 +37,22 @@ namespace SimpleTaskManagerApp.Services.Data
 			await _taskRepository.SaveChangesAsync();
 		}
 
-		public async Task<IEnumerable<AppTaskListViewModel>> GetAllTasksAsync()
+		public async Task<IEnumerable<AppTaskListViewModel>> GetAllTasksAsync(string userId, bool isAdmin)
 		{
 			//Split the query in two, because EF cannot
 			//translate ToString("Date-format") in SQL.
-			var tasksRaw = await this._dbContext.AppTasks
-				.Include(t => t.Status)
-				.AsNoTracking()
-				.Where(t => !t.IsDeleted)
-				.ToListAsync();
+			var query = _dbContext.AppTasks
+			.Include(t => t.Status)
+			.AsNoTracking()
+			.Where(t => !t.IsDeleted);
+
+			//Check for userId/Admin
+			if (!isAdmin)
+			{
+				query = query.Where(t => t.UserId == userId);
+			}
+
+			var tasksRaw = await query.ToListAsync();
 
 			var tasks = tasksRaw
 				.Select(t => new AppTaskListViewModel

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.AppTask;
 using System.Security.Claims;
+using static SimpleTaskManagerApp.Common.Utility;
 
 namespace SimpleTaskManagerApp.Controllers
 {
@@ -19,9 +20,24 @@ namespace SimpleTaskManagerApp.Controllers
 		[HttpGet]
         public async Task<IActionResult> Index()
 		{	
-			var model = await _appTaskService.GetAllTasksAsync();
+			var userId = GetCurrentUserId();
 
-			return View(model);
+			Guid userGuid = Guid.Empty;
+
+			bool isValid = IsGuidValid(userId,ref userGuid);
+
+			if (!isValid)
+			{
+				//Soon
+				//return RedirectToAction("Home","Error");
+				return NotFound();
+			}
+
+			var isAdmin = User.IsInRole("Administrator");
+
+			var models = await _appTaskService.GetAllTasksAsync(userId, isAdmin);
+
+			return View(models);
 		}
 
 		[HttpGet]
@@ -82,5 +98,7 @@ namespace SimpleTaskManagerApp.Controllers
 			await _appTaskService.CreateAsync(model, GetCurrentUserId());
 			return Ok(); 
 		}
+
+
 	}
 }
