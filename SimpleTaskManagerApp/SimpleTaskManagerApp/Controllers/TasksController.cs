@@ -19,8 +19,8 @@ namespace SimpleTaskManagerApp.Controllers
 
 		[HttpGet]
         public async Task<IActionResult> Index()
-		{	
-			var userId = GetCurrentUserId();
+		{
+			string? userId = GetCurrentUserId();
 
 			Guid userGuid = Guid.Empty;
 
@@ -29,13 +29,13 @@ namespace SimpleTaskManagerApp.Controllers
 			if (!isValid)
 			{
 				//Soon
-				//return RedirectToAction("Home","Error");
+				//return RedirectToAction("Custom404","Error");
 				return NotFound();
 			}
 
-			var isAdmin = User.IsInRole("Administrator");
+			bool isAdmin = User.IsInRole("Administrator");
 
-			var models = await _appTaskService.GetAllTasksAsync(userId, isAdmin);
+			IEnumerable<AppTaskListViewModel> models = await _appTaskService.GetAllTasksAsync(userId, isAdmin);
 
 			return View(models);
 		}
@@ -44,7 +44,7 @@ namespace SimpleTaskManagerApp.Controllers
 		[Authorize]
 		public async Task<IActionResult> Create()
 		{
-			var model = await this._appTaskService.GetCreateViewModelAsync();
+			AppTaskCreateViewModel model = await this._appTaskService.GetCreateViewModelAsync();
 			return View(model);
 		}
 
@@ -60,7 +60,7 @@ namespace SimpleTaskManagerApp.Controllers
 				return View(model);
 			}
 
-			var userId = GetCurrentUserId();
+			string? userId = GetCurrentUserId();
 			await _appTaskService.CreateAsync(model, userId);
 
 			return RedirectToAction(nameof(Index));
@@ -72,7 +72,7 @@ namespace SimpleTaskManagerApp.Controllers
 		[Authorize]
 		public async Task<IActionResult> CreatePartial()
 		{
-			var model = new AppTaskCreateViewModel
+			AppTaskCreateViewModel model = new AppTaskCreateViewModel
 			{
 				Statuses = (await _appTaskService.GetCreateViewModelAsync()).Statuses
 			};
@@ -99,6 +99,43 @@ namespace SimpleTaskManagerApp.Controllers
 			return Ok(); 
 		}
 
+		//GET EditPartial
+		[HttpGet]
+		[Authorize]
+		public async Task<IActionResult> EditPartial(string? id)
+		{
 
+			Guid taskGuid = Guid.Empty;
+			bool isTaskGuidValid = IsGuidValid(id,ref taskGuid);
+
+			if (!isTaskGuidValid)
+			{
+
+				//return RedirectToAction("Custom404","Error");
+				return NotFound();
+			}
+
+			string? userId = GetCurrentUserId();
+			Guid userGuid = Guid.Empty;
+			bool isUserValid = IsGuidValid(userId,ref userGuid);
+
+			if (!isUserValid)
+			{
+				
+				//return RedirectToAction("Custom404","Error");
+				return NotFound();
+			}
+
+			bool isAdmin = User.IsInRole("Administrator");
+
+			var model = await this._appTaskService.GetEditViewModelAsync(taskGuid, userGuid, isAdmin);
+
+			if (model == null) 
+			{
+				return NotFound();
+			}
+
+			return PartialView("_EditPartial",model);
+		}
 	}
 }

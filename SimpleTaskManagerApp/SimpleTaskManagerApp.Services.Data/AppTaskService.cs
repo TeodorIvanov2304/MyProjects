@@ -80,5 +80,10 @@ namespace SimpleTaskManagerApp.Services.Data
 				})
 			};
 		}
+
+		public Task<EditTaskViewModel> GetEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
