@@ -29,7 +29,7 @@ namespace SimpleTaskManagerApp.Data.Models.Models
 		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
 		[Comment("Task due date")]
-		public DateTime? DueDate { get; set; }
+		public DateTime DueDate { get; set; }
 
 		[Required]
 		[Comment("Whether the task is soft-deleted")]

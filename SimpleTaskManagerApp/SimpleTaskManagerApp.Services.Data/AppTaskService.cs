@@ -61,7 +61,7 @@ namespace SimpleTaskManagerApp.Services.Data
 					Title = t.Title,
 					StatusName = t.Status.Name,
 					CreatedAt = t.CreatedAt.ToString(AllDateFormat),
-					DueDate = t.DueDate?.ToString(AllDateFormat) ?? "N/A"
+					DueDate = t.DueDate.ToString(AllDateFormat) ?? "N/A"
 				})
 				.ToList();
 
@@ -81,9 +81,37 @@ namespace SimpleTaskManagerApp.Services.Data
 			};
 		}
 
-		public Task<EditTaskViewModel> GetEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin)
+		public async Task<EditTaskViewModel> GetEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin)
 		{
-			throw new NotImplementedException();
+			var task = await this._taskRepository.GetByIdAsync(taskGuid);
+
+			if (task == null || task.IsDeleted)
+			{
+				return null!;
+			}
+
+			
+			if (!isAdmin && task.UserId != userGuid.ToString())
+			{
+				return null!;
+			}
+
+			var statuses = await this._statusService.GetAllStatusesAsync();
+
+			var model = new EditTaskViewModel
+			{
+				Title = task.Title,
+				Description = task.Description,
+				DueDate = task.DueDate,
+				StatusId = task.StatusId,
+				Statuses = statuses.Select(s => new AppTaskStatusViewModel
+				{
+					Id = s.Id,
+					Name = s.Name
+				})
+			};
+
+			return model;
 		}
 	}
 }
