@@ -61,7 +61,7 @@ namespace SimpleTaskManagerApp.Services.Data
 					Title = t.Title,
 					StatusName = t.Status.Name,
 					CreatedAt = t.CreatedAt.ToString(AllDateFormat),
-					DueDate = t.DueDate.ToString(AllDateFormat) ?? "N/A"
+					DueDate = t.DueDate?.ToString(AllDateFormat) ?? "N/A"
 				})
 				.ToList();
 
@@ -102,7 +102,7 @@ namespace SimpleTaskManagerApp.Services.Data
 			{
 				Title = task.Title,
 				Description = task.Description,
-				DueDate = task.DueDate,
+				DueDate = task.DueDate ?? DateTime.Today,
 				StatusId = task.StatusId,
 				Statuses = statuses.Select(s => new AppTaskStatusViewModel
 				{

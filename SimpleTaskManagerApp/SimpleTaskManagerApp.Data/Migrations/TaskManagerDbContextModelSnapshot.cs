@@ -175,7 +175,7 @@ namespace SimpleTaskManagerApp.Data.Migrations
                         .HasColumnType("character varying(800)")
                         .HasComment("Task description");
 
-                    b.Property<DateTime>("DueDate")
+                    b.Property<DateTime?>("DueDate")
                         .HasColumnType("timestamp with time zone")
                         .HasComment("Task due date");
 
@@ -204,7 +204,7 @@ namespace SimpleTaskManagerApp.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AppTasks");
+                    b.ToTable("AppTasks", (string)null);
                 });
 
             modelBuilder.Entity("SimpleTaskManagerApp.Data.Models.Models.ApplicationUser", b =>
@@ -298,7 +298,7 @@ namespace SimpleTaskManagerApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses");
+                    b.ToTable("Statuses", (string)null);
 
                     b.HasData(
                         new

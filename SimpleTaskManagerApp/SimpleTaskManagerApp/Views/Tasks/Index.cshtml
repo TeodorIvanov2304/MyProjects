@@ -31,9 +31,9 @@
 				<td>@task.CreatedAt</td>
 				<td>@task.DueDate</td>
 				<td>
-					<a asp-action="Details" asp-route-id="@task.Id" class="btn btn-sm btn-info">Details</a>
-					<a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-warning">Edit</a>
-					<a asp-action="Delete" asp-route-id="@task.Id" class="btn btn-sm btn-danger">Delete</a>
+					<button class="btn btn-sm btn-primary mb-1" data-task-id="@task.Id">Details</button>
+					<button class="btn btn-sm btn-warning mb-1 load-edit-form" data-task-id="@task.Id">Edit Task</button>
+					<button class="btn btn-sm btn-danger mb-1" data-task-id="@task.Id">Delete</button>
 				</td>
 			</tr>
 		}
