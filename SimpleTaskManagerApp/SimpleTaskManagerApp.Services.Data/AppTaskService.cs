@@ -81,13 +81,13 @@ namespace SimpleTaskManagerApp.Services.Data
 			};
 		}
 
-		public async Task<EditTaskViewModel> GetEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin)
+		public async Task<EditTaskViewModel?> GetEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin)
 		{
 			var task = await this._taskRepository.GetByIdAsync(taskGuid);
 
 			if (task == null || task.IsDeleted)
 			{
-				return null!;
+				return null;
 			}
 
 			
@@ -99,10 +99,11 @@ namespace SimpleTaskManagerApp.Services.Data
 			var statuses = await this._statusService.GetAllStatusesAsync();
 
 			var model = new EditTaskViewModel
-			{
+			{	
+				Id = task.Id,
 				Title = task.Title,
 				Description = task.Description,
-				DueDate = task.DueDate ?? DateTime.Today,
+				DueDate = task.DueDate,
 				StatusId = task.StatusId,
 				Statuses = statuses.Select(s => new AppTaskStatusViewModel
 				{
@@ -112,6 +113,34 @@ namespace SimpleTaskManagerApp.Services.Data
 			};
 
 			return model;
+		}
+
+		public async Task<bool> PostEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin, EditTaskViewModel model)
+		{
+			var task = await this._taskRepository.GetByIdAsync(taskGuid);
+
+			if (task == null || task.IsDeleted)
+			{
+				return false;
+			}
+
+
+			if (!isAdmin && task.UserId != userGuid.ToString())
+			{
+				return false!;
+			}
+
+			var statuses = await this._statusService.GetAllStatusesAsync();
+
+			task.Id = model.Id;
+			task.Title = model.Title;
+			task.Description = model.Description;
+			task.DueDate = model.DueDate;
+			task.StatusId = model.StatusId;
+
+			await this._taskRepository.SaveChangesAsync();
+
+			return true;
 		}
 	}
 }

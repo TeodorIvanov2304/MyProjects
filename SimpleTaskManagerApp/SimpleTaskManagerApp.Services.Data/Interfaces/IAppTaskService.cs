@@ -7,6 +7,7 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 		Task<IEnumerable<AppTaskListViewModel>> GetAllTasksAsync(string userId, bool isAdmin);
 		Task<AppTaskCreateViewModel> GetCreateViewModelAsync();
 		Task CreateAsync(AppTaskCreateViewModel model, string userId);
-		Task<EditTaskViewModel> GetEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin);
+		Task<EditTaskViewModel?> GetEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin);
+		Task<bool> PostEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin, EditTaskViewModel model);
 	}
 }

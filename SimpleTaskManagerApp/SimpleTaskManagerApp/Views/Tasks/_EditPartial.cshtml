@@ -4,6 +4,8 @@
 <form id="editTaskForm" asp-action="EditPartial" method="post">
 	@Html.AntiForgeryToken()
 
+	<input type="hidden" name="Id" value="@Model.Id" />
+
 	<!-- Title -->
 	<div class="form-floating mb-3">
 		<input asp-for="Title" class="form-control" />
@@ -21,7 +23,8 @@
 	<!-- DueDate -->
 	<div class="form-floating mb-3">
 		<!-- Add JS Flatpickr to input -->
-		<input asp-for="DueDate" class="form-control datepicker" />
+		<input asp-for="DueDate" class="form-control datepicker" autocomplete="off"
+			   value="@(Model.DueDate?.ToString("yyyy-MM-dd HH:mm") ?? "")" />
 		<label asp-for="DueDate"></label>
 		<span asp-validation-for="DueDate" class="text-danger"></span>
 	</div>

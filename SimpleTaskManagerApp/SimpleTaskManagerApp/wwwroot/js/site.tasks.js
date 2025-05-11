@@ -89,6 +89,7 @@ function setupEditFormSubmit() {
             },
             error: function (xhr, status, error) {
                 console.error("Edit error:", error);
+                console.error("Response:", xhr.responseText);
                 showToast("Failed to update task.");
             }
         });

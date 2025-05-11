@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.AppTask;
+using SimpleTaskManagerApp.ViewModels.Status;
 using System.Security.Claims;
 using static SimpleTaskManagerApp.Common.Utility;
 
@@ -128,14 +129,59 @@ namespace SimpleTaskManagerApp.Controllers
 
 			bool isAdmin = User.IsInRole("Administrator");
 
-			var model = await this._appTaskService.GetEditViewModelAsync(taskGuid, userGuid, isAdmin);
+			EditTaskViewModel? model = await this._appTaskService.GetEditViewModelAsync(taskGuid, userGuid, isAdmin);
 
 			if (model == null) 
 			{
 				return NotFound();
 			}
-
+			
 			return PartialView("_EditPartial",model);
+		}
+
+		//POST EditPartial
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> EditPartial(EditTaskViewModel model)
+		{
+			if (!ModelState.IsValid) 
+			{
+				model.Statuses = (IEnumerable<AppTaskStatusViewModel>)await _statusService.GetAllStatusesAsync();
+				return PartialView("_EditPartial", model);
+			}
+
+			Guid taskGuid = Guid.Empty;
+			bool isTaskValid = IsGuidValid(model.Id.ToString(), ref taskGuid);
+
+			if (!isTaskValid)
+			{
+
+				//return RedirectToAction("Custom404","Error");
+				return NotFound();
+			}
+
+			string? userId = GetCurrentUserId();
+			Guid userGuid = Guid.Empty;
+			bool isUserValid = IsGuidValid(userId, ref userGuid);
+
+			if (!isUserValid)
+			{
+
+				//return RedirectToAction("Custom404","Error");
+				return NotFound();
+			}
+
+			bool isAdmin = User.IsInRole("Administrator");
+
+			var result = await this._appTaskService.PostEditViewModelAsync(taskGuid, userGuid, isAdmin, model);
+
+			if (!result)
+			{
+				return BadRequest();
+			}
+
+			return RedirectToAction(nameof(Index));
 		}
 	}
 }

@@ -1,10 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static SimpleTaskManagerApp.Common.EntityValidationConstants;
 
 namespace SimpleTaskManagerApp.ViewModels.AppTask
 {
 	public class EditTaskViewModel
 	{
+		[Key]
+		[Required]
+		public Guid Id { get; set; }
+
 		[Required]
 		[MinLength(AppTaskTitleMinLength)]
 		[MaxLength(AppTaskTitleMaxLength)]
@@ -19,7 +24,7 @@ namespace SimpleTaskManagerApp.ViewModels.AppTask
 		[Display(Name = "Due Date")]
 		[DataType(DataType.DateTime)]
 		[DisplayFormat(DataFormatString = AllDateFormat, ApplyFormatInEditMode = true)]
-		public DateTime DueDate { get; set; }
+		public DateTime? DueDate { get; set; }
 
 		[Required]
 		[Display(Name = "Status")]
