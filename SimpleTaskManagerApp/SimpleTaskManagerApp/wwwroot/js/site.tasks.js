@@ -3,12 +3,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     setupCreateButton();
     setupCreateFormSubmit();
-
-    //Init Edit functionality
     setupEditButton();
     setupEditFormSubmit();
+    setupDeleteSubmit();
 });
-
 
 // CREATE TASK HANDLERS
 
@@ -18,84 +16,119 @@ function setupCreateButton() {
             .then(response => response.text())
             .then(html => {
                 document.getElementById("modal-form-container").innerHTML = html;
-                initFlatpickr(); // Flatpickr for the dates
+                initFlatpickr();
             });
     });
 }
 
 function setupCreateFormSubmit() {
-    $(document).on('submit', '#createTaskForm', function (e) {
-        e.preventDefault();
+    document.addEventListener('submit', function (e) {
+        if (e.target && e.target.id === 'createTaskForm') {
+            e.preventDefault();
+            const form = e.target;
+            const token = form.querySelector('input[name="__RequestVerificationToken"]').value;
 
-        var form = $(this);
-        var token = $('input[name="__RequestVerificationToken"]', form).val();
-        $.ajax({
-            type: 'POST',
-            url: '/Tasks/CreatePartial',
-            data: form.serialize(),
-            headers: {
-                'RequestVerificationToken': token
-            },
-            success: function () {
-                $('#createTaskModal').modal('hide');
-                showToast("Task added!");
-                location.reload();
-            },
-            error: function (xhr, status, error) {
-                console.error("Status:", status);
-                console.error("Error:", error);
-                console.error("Response:", xhr.responseText);
-                showToast("Something went wrong!");
-            }
-        });
+            fetch('/Tasks/CreatePartial', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': token
+                },
+                body: new URLSearchParams(new FormData(form))
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error("Request failed");
+                    bootstrap.Modal.getInstance(document.getElementById('createTaskModal')).hide();
+                    showToast("Task added!");
+                    location.reload();
+                })
+                .catch(err => {
+                    console.error("Create error:", err);
+                    showToast("Something went wrong!");
+                });
+        }
     });
 }
-
 
 // EDIT TASK HANDLERS
 
-// Load Edit form into modal
 function setupEditButton() {
-    $(document).on('click', '.load-edit-form', function () {
-        var taskId = $(this).data('task-id');
-        fetch(`/Tasks/EditPartial?id=${taskId}`)
-            .then(response => response.text())
-            .then(html => {
-                $('#edit-modal-form-container').html(html);
-                $('#editTaskModal').modal('show');
-                initFlatpickr(); // Flatpickr for the edit form
-            });
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('load-edit-form')) {
+            const taskId = e.target.dataset.taskId;
+            fetch(`/Tasks/EditPartial?id=${taskId}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('edit-modal-form-container').innerHTML = html;
+                    new bootstrap.Modal(document.getElementById('editTaskModal')).show();
+                    initFlatpickr();
+                });
+        }
     });
 }
 
-// Submit Edit form via AJAX
 function setupEditFormSubmit() {
-    $(document).on('submit', '#editTaskForm', function (e) {
-        e.preventDefault();
+    document.addEventListener('submit', function (e) {
+        if (e.target && e.target.id === 'editTaskForm') {
+            e.preventDefault();
+            const form = e.target;
+            const token = form.querySelector('input[name="__RequestVerificationToken"]').value;
 
-        var form = $(this);
-        var token = $('input[name="__RequestVerificationToken"]', form).val();
-        $.ajax({
-            type: 'POST',
-            url: '/Tasks/EditPartial',
-            data: form.serialize(),
+            fetch('/Tasks/EditPartial', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': token
+                },
+                body: new URLSearchParams(new FormData(form))
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error("Edit failed");
+                    bootstrap.Modal.getInstance(document.getElementById('editTaskModal')).hide();
+                    showToast("Task updated!");
+                    location.reload();
+                })
+                .catch(err => {
+                    console.error("Edit error:", err);
+                    showToast("Failed to update task.");
+                });
+        }
+    });
+}
+
+// DELETE TASK HANDLERS
+
+function setupDeleteSubmit() {
+    let currentDeleteTaskId = null;
+
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('load-delete-modal')) {
+            currentDeleteTaskId = e.target.dataset.taskId;
+        }
+    });
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        if (!currentDeleteTaskId) return;
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        fetch(`/Tasks/Delete/${currentDeleteTaskId}`, {
+            method: 'POST',
             headers: {
                 'RequestVerificationToken': token
-            },
-            success: function () {
-                $('#editTaskModal').modal('hide');
-                showToast("Task updated!");
-                location.reload();
-            },
-            error: function (xhr, status, error) {
-                console.error("Edit error:", error);
-                console.error("Response:", xhr.responseText);
-                showToast("Failed to update task.");
             }
-        });
+        })
+            .then(response => {
+                if (!response.ok) throw new Error("Delete failed");
+                bootstrap.Modal.getInstance(document.getElementById('deleteConfirmModal')).hide();
+                showToast("Task deleted!");
+                location.reload();
+            })
+            .catch(() => {
+                showToast("Failed to delete task.");
+            });
     });
-}
 
+}
 
 // FLATPICKR INIT
 
@@ -106,7 +139,6 @@ function initFlatpickr() {
         time_24hr: true
     });
 }
-
 
 // TOAST
 
