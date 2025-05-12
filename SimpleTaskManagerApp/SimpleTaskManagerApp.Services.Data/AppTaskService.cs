@@ -37,7 +37,7 @@ namespace SimpleTaskManagerApp.Services.Data
 			await _taskRepository.SaveChangesAsync();
 		}
 
-		public async Task<IEnumerable<AppTaskListViewModel>> GetAllTasksAsync(string userId, bool isAdmin)
+		public async Task<IEnumerable<AppTaskListViewModel>> GetAllTasksAsync(Guid userGuid, bool isAdmin)
 		{
 			//Split the query in two, because EF cannot
 			//translate ToString("Date-format") in SQL.
@@ -49,7 +49,7 @@ namespace SimpleTaskManagerApp.Services.Data
 			//Check for userId/Admin
 			if (!isAdmin)
 			{
-				query = query.Where(t => t.UserId == userId);
+				query = query.Where(t => t.UserId == userGuid.ToString());
 			}
 
 			var tasksRaw = await query.ToListAsync();

@@ -4,10 +4,11 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 {
 	public interface IAppTaskService
 	{
-		Task<IEnumerable<AppTaskListViewModel>> GetAllTasksAsync(string userId, bool isAdmin);
+		Task<IEnumerable<AppTaskListViewModel>> GetAllTasksAsync(Guid userGuid, bool isAdmin);
 		Task<AppTaskCreateViewModel> GetCreateViewModelAsync();
 		Task CreateAsync(AppTaskCreateViewModel model, string userId);
 		Task<EditTaskViewModel?> GetEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin);
 		Task<bool> PostEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin, EditTaskViewModel model);
+		Task<bool> PostDeleteViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin);
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.AppTask;
 using SimpleTaskManagerApp.ViewModels.Status;
@@ -36,7 +37,7 @@ namespace SimpleTaskManagerApp.Controllers
 
 			bool isAdmin = User.IsInRole("Administrator");
 
-			IEnumerable<AppTaskListViewModel> models = await _appTaskService.GetAllTasksAsync(userId, isAdmin);
+			IEnumerable<AppTaskListViewModel> models = await _appTaskService.GetAllTasksAsync(userGuid, isAdmin);
 
 			return View(models);
 		}
@@ -182,6 +183,32 @@ namespace SimpleTaskManagerApp.Controllers
 			}
 
 			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Delete(Guid taskId)
+		{
+			string? userId = GetCurrentUserId();
+			Guid userGuid = Guid.Empty;
+			bool isUserValid = IsGuidValid(userId, ref userGuid);
+
+			if (!isUserValid) 
+			{
+				return NotFound();
+			}
+
+			bool isAdmin = User.IsInRole("Administrator");
+
+			bool isDeleted = await this._appTaskService.PostDeleteViewModelAsync(taskId, userGuid, isAdmin);
+
+			if (!isDeleted)
+			{
+				return BadRequest("Unable to delete task.");
+			}
+
+			return Ok();
 		}
 	}
 }
