@@ -81,6 +81,37 @@ namespace SimpleTaskManagerApp.Services.Data
 			};
 		}
 
+		public async Task<DetailsAppTaskViewModel?> GetDetailsViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin)
+		{
+			var task = await this._dbContext.AppTasks
+				.Include(t => t.User)
+				.Include(t => t.Status)
+				.FirstOrDefaultAsync(t => t.Id == taskGuid);
+
+			if (task == null || task.IsDeleted)
+			{
+				return null;
+			}
+
+
+			if (!isAdmin && task.UserId != userGuid.ToString())
+			{
+				return null!;
+			}
+
+			var detailsTask = new DetailsAppTaskViewModel ()
+			{
+				Username = task.User.FirstName + " " + task.User.LastName,
+				Title = task.Title,
+				Description = task.Description,
+				CreatedAt = task.CreatedAt,
+				DueDate = task.DueDate,
+				StatusName = task.Status.Name
+			};
+
+			return detailsTask;
+		}
+
 		public async Task<EditTaskViewModel?> GetEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin)
 		{
 			var task = await this._taskRepository.GetByIdAsync(taskGuid);

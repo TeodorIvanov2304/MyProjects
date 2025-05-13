@@ -1,24 +1,12 @@
 ﻿@using SimpleTaskManagerApp.ViewModels.AppTask
 @model DetailsAppTaskViewModel
 
-<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="detailsModalLabel">Task Details</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<p><strong>User:</strong> @Model.Username</p>
-				<p><strong>Title:</strong> @Model.Title</p>
-				<p><strong>Description:</strong> @Model.Description</p>
-				<p><strong>Created At:</strong> @Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</p>
-				@if (Model.DueDate != null)
-				{
-					<p><strong>Due Date:</strong> @Model.DueDate?.ToString("yyyy-MM-dd HH:mm")</p>
-				}
-				<p><strong>Status:</strong> @Model.StatusName</p>
-			</div>
-		</div>
-	</div>
+
+<div>
+	<h5>@Model.Title</h5>
+	<p><strong>Username:</strong> @Model.Username</p>
+	<p><strong>Description:</strong> @Model.Description</p>
+	<p><strong>Due Date:</strong> @Model?.DueDate?.ToString("dd/MM/yyyy HH:mm")</p>
+	<p><strong>Status:</strong> @Model.StatusName</p>
+	<p><strong>Created At:</strong> @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
 </div>

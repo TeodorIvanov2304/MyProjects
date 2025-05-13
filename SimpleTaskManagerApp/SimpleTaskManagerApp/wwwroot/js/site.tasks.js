@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     setupEditButton();
     setupEditFormSubmit();
     setupDeleteSubmit();
+    setupDetailsModal();
 });
 
 // CREATE TASK HANDLERS
@@ -130,6 +131,26 @@ function setupDeleteSubmit() {
             });
     });
 
+}
+
+//DETAILS TASK HANDLER
+function setupDetailsModal() {
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('load-details-modal')) {
+            const taskId = e.target.dataset.taskId;
+
+            fetch(`/Tasks/DetailsPartial?id=${taskId}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('details-modal-form-container').innerHTML = html;
+                    const modal = new bootstrap.Modal(document.getElementById('detailsTaskModal'));
+                    modal.show();
+                })
+                .catch(() => {
+                    showToast("Failed to load task details.");
+                });
+        }
+    });
 }
 
 // FLATPICKR INIT

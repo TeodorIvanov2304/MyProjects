@@ -10,5 +10,6 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 		Task<EditTaskViewModel?> GetEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin);
 		Task<bool> PostEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin, EditTaskViewModel model);
 		Task<bool> PostDeleteViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin);
+		Task<DetailsAppTaskViewModel?> GetDetailsViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin);
 	}
 }

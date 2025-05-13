@@ -210,5 +210,40 @@ namespace SimpleTaskManagerApp.Controllers
 
 			return Ok();
 		}
+
+		[HttpGet]
+		[Authorize]
+		public async Task<IActionResult> DetailsPartial(string? id)
+		{
+			string? userId = GetCurrentUserId();
+			Guid userGuid = Guid.Empty;
+			bool isUserValid = IsGuidValid(userId, ref userGuid);
+
+			if (!isUserValid)
+			{
+				return NotFound();
+			}
+
+			Guid taskGuid = Guid.Empty;
+			bool isTaskValid = IsGuidValid(id, ref taskGuid);
+
+			if (!isTaskValid)
+			{
+
+				//return RedirectToAction("Custom404","Error");
+				return NotFound();
+			}
+
+			bool isAdmin = User.IsInRole("Administrator");
+
+			var model = await this._appTaskService.GetDetailsViewModelAsync(taskGuid, userGuid, isAdmin);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return PartialView("_DetailsPartial", model);
+		}
 	}
 }

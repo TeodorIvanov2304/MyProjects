@@ -31,7 +31,7 @@
 				<td>@task.CreatedAt</td>
 				<td>@task.DueDate</td>
 				<td>
-					<button class="btn btn-sm btn-primary mb-1" data-task-id="@task.Id">Details</button>
+					<button class="btn btn-sm btn-primary mb-1 load-details-modal" data-task-id="@task.Id">Details</button>
 					<button class="btn btn-sm btn-warning mb-1 load-edit-form" data-task-id="@task.Id">Edit Task</button>
 					<button class="btn btn-danger btn-sm load-delete-modal" data-task-id="@task.Id" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">Delete</button>
 				</td>
@@ -90,6 +90,21 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 				<button id="confirmDeleteBtn" type="button" class="btn btn-danger">Delete</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+@* Bootstrap Details modal *@
+<div class="modal fade" id="detailsTaskModal" tabindex="-1" aria-labelledby="detailsTaskModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="detailsTaskModalLabel">Task Details</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" id="details-modal-form-container">
+				@* AJAX will load the details here *@
 			</div>
 		</div>
 	</div>
