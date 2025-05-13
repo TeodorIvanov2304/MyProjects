@@ -118,7 +118,9 @@ function setupDeleteSubmit() {
             }
         })
             .then(response => {
-                if (!response.ok) throw new Error("Delete failed");
+                if (!response.ok) {
+                    throw new Error("Delete failed")
+                };
                 bootstrap.Modal.getInstance(document.getElementById('deleteConfirmModal')).hide();
                 showToast("Task deleted!");
                 location.reload();

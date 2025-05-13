@@ -115,6 +115,26 @@ namespace SimpleTaskManagerApp.Services.Data
 			return model;
 		}
 
+		public async Task<bool> PostDeleteViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin)
+		{
+			var task = await this._taskRepository.GetByIdAsync(taskGuid);
+
+			if (task == null || task.IsDeleted)
+			{
+				return false;
+			}
+
+			if (task.UserId != userGuid.ToString() && !isAdmin) 
+			{
+				return false;
+			}
+
+			task.IsDeleted = true;
+
+			await this._dbContext.SaveChangesAsync();
+			return true;
+		}
+
 		public async Task<bool> PostEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin, EditTaskViewModel model)
 		{
 			var task = await this._taskRepository.GetByIdAsync(taskGuid);

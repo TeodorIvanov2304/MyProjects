@@ -185,7 +185,7 @@ namespace SimpleTaskManagerApp.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
-		[HttpPost]
+		[HttpPost("Tasks/Delete/{taskId}")]
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Delete(Guid taskId)
