@@ -14,7 +14,6 @@ namespace SimpleTaskManagerApp.Services.Data
 		private readonly IStatusService _statusService;
 		private readonly TaskManagerDbContext _dbContext;
 
-
 		public AppTaskService(ITaskRepository taskRepository, IStatusService statusService, TaskManagerDbContext dbContext)
 		{
 			this._taskRepository = taskRepository;

@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleTaskManagerApp.Data.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleTaskManagerApp.Common", "SimpleTaskManagerApp.Common\SimpleTaskManagerApp.Common.csproj", "{47C33D66-1721-4A94-A3C3-2C1D5AC533A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTaskManagerApp.ViewModels", "SimpleTaskManagerApp.ViewModels\SimpleTaskManagerApp.ViewModels.csproj", "{CB97C7D8-2DF4-441C-B8EA-E005A8E16F8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleTaskManagerApp.ViewModels", "SimpleTaskManagerApp.ViewModels\SimpleTaskManagerApp.ViewModels.csproj", "{CB97C7D8-2DF4-441C-B8EA-E005A8E16F8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTaskManagerApp.Services.Data", "SimpleTaskManagerApp.Services.Data\SimpleTaskManagerApp.Services.Data.csproj", "{6BB079D0-A63B-44EE-8B85-04A463A0EB1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleTaskManagerApp.Services.Data", "SimpleTaskManagerApp.Services.Data\SimpleTaskManagerApp.Services.Data.csproj", "{6BB079D0-A63B-44EE-8B85-04A463A0EB1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTaskManagerApp.Services.Tests", "SimpleTaskManagerApp.Services.Tests\SimpleTaskManagerApp.Services.Tests.csproj", "{8C14493E-C517-44A2-AA2B-EFEABA958E0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{6BB079D0-A63B-44EE-8B85-04A463A0EB1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BB079D0-A63B-44EE-8B85-04A463A0EB1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BB079D0-A63B-44EE-8B85-04A463A0EB1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C14493E-C517-44A2-AA2B-EFEABA958E0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C14493E-C517-44A2-AA2B-EFEABA958E0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C14493E-C517-44A2-AA2B-EFEABA958E0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C14493E-C517-44A2-AA2B-EFEABA958E0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
