@@ -57,5 +57,23 @@ namespace SimpleTaskManagerApp.Services.Tests
 			var taskCount = await _context.AppTasks.CountAsync();
 			Assert.Equal(1, taskCount);
 		}
+
+		[Fact]
+		public async Task CreateAsync_ShouldNotAdd_WhenStatusIdIsInvalid()
+		{	
+			//Arrange
+			var model = new AppTaskCreateViewModel
+			{
+				Title = "Bad Status Task",
+				Description = "Invalid Status",
+				DueDate = DateTime.Now.AddDays(1),
+				StatusId = 999
+			};
+
+			string userId = Guid.NewGuid().ToString();
+
+			//Act + Assert
+			await Assert.ThrowsAsync<InvalidOperationException>(() => _appTaskService.CreateAsync(model, userId));
+		}
 	}
 }
