@@ -25,9 +25,16 @@ namespace SimpleTaskManagerApp.Services.Data
 		public async Task CreateAsync(AppTaskCreateViewModel model, string userId)
 		{
 
+			//Check for valid status
 			if (!Enum.IsDefined(typeof(TaskStatusEnum), model.StatusId))
 			{
 				throw new InvalidOperationException($"Invalid status ID: {model.StatusId}");
+			}
+
+			//Check for empty string
+			if (string.IsNullOrWhiteSpace(model.Title))
+			{
+				throw new ArgumentNullException(nameof(model.Title), "Title cannot be null or empty.");
 			}
 
 			var task = new AppTask

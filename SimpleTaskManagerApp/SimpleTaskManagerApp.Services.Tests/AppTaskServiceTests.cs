@@ -75,5 +75,22 @@ namespace SimpleTaskManagerApp.Services.Tests
 			//Act + Assert
 			await Assert.ThrowsAsync<InvalidOperationException>(() => _appTaskService.CreateAsync(model, userId));
 		}
+
+		[Fact]
+		public async Task CreateAsync_ShouldNotAdd_WhenTitleIsNullOrEmpty()
+		{
+			//Arrange
+			var model = new AppTaskCreateViewModel
+			{
+				Title = "",
+				Description = "Empty or null title",
+				DueDate = DateTime.Now.AddDays(1),
+				StatusId = 1
+			};
+
+			string userId = Guid.NewGuid().ToString();
+
+			await Assert.ThrowsAsync<ArgumentNullException>(() => _appTaskService.CreateAsync(model, userId));
+		}
 	}
 }
