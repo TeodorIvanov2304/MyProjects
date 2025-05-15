@@ -31,10 +31,16 @@ namespace SimpleTaskManagerApp.Services.Data
 				throw new InvalidOperationException($"Invalid status ID: {model.StatusId}");
 			}
 
-			//Check for empty string
+			//Check for empty title
 			if (string.IsNullOrWhiteSpace(model.Title))
 			{
 				throw new ArgumentNullException(nameof(model.Title), "Title cannot be null or empty.");
+			}
+
+			//Check for empty description
+			if (string.IsNullOrWhiteSpace(model.Description))
+			{
+				throw new ArgumentNullException(nameof(model.Description), "Description cannot be null or empty.");
 			}
 
 			var task = new AppTask
