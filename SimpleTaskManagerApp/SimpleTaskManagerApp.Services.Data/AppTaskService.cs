@@ -2,6 +2,7 @@
 using SimpleTaskManagerApp.Data;
 using SimpleTaskManagerApp.Data.Data.Repositories.Interfaces;
 using SimpleTaskManagerApp.Data.Models.Models;
+using SimpleTaskManagerApp.Data.Models.Models.Enums;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.AppTask;
 using static SimpleTaskManagerApp.Common.EntityValidationConstants;
@@ -23,6 +24,12 @@ namespace SimpleTaskManagerApp.Services.Data
 
 		public async Task CreateAsync(AppTaskCreateViewModel model, string userId)
 		{
+
+			if (Enum.IsDefined(typeof(TaskStatusEnum), model.StatusId))
+			{
+				throw new InvalidOperationException($"Invalid status ID: {model.StatusId}");
+			}
+
 			var task = new AppTask
 			{
 				Title = model.Title,
