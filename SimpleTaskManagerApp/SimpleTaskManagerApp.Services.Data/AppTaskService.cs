@@ -25,7 +25,7 @@ namespace SimpleTaskManagerApp.Services.Data
 		public async Task CreateAsync(AppTaskCreateViewModel model, string userId)
 		{
 
-			if (Enum.IsDefined(typeof(TaskStatusEnum), model.StatusId))
+			if (!Enum.IsDefined(typeof(TaskStatusEnum), model.StatusId))
 			{
 				throw new InvalidOperationException($"Invalid status ID: {model.StatusId}");
 			}
