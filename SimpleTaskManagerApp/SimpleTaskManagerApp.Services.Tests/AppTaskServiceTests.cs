@@ -11,7 +11,7 @@ using SimpleTaskManagerApp.ViewModels.AppTask;
 
 namespace SimpleTaskManagerApp.Services.Tests
 {
-	public class AppTaskServiceTests
+	public class AppTaskServiceTests : IDisposable
 	{
 		private readonly TaskManagerDbContext _context;
 		private readonly ITaskRepository _taskRepository;
@@ -19,31 +19,50 @@ namespace SimpleTaskManagerApp.Services.Tests
 		private readonly AppTaskService _appTaskService;
 
 		public AppTaskServiceTests()
-		{	
-			//Create InMemory DbContext, not the real Db
+		{
+			// Create an in-memory DbContext with a unique database name (using Guid)
 			var options = new DbContextOptionsBuilder<TaskManagerDbContext>()
-				.UseInMemoryDatabase("TestDb_NoMoq")
+				.UseInMemoryDatabase(Guid.NewGuid().ToString())
 				.Options;
 
+			// Initialize the database context
 			_context = new TaskManagerDbContext(options);
 
+			// Initialize the task repository
 			_taskRepository = new TaskRepository(_context);
+
+			// Initialize the status service
 			_statusService = new StatusTaskService(_context);
 
+			// Initialize the AppTaskService
 			_appTaskService = new AppTaskService(
 				_taskRepository,
 				_statusService,
 				_context
 			);
+
+			// Seed default statuses if not already present
+			if (!_context.Statuses.Any())
+			{
+				_context.Statuses.AddRange(
+					new Status { Id = 1, Name = "Pending" },
+					new Status { Id = 2, Name = "In Progress" },
+					new Status { Id = 3, Name = "Completed" },
+					new Status { Id = 4, Name = "Canceled" }
+				);
+
+				_context.SaveChanges();
+			}
 		}
 
-
-		//CREATE ASYNC
+		// -------------------------
+		// CREATE ASYNC TESTS
+		// -------------------------
 
 		[Fact]
 		public async Task CreateAsync_ShouldAddTaskToDatabase_WhenValidInput()
 		{
-			// Arrange
+			// Arrange: Prepare a valid task creation model
 			var model = new AppTaskCreateViewModel
 			{
 				Title = "Test Task",
@@ -54,18 +73,18 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 			var userId = Guid.NewGuid().ToString();
 
-			// Act
+			// Act: Attempt to create the task
 			await _appTaskService.CreateAsync(model, userId);
 
-			// Assert
+			// Assert: Verify task was added
 			var taskCount = await _context.AppTasks.CountAsync();
 			Assert.Equal(1, taskCount);
 		}
 
 		[Fact]
 		public async Task CreateAsync_ShouldNotAdd_WhenStatusIdIsInvalid()
-		{	
-			//Arrange
+		{
+			// Arrange: Prepare a model with an invalid status ID
 			var model = new AppTaskCreateViewModel
 			{
 				Title = "Bad Status Task",
@@ -76,15 +95,15 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 			string userId = Guid.NewGuid().ToString();
 
-			//Act + Assert
+			// Act & Assert: Expect an exception due to invalid status ID
 			await Assert.ThrowsAsync<InvalidOperationException>(() => _appTaskService.CreateAsync(model, userId));
 		}
 
 		[Fact]
 		public async Task CreateAsync_ShouldNotAdd_WhenTitleIsNullOrEmpty()
 		{
-			//Arrange
-			AppTaskCreateViewModel model = new AppTaskCreateViewModel
+			// Arrange: Prepare a model with an empty title
+			var model = new AppTaskCreateViewModel
 			{
 				Title = "",
 				Description = "Empty or null title",
@@ -94,14 +113,15 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 			string userId = Guid.NewGuid().ToString();
 
+			// Act & Assert: Expect an exception due to null or empty title
 			await Assert.ThrowsAsync<ArgumentNullException>(() => _appTaskService.CreateAsync(model, userId));
 		}
 
 		[Fact]
 		public async Task CreateAsync_ShouldNotAdd_WhenDescriptionIsNullOrEmpty()
 		{
-			//Arrange
-			AppTaskCreateViewModel model = new AppTaskCreateViewModel
+			// Arrange: Prepare a model with an empty description
+			var model = new AppTaskCreateViewModel
 			{
 				Title = "Bad description",
 				Description = "",
@@ -111,38 +131,88 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 			string userId = Guid.NewGuid().ToString();
 
-			//Act + Assert
+			// Act & Assert: Expect an exception due to null or empty description
 			await Assert.ThrowsAsync<ArgumentNullException>(() => _appTaskService.CreateAsync(model, userId));
 		}
 
-
-		//GET ALL ASYNC
+		// -------------------------
+		// GET ALL ASYNC TESTS
+		// -------------------------
 
 		[Fact]
 		public async Task GetAllTasksAsync_ShouldReturnTasksForUser()
 		{
-			//Arrange 
-
+			// Arrange: Add tasks for a specific user
 			var userId = Guid.NewGuid().ToString();
 			var userGuid = Guid.Parse(userId);
 			var isAdmin = false;
 
-			var tasks = new List<AppTask>() 
-			{
-				new AppTask { Id = Guid.NewGuid(), Title = "Task 1", Description = "Description 1",UserId = userId, Status = new Status { Name = "New" } },
-				new AppTask { Id = Guid.NewGuid(), Title = "Task 2", Description = "Description 2",UserId = userId, Status = new Status { Name = "In Progress" } }
-			};
+			var tasks = new List<AppTask>
+		{
+			new AppTask { Id = Guid.NewGuid(), Title = "Task 1", Description = "Description 1", UserId = userId, Status = new Status { Name = "New" } },
+			new AppTask { Id = Guid.NewGuid(), Title = "Task 2", Description = "Description 2", UserId = userId, Status = new Status { Name = "In Progress" } }
+		};
 
 			await _context.AddRangeAsync(tasks);
 			await _context.SaveChangesAsync();
 
-			//Act
+			// Act: Fetch tasks for that user
 			var result = await _appTaskService.GetAllTasksAsync(userGuid, isAdmin);
 
-
-			//Assert
+			// Assert: Ensure both tasks are returned
 			Assert.Equal(2, result.Count());
 			Assert.Contains(result, t => t.Title == "Task 1");
+		}
+
+		[Fact]
+		public async Task GetAllTasksAsync_ShouldReturnAllTasksForAdmin()
+		{
+			// Arrange: Create tasks for two different users
+			var user1Id = Guid.NewGuid().ToString();
+			var user2Id = Guid.NewGuid().ToString();
+
+			var model1 = new AppTaskCreateViewModel
+			{
+				Title = "Task 1",
+				Description = "Test description 1",
+				DueDate = DateTime.Now.AddDays(1),
+				StatusId = 1
+			};
+
+			await _appTaskService.CreateAsync(model1, user1Id);
+
+			var model2 = new AppTaskCreateViewModel
+			{
+				Title = "Task 2",
+				Description = "Test description 2",
+				DueDate = DateTime.Now.AddDays(1),
+				StatusId = 1
+			};
+
+			await _appTaskService.CreateAsync(model2, user2Id);
+			await _context.SaveChangesAsync();
+
+			var userGuid = Guid.Parse(user1Id);
+			var isAdmin = true;
+
+			// Act: Admin fetches all tasks
+			var result = await _appTaskService.GetAllTasksAsync(userGuid, isAdmin);
+
+			// Assert: Ensure both tasks are visible to the admin
+			Assert.Equal(2, result.Count());
+		}
+
+		// -------------------------
+		// Cleanup
+		// -------------------------
+
+		public void Dispose()
+		{
+			// Delete the in-memory database
+			_context.Database.EnsureDeleted();
+
+			// Release database resources
+			_context.Dispose();
 		}
 	}
 }
