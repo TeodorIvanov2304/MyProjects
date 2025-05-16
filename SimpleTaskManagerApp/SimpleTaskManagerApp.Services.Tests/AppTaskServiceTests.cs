@@ -80,7 +80,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 		public async Task CreateAsync_ShouldNotAdd_WhenTitleIsNullOrEmpty()
 		{
 			//Arrange
-			var model = new AppTaskCreateViewModel
+			AppTaskCreateViewModel model = new AppTaskCreateViewModel
 			{
 				Title = "",
 				Description = "Empty or null title",
@@ -90,6 +90,24 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 			string userId = Guid.NewGuid().ToString();
 
+			await Assert.ThrowsAsync<ArgumentNullException>(() => _appTaskService.CreateAsync(model, userId));
+		}
+
+		[Fact]
+		public async Task CreateAsync_ShouldNotAdd_WhenDescriptionIsNullOrEmpty()
+		{
+			//Arrange
+			AppTaskCreateViewModel model = new AppTaskCreateViewModel
+			{
+				Title = "Bad description",
+				Description = "",
+				DueDate = DateTime.Now.AddDays(1),
+				StatusId = 1
+			};
+
+			string userId = Guid.NewGuid().ToString();
+
+			//Act + Assert
 			await Assert.ThrowsAsync<ArgumentNullException>(() => _appTaskService.CreateAsync(model, userId));
 		}
 	}
