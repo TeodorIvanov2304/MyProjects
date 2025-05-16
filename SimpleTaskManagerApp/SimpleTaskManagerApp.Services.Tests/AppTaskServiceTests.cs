@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using NuGet.DependencyResolver;
 using SimpleTaskManagerApp.Data;
 using SimpleTaskManagerApp.Data.Data.Repositories;
 using SimpleTaskManagerApp.Data.Data.Repositories.Interfaces;
@@ -35,6 +36,9 @@ namespace SimpleTaskManagerApp.Services.Tests
 				_context
 			);
 		}
+
+
+		//CREATE ASYNC
 
 		[Fact]
 		public async Task CreateAsync_ShouldAddTaskToDatabase_WhenValidInput()
@@ -109,6 +113,36 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 			//Act + Assert
 			await Assert.ThrowsAsync<ArgumentNullException>(() => _appTaskService.CreateAsync(model, userId));
+		}
+
+
+		//GET ALL ASYNC
+
+		[Fact]
+		public async Task GetAllTasksAsync_ShouldReturnTasksForUser()
+		{
+			//Arrange 
+
+			var userId = Guid.NewGuid().ToString();
+			var userGuid = Guid.Parse(userId);
+			var isAdmin = false;
+
+			var tasks = new List<AppTask>() 
+			{
+				new AppTask { Id = Guid.NewGuid(), Title = "Task 1", Description = "Description 1",UserId = userId, Status = new Status { Name = "New" } },
+				new AppTask { Id = Guid.NewGuid(), Title = "Task 2", Description = "Description 2",UserId = userId, Status = new Status { Name = "In Progress" } }
+			};
+
+			await _context.AddRangeAsync(tasks);
+			await _context.SaveChangesAsync();
+
+			//Act
+			var result = await _appTaskService.GetAllTasksAsync(userGuid, isAdmin);
+
+
+			//Assert
+			Assert.Equal(2, result.Count());
+			Assert.Contains(result, t => t.Title == "Task 1");
 		}
 	}
 }
