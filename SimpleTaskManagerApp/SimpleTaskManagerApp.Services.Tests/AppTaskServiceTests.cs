@@ -261,6 +261,46 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Assert.Empty(result);
 		}
 
+		[Fact]
+		public async Task GetAllTasksAsync_ShouldReturnResults_WhenUserIsNotCreatorButIsAdmin()
+		{
+			// Arrange: Create two tasks with different non-admin user ID-s
+			var model = new AppTaskCreateViewModel
+			{
+				Title = "Task 1",
+				Description = "Test description 1",
+				DueDate = DateTime.Now.AddDays(1),
+				StatusId = 1
+			};
+
+			var modelUserId = Guid.NewGuid().ToString();
+			await _appTaskService.CreateAsync(model, modelUserId);
+
+			var anotherModel = new AppTaskCreateViewModel
+			{
+				Title = "Task 2",
+				Description = "Test description 2",
+				DueDate = DateTime.Now.AddDays(1),
+				StatusId = 1
+			};
+
+			var anotherModelUserId = Guid.NewGuid().ToString();
+			await _appTaskService.CreateAsync(anotherModel, anotherModelUserId);
+
+			// Arrange: Create an admin user who is not the creator of either task
+			var adminUserId = Guid.NewGuid().ToString();
+			var adminGuid = Guid.Parse(adminUserId);
+			var isAdmin = true;
+
+			// Act: Fetch all tasks as the admin user
+			var result = await _appTaskService.GetAllTasksAsync(adminGuid, isAdmin);
+
+			// Assert: Ensure both tasks are returned for the admin
+			Assert.Equal(2, result.Count());
+			Assert.Contains(result, t => t.Title == "Task 1");
+			Assert.Contains(result, t => t.Title == "Task 2");
+		}
+
 		// -------------------------
 		// Cleanup
 		// -------------------------
