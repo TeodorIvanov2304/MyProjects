@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.SqlServer.Server;
 using Moq;
 using NuGet.DependencyResolver;
 using SimpleTaskManagerApp.Data;
@@ -192,8 +193,8 @@ namespace SimpleTaskManagerApp.Services.Tests
 			await _appTaskService.CreateAsync(model2, user2Id);
 			await _context.SaveChangesAsync();
 
-			var userGuid = Guid.Parse(user1Id);
-			var isAdmin = true;
+			Guid userGuid = Guid.Parse(user1Id);
+			bool isAdmin = true;
 
 			// Act: Admin fetches all tasks
 			var result = await _appTaskService.GetAllTasksAsync(userGuid, isAdmin);
@@ -201,6 +202,23 @@ namespace SimpleTaskManagerApp.Services.Tests
 			// Assert: Ensure both tasks are visible to the admin
 			Assert.Equal(2, result.Count());
 		}
+
+		[Fact]
+		public async Task GetAllTasksAsync_IfUserHasNoTasksShouldReturnEmptyList()
+		{	
+			//Assert: Create user Guid
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+			bool isAdmin = false;
+
+			//Act: fetch all user tasks
+			var result = await _appTaskService.GetAllTasksAsync(userGuid,isAdmin);
+
+			//Assert: Ensure the result is empty, because user has no tasks
+			Assert.Empty(result);
+
+		}
+
 
 		// -------------------------
 		// Cleanup
