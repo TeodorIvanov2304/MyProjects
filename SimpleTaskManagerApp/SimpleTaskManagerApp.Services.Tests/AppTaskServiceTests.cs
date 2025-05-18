@@ -205,14 +205,14 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 		[Fact]
 		public async Task GetAllTasksAsync_IfUserHasNoTasksShouldReturnEmptyList()
-		{	
+		{
 			//Assert: Create user Guid
 			string userId = Guid.NewGuid().ToString();
 			Guid userGuid = Guid.Parse(userId);
 			bool isAdmin = false;
 
 			//Act: fetch all user tasks
-			var result = await _appTaskService.GetAllTasksAsync(userGuid,isAdmin);
+			var result = await _appTaskService.GetAllTasksAsync(userGuid, isAdmin);
 
 			//Assert: Ensure the result is empty, because user has no tasks
 			Assert.Empty(result);
@@ -234,16 +234,43 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Assert.Empty(result);
 		}
 
+		[Fact]
+		public async Task GetAllTasksAsync_ShouldReturnEmptyList_WhenUserIsNotAdminAndOwnsNoTasks()
+		{	
+			//Arrange: Create new model and user, and another user
+			var model = new AppTaskCreateViewModel
+			{
+				Title = "Task 1",
+				Description = "Test description 1",
+				DueDate = DateTime.Now.AddDays(1),
+				StatusId = 1
+			};
+
+			string ownerUserId = Guid.NewGuid().ToString();
+			await _appTaskService.CreateAsync(model, ownerUserId);
+			
+			//Create second user, who has no tasks and is not admin
+			string anotherUserId = Guid.NewGuid().ToString();
+			Guid anotherUserGuid = Guid.Parse(anotherUserId);
+			bool isAdmin = false;
+
+			//Act: fetch all tasks of the second user
+			var result = await _appTaskService.GetAllTasksAsync(anotherUserGuid, isAdmin);
+
+			//Assert: Ensure that task list is empty
+			Assert.Empty(result);
+		}
+
 		// -------------------------
 		// Cleanup
 		// -------------------------
 
 		public void Dispose()
 		{
-			// Delete the in-memory database
+			// Delete the in-memory database after every test
 			_context.Database.EnsureDeleted();
 
-			// Release database resources
+			// Release database resources after every test
 			_context.Dispose();
 		}
 	}
