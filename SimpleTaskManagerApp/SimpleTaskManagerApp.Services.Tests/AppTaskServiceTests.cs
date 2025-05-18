@@ -219,6 +219,20 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 		}
 
+		[Fact]
+		public async Task GetAllTasksAsync_AdminWithNoTasksInSystem_ShouldReturnEmptyList()
+		{
+			// Arrange: New user GUID (without tasks in the system)
+			string adminUserId = Guid.NewGuid().ToString();
+			Guid adminUserGuid = Guid.Parse(adminUserId);
+			bool isAdmin = true;
+
+			// Act: fetch all tasks as admin
+			var result = await _appTaskService.GetAllTasksAsync(adminUserGuid, isAdmin);
+
+			// Assert: Ensure the result is empty
+			Assert.Empty(result);
+		}
 
 		// -------------------------
 		// Cleanup
