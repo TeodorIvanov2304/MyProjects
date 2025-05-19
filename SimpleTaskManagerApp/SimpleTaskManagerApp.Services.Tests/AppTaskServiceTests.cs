@@ -419,8 +419,43 @@ namespace SimpleTaskManagerApp.Services.Tests
 		[Fact]
 		public async Task GetDetailsViewModel_ShouldReturnNull_WhenUserIsNotOwnerAndNotAdmin()
 		{
+			//Arrange 
+			string userId = Guid.NewGuid().ToString();
+			Guid anotherUserGuid = Guid.NewGuid();
+			DateTime createdAt = DateTime.UtcNow;
+			bool isAdmin = false;
 
+			// Add a user so we can test username generation
+			AppTask task = new AppTask()
+			{
+				Id = Guid.NewGuid(),
+				Title = "Private Task",
+				Description = "Private Task Description",
+				CreatedAt = createdAt,
+				DueDate = createdAt.AddDays(1),
+				UserId = userId,
+				StatusId = 1,
+				Status = await _context.Statuses.FirstAsync(s => s.Id == 1),
+				User = new ApplicationUser
+				{
+					Id = userId,
+					FirstName = "Peter",
+					LastName = "Petersen"
+				}
+			};
+
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			//Act 
+			var result = await _appTaskService.GetDetailsViewModelAsync(task.Id, anotherUserGuid, isAdmin);
+
+			//Assert
+			Assert.Null(result);
 		}
+
+		
+
 
 		// -------------------------
 		// Cleanup
