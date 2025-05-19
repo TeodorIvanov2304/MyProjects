@@ -809,6 +809,43 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Assert.False(result);
 		}
 
+		[Fact]
+		public async Task PostDeleteViewModelAsync_ShouldReturnFalse_WhenUserIdIsEmpty()
+		{
+			// Arrange: Create a task owned by a user
+			string userId = Guid.NewGuid().ToString();
+			bool isAdmin = false;
+
+			AppTask task = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "Restricted Task",
+				Description = "Should not be deleted by other users",
+				UserId = userId,
+				IsDeleted = false,
+				StatusId = 1,
+				Status = await _context.Statuses.FirstAsync(s => s.Id == 1),
+				User = new ApplicationUser
+				{
+					Id = userId,
+					FirstName = "Peter",
+					LastName = "Pederson"
+				}
+			};
+
+			// Save the task to the in-memory database
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			// Act: try to delete the task with empty user Guid
+			bool result = await _appTaskService.PostDeleteViewModelAsync(task.Id, Guid.Empty, isAdmin);
+
+			//Assert: Ensure that the service returns false result
+			Assert.False(result);
+		}
+
+
+
 		// -------------------------
 		// Cleanup
 		// -------------------------
@@ -821,5 +858,8 @@ namespace SimpleTaskManagerApp.Services.Tests
 			// Release database resources after every test
 			_context.Dispose();
 		}
+
+
+
 	}
 }
