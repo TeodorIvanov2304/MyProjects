@@ -794,6 +794,20 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 		}
 
+		[Fact]
+		public async Task PostDeleteViewModelAsync_ShouldReturnFalse_WhenTaskIdIsEmpty()
+		{
+			// Arrange: create new user
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+			bool isAdmin = true;
+
+			// Act: Try deleting task with empty task.Id
+			bool result = await _appTaskService.PostDeleteViewModelAsync(Guid.Empty, userGuid, isAdmin);
+
+			// Assert: Ensure that result is false
+			Assert.False(result);
+		}
 
 		// -------------------------
 		// Cleanup
