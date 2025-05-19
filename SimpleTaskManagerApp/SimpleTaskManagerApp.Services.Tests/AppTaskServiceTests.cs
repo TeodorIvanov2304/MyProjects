@@ -754,6 +754,46 @@ namespace SimpleTaskManagerApp.Services.Tests
 		}
 
 		[Fact]
+		public async Task PostDeleteViewModelAsync_ShouldReturnFalse_WhenAdminTriesToDeleteAlreadyDeletedTask()
+		{
+			// Arrange: Create a user and a task that is already marked as deleted
+			string adminId = Guid.NewGuid().ToString();
+			Guid adminGuid = Guid.Parse(adminId);
+			bool isAdmin = true;
+
+			AppTask task = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "Already deleted Task",
+				Description = "Should not be affected",
+				UserId = adminId,
+				IsDeleted = true,
+				StatusId = 1,
+				Status = await _context.Statuses.FirstAsync(s => s.Id == 1),
+				User = new ApplicationUser
+				{
+					Id = adminId,
+					FirstName = "Peter",
+					LastName = "Pederson"
+				}
+			};
+
+			// Save the task to the in-memory database
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			// Act: Attempt to delete an already deleted task with admin
+			bool result = await _appTaskService.PostDeleteViewModelAsync(task.Id, adminGuid, isAdmin);
+
+			// Assert: Should return false
+			Assert.False(result);
+
+			// Assert: Ensure the task is still marked as deleted
+			AppTask? taskFromDb = await _context.AppTasks.FindAsync(task.Id);
+			Assert.True(taskFromDb?.IsDeleted);
+		}
+
+		[Fact]
 		public async Task PostDeleteViewModelAsync_ShouldReturnFalse_WhenUserIsNotOwnerOrAdmin()
 		{
 			// Arrange: Create a task owned by a different user
