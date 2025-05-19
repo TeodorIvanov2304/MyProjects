@@ -668,6 +668,50 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Assert.False(existingTask.IsDeleted);
 		}
 
+		[Fact]
+		public async Task PostDeleteViewModelAsync_ShouldReturnFalse_WhenTaskDoesNotExist_AndUserIsAdmin()
+		{
+			// Arrange: Create a valid admin user
+			string adminUserId = Guid.NewGuid().ToString();
+			Guid adminGuid = Guid.Parse(adminUserId);
+			bool isAdmin = true;
+
+			// Create and save a valid task with a different user
+			string ownerUserId = Guid.NewGuid().ToString();
+			var task = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "Existing Task",
+				Description = "Should not be affected",
+				UserId = ownerUserId,
+				IsDeleted = false,
+				StatusId = 1,
+				Status = await _context.Statuses.FirstAsync(s => s.Id == 1),
+				User = new ApplicationUser
+				{
+					Id = ownerUserId,
+					FirstName = "John",
+					LastName = "Doe"
+				}
+			};
+
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			// Generate a non-existing task ID
+			Guid nonExistingTaskId = Guid.NewGuid();
+
+			// Act: Try to delete a task that doesn't exist
+			bool result = await _appTaskService.PostDeleteViewModelAsync(nonExistingTaskId, adminGuid, isAdmin);
+
+			// Assert: Should return false, since task doesn't exist
+			Assert.False(result);
+
+			// Assert: The existing task should remain unaffected
+			AppTask existingTask = await _context.AppTasks.FirstAsync(t => t.Id == task.Id);
+			Assert.False(existingTask.IsDeleted);
+		}
+
 
 		// -------------------------
 		// Cleanup
