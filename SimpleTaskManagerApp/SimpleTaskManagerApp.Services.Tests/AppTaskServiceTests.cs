@@ -498,6 +498,46 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Assert.Equal("Peter Petersen", result.Username);
 		}
 
+		[Fact]
+		public async Task GetDetailsViewModelAsync_ShouldReturnNull_WhenTaskIsDeleted()
+		{
+			// Arrange: Create a user and a soft-deleted task assigned to them
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+			DateTime createdAt = DateTime.UtcNow;
+			bool isAdmin = false;
+
+			var task = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "Deleted Task",
+				Description = "Deleted Task Description",
+				CreatedAt = createdAt,
+				DueDate = createdAt.AddDays(1),
+				UserId = userId,
+				IsDeleted = true, // Soft delete
+				StatusId = 1,
+				Status = await _context.Statuses.FirstAsync(s => s.Id == 1),
+				User = new ApplicationUser
+				{
+					Id = userId,
+					FirstName = "Peter",
+					LastName = "Petersen"
+				}
+			};
+
+			// Save the task to the in-memory database
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			// Act: Try to fetch the details as a regular user
+			var result = await _appTaskService.GetDetailsViewModelAsync(task.Id, userGuid, isAdmin);
+
+			// Assert: The task should not be returned because it is marked as deleted
+			Assert.Null(result);
+
+		}
+
 
 		// -------------------------
 		// Cleanup
