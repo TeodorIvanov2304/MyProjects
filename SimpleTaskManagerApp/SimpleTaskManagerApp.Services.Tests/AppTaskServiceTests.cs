@@ -391,13 +391,13 @@ namespace SimpleTaskManagerApp.Services.Tests
 				DueDate = createdAt.AddDays(1),
 				UserId = userId,
 				StatusId = 1,
-				Status = await _context.Statuses.FirstAsync(s => s.Id == 1), 
+				Status = await _context.Statuses.FirstAsync(s => s.Id == 1),
 				User = new ApplicationUser
 				{
 					Id = userId,
 					FirstName = "Peter",
 					LastName = "Petersen"
-				} 
+				}
 			};
 
 			await _context.AppTasks.AddAsync(task);
@@ -408,13 +408,13 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 			// Assert: Ensure the result contains the correct data from the task
 			Assert.NotNull(result);
-			Assert.IsType<DetailsAppTaskViewModel>(result); 
-			Assert.Equal("Peter Petersen", result.Username); 
+			Assert.IsType<DetailsAppTaskViewModel>(result);
+			Assert.Equal("Peter Petersen", result.Username);
 			Assert.Equal("Task Title", result.Title);
 			Assert.Equal("Task Description", result.Description);
 			Assert.Equal(createdAt, result.CreatedAt);
 			Assert.Equal(createdAt.AddDays(1), result.DueDate);
-			Assert.Equal("Pending", result.StatusName); 
+			Assert.Equal("Pending", result.StatusName);
 		}
 
 		[Fact]
@@ -494,7 +494,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Assert.NotNull(result);
 			Assert.Equal("Admin Task", result.Title);
 			Assert.Equal("Admin Task Description", result.Description);
-			Assert.Equal("Pending", result.StatusName); 
+			Assert.Equal("Pending", result.StatusName);
 			Assert.Equal("Peter Petersen", result.Username);
 		}
 
@@ -542,6 +542,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 		// -------------------------
 		// POST DELETE VIEW MODEL ASYNC TESTS
 		// ----
+
 		[Fact]
 		public async Task PostDeleteViewModelAsync_ShouldReturnTrue_WhenUserIsOwner()
 		{
@@ -581,6 +582,92 @@ namespace SimpleTaskManagerApp.Services.Tests
 			AppTask taskToDelete = await _context.AppTasks.FirstAsync(t => t.Id == task.Id);
 			Assert.True(taskToDelete.IsDeleted);
 		}
+
+		[Fact]
+		public async Task PostDeleteViewModelAsync_ShouldReturnTrue_WhenUserIsAdmin()
+		{
+			// Arrange: Create a user and a task assigned to him, create Admin user
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+
+			Guid adminGuid = Guid.NewGuid();
+			bool isAdmin = true;
+
+			var task = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "Admin Task delete",
+				Description = "To be deleted by Admin",
+				UserId = userId,
+				IsDeleted = false,
+				StatusId = 1,
+				Status = await _context.Statuses.FirstAsync(s => s.Id == 1),
+				User = new ApplicationUser
+				{
+					Id = userId,
+					FirstName = "Peter",
+					LastName = "Petersen"
+				}
+			};
+
+			// Save task to the in-memory database
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			// Act: Attempt to delete the task as Admin
+			bool result = await _appTaskService.PostDeleteViewModelAsync(task.Id, adminGuid, isAdmin);
+
+			// Assert: The deletion should be successful
+			Assert.True(result);
+
+			// Assert: Task should be marked as deleted in the database (soft delete)
+			AppTask taskToDelete = await _context.AppTasks.FirstAsync(t => t.Id == task.Id);
+			Assert.True(taskToDelete.IsDeleted);
+		}
+
+		[Fact]
+		public async Task PostDeleteViewModelAsync_ShouldReturnFalse_WhenTaskIsNotExisting()
+		{
+			// Arrange: Create a valid user and a task assigned to them
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+			bool isAdmin = false;
+
+			var task = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "Task to not delete",
+				Description = "Not to be deleted",
+				UserId = userId,
+				IsDeleted = false,
+				StatusId = 1,
+				Status = await _context.Statuses.FirstAsync(s => s.Id == 1),
+				User = new ApplicationUser
+				{
+					Id = userId,
+					FirstName = "Peter",
+					LastName = "Petersen"
+				}
+			};
+
+			// Save the task to the in-memory database
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			// Use a different (non-existent) task ID
+			Guid nonExistingTaskId = Guid.NewGuid();
+
+			// Act: Attempt to delete a task that doesn't exist
+			bool result = await _appTaskService.PostDeleteViewModelAsync(nonExistingTaskId, userGuid, isAdmin);
+
+			// Assert: Method should return false since task doesn't exist
+			Assert.False(result);
+
+			// Assert: The existing task should not be marked as deleted
+			AppTask existingTask = await _context.AppTasks.FirstAsync(t => t.Id == task.Id);
+			Assert.False(existingTask.IsDeleted);
+		}
+
 
 		// -------------------------
 		// Cleanup
