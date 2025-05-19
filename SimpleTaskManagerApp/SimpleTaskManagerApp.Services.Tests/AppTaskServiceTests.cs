@@ -551,7 +551,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Guid userGuid = Guid.Parse(userId);
 			bool isAdmin = false;
 
-			var task = new AppTask
+			AppTask task = new AppTask
 			{
 				Id = Guid.NewGuid(),
 				Title = "Task to delete",
@@ -593,7 +593,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Guid adminGuid = Guid.NewGuid();
 			bool isAdmin = true;
 
-			var task = new AppTask
+			AppTask task = new AppTask
 			{
 				Id = Guid.NewGuid(),
 				Title = "Admin Task delete",
@@ -633,7 +633,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Guid userGuid = Guid.Parse(userId);
 			bool isAdmin = false;
 
-			var task = new AppTask
+			AppTask task = new AppTask
 			{
 				Id = Guid.NewGuid(),
 				Title = "Task to not delete",
@@ -678,23 +678,24 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 			// Create and save a valid task with a different user
 			string ownerUserId = Guid.NewGuid().ToString();
-			var task = new AppTask
+			AppTask task = new AppTask
 			{
 				Id = Guid.NewGuid(),
 				Title = "Existing Task",
 				Description = "Should not be affected",
-				UserId = ownerUserId,
+				UserId = adminUserId,
 				IsDeleted = false,
 				StatusId = 1,
 				Status = await _context.Statuses.FirstAsync(s => s.Id == 1),
 				User = new ApplicationUser
 				{
-					Id = ownerUserId,
+					Id = adminUserId,
 					FirstName = "John",
 					LastName = "Doe"
 				}
 			};
 
+			// Save the task to the in-memory database
 			await _context.AppTasks.AddAsync(task);
 			await _context.SaveChangesAsync();
 
@@ -712,6 +713,45 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Assert.False(existingTask.IsDeleted);
 		}
 
+		[Fact]
+		public async Task PostDeleteViewModelAsync_ShouldReturnFalse_WhenTaskIsDeleted()
+		{
+			// Arrange: Create a user and a task that is already marked as deleted
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+			bool isAdmin = false;
+
+			AppTask task = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "Already deleted Task",
+				Description = "Should not be affected",
+				UserId = userId,
+				IsDeleted = true, // <- already deleted
+				StatusId = 1,
+				Status = await _context.Statuses.FirstAsync(s => s.Id == 1),
+				User = new ApplicationUser
+				{
+					Id = userId,
+					FirstName = "Peter",
+					LastName = "Pederson"
+				}
+			};
+
+			// Save the task to the in-memory database
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			// Act: Attempt to delete an already deleted task
+			bool result = await _appTaskService.PostDeleteViewModelAsync(task.Id, userGuid, isAdmin);
+
+			// Assert: Should return false
+			Assert.False(result);
+
+			// Assert: Ensure the task is still marked as deleted
+			AppTask? taskFromDb = await _context.AppTasks.FindAsync(task.Id);
+			Assert.True(taskFromDb?.IsDeleted);
+		}
 
 		// -------------------------
 		// Cleanup
