@@ -301,6 +301,31 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Assert.Contains(result, t => t.Title == "Task 2");
 		}
 
+		[Fact]
+		public async Task GetAllTasksAsync_ShouldReturnEmpty_WhenUserGuidIsEmptyAndNotAdmin()
+		{
+			// Arrange: Create a valid task with a real user
+			var userId = Guid.NewGuid().ToString();
+
+			var model = new AppTaskCreateViewModel()
+			{
+				Title = "Valid Task",
+				Description = "Test Description",
+				DueDate = DateTime.Now.AddDays(1),
+				StatusId = 1
+			};
+
+			await _appTaskService.CreateAsync(model,userId);
+
+			// Act: Attempt to retrieve tasks with Guid.Empty as user ID and not admin
+			var result = await _appTaskService.GetAllTasksAsync(Guid.Empty, isAdmin: false);
+
+			// Assert: No tasks should be returned for invalid user
+			Assert.Empty(result);
+		}
+
+		
+
 		// -------------------------
 		// Cleanup
 		// -------------------------
