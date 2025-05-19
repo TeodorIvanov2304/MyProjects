@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
 using Moq;
@@ -454,7 +455,48 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Assert.Null(result);
 		}
 
-		
+		[Fact]
+		public async Task GetDetailsViewModelAsync_ShouldReturnDetails_WhenUserIsAdmin()
+		{
+			// Arrange: Create a regular user and an admin user
+			string userId = Guid.NewGuid().ToString();
+			Guid adminGuid = Guid.NewGuid();
+			DateTime createdAt = DateTime.UtcNow;
+			bool isAdmin = true;
+
+			// Create a task assigned to the regular user
+			AppTask task = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "Admin Task",
+				Description = "Admin Task Description",
+				CreatedAt = createdAt,
+				DueDate = createdAt.AddDays(1),
+				UserId = userId,
+				StatusId = 1,
+				Status = await _context.Statuses.FirstAsync(s => s.Id == 1),
+				User = new ApplicationUser
+				{
+					Id = userId,
+					FirstName = "Peter",
+					LastName = "Petersen"
+				}
+			};
+
+			// Save the task to the in-memory database
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			// Act: Fetch task details as admin
+			var result = await _appTaskService.GetDetailsViewModelAsync(task.Id, adminGuid, isAdmin);
+
+			// Assert: Ensure the result is correct and accessible by admin
+			Assert.NotNull(result);
+			Assert.Equal("Admin Task", result.Title);
+			Assert.Equal("Admin Task Description", result.Description);
+			Assert.Equal("Pending", result.StatusName); 
+			Assert.Equal("Peter Petersen", result.Username);
+		}
 
 
 		// -------------------------
