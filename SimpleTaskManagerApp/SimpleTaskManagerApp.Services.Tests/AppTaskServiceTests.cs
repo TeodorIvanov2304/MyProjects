@@ -753,6 +753,48 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Assert.True(taskFromDb?.IsDeleted);
 		}
 
+		[Fact]
+		public async Task PostDeleteViewModelAsync_ShouldReturnFalse_WhenUserIsNotOwnerOrAdmin()
+		{
+			// Arrange: Create a task owned by a different user
+			string ownerUserId = Guid.NewGuid().ToString();
+			Guid nonOwnerGuid = Guid.NewGuid(); // another user
+			bool isAdmin = false;
+
+			AppTask task = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "Restricted Task",
+				Description = "Should not be deleted by other users",
+				UserId = ownerUserId,
+				IsDeleted = false, // Task is not deleted yet
+				StatusId = 1,
+				Status = await _context.Statuses.FirstAsync(s => s.Id == 1),
+				User = new ApplicationUser
+				{
+					Id = ownerUserId,
+					FirstName = "Peter",
+					LastName = "Pederson"
+				}
+			};
+
+			// Save the task to the in-memory database
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			// Act: Try to delete the task with a user who is neither the owner nor an admin
+			bool result = await _appTaskService.PostDeleteViewModelAsync(task.Id, nonOwnerGuid, isAdmin);
+
+			// Assert: Should return false
+			Assert.False(result);
+
+			// Assert: Task should still not be marked as deleted
+			AppTask? taskFromDb = await _context.AppTasks.FindAsync(task.Id);
+			Assert.False(taskFromDb?.IsDeleted);
+
+		}
+
+
 		// -------------------------
 		// Cleanup
 		// -------------------------
