@@ -64,7 +64,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 		public async Task CreateAsync_ShouldAddTaskToDatabase_WhenValidInput()
 		{
 			// Arrange: Prepare a valid task creation model
-			var model = new AppTaskCreateViewModel
+			AppTaskCreateViewModel model = new AppTaskCreateViewModel
 			{
 				Title = "Test Task",
 				Description = "Test Description",
@@ -72,13 +72,13 @@ namespace SimpleTaskManagerApp.Services.Tests
 				StatusId = 1
 			};
 
-			var userId = Guid.NewGuid().ToString();
+			string userId = Guid.NewGuid().ToString();
 
 			// Act: Attempt to create the task
 			await _appTaskService.CreateAsync(model, userId);
 
 			// Assert: Verify task was added
-			var taskCount = await _context.AppTasks.CountAsync();
+			int taskCount = await _context.AppTasks.CountAsync();
 			Assert.Equal(1, taskCount);
 		}
 
@@ -86,7 +86,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 		public async Task CreateAsync_ShouldNotAdd_WhenStatusIdIsInvalid()
 		{
 			// Arrange: Prepare a model with an invalid status ID
-			var model = new AppTaskCreateViewModel
+			AppTaskCreateViewModel model = new AppTaskCreateViewModel
 			{
 				Title = "Bad Status Task",
 				Description = "Invalid Status",
@@ -104,7 +104,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 		public async Task CreateAsync_ShouldNotAdd_WhenTitleIsNullOrEmpty()
 		{
 			// Arrange: Prepare a model with an empty title
-			var model = new AppTaskCreateViewModel
+			AppTaskCreateViewModel model = new AppTaskCreateViewModel
 			{
 				Title = "",
 				Description = "Empty or null title",
@@ -122,7 +122,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 		public async Task CreateAsync_ShouldNotAdd_WhenDescriptionIsNullOrEmpty()
 		{
 			// Arrange: Prepare a model with an empty description
-			var model = new AppTaskCreateViewModel
+			AppTaskCreateViewModel model = new AppTaskCreateViewModel
 			{
 				Title = "Bad description",
 				Description = "",
@@ -144,11 +144,11 @@ namespace SimpleTaskManagerApp.Services.Tests
 		public async Task GetAllTasksAsync_ShouldReturnTasksForUser()
 		{
 			// Arrange: Add tasks for a specific user
-			var userId = Guid.NewGuid().ToString();
-			var userGuid = Guid.Parse(userId);
-			var isAdmin = false;
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+			bool isAdmin = false;
 
-			var tasks = new List<AppTask>
+			List<AppTask> tasks = new List<AppTask>
 		{
 			new AppTask { Id = Guid.NewGuid(), Title = "Task 1", Description = "Description 1", UserId = userId, Status = new Status { Name = "New" } },
 			new AppTask { Id = Guid.NewGuid(), Title = "Task 2", Description = "Description 2", UserId = userId, Status = new Status { Name = "In Progress" } }
@@ -158,7 +158,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 			await _context.SaveChangesAsync();
 
 			// Act: Fetch tasks for that user
-			var result = await _appTaskService.GetAllTasksAsync(userGuid, isAdmin);
+			IEnumerable<AppTaskListViewModel> result = await _appTaskService.GetAllTasksAsync(userGuid, isAdmin);
 
 			// Assert: Ensure both tasks are returned
 			Assert.Equal(2, result.Count());
@@ -169,10 +169,10 @@ namespace SimpleTaskManagerApp.Services.Tests
 		public async Task GetAllTasksAsync_ShouldReturnAllTasksForAdmin()
 		{
 			// Arrange: Create tasks for two different users
-			var user1Id = Guid.NewGuid().ToString();
-			var user2Id = Guid.NewGuid().ToString();
+			string user1Id = Guid.NewGuid().ToString();
+			string user2Id = Guid.NewGuid().ToString();
 
-			var model1 = new AppTaskCreateViewModel
+			AppTaskCreateViewModel model1 = new AppTaskCreateViewModel
 			{
 				Title = "Task 1",
 				Description = "Test description 1",
@@ -197,7 +197,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 			bool isAdmin = true;
 
 			// Act: Admin fetches all tasks
-			var result = await _appTaskService.GetAllTasksAsync(userGuid, isAdmin);
+			IEnumerable<AppTaskListViewModel> result = await _appTaskService.GetAllTasksAsync(userGuid, isAdmin);
 
 			// Assert: Ensure both tasks are visible to the admin
 			Assert.Equal(2, result.Count());
@@ -212,7 +212,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 			bool isAdmin = false;
 
 			//Act: fetch all user tasks
-			var result = await _appTaskService.GetAllTasksAsync(userGuid, isAdmin);
+			IEnumerable<AppTaskListViewModel> result = await _appTaskService.GetAllTasksAsync(userGuid, isAdmin);
 
 			//Assert: Ensure the result is empty, because user has no tasks
 			Assert.Empty(result);
@@ -228,7 +228,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 			bool isAdmin = true;
 
 			// Act: fetch all tasks as admin
-			var result = await _appTaskService.GetAllTasksAsync(adminUserGuid, isAdmin);
+			IEnumerable<AppTaskListViewModel> result = await _appTaskService.GetAllTasksAsync(adminUserGuid, isAdmin);
 
 			// Assert: Ensure the result is empty
 			Assert.Empty(result);
@@ -236,9 +236,9 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 		[Fact]
 		public async Task GetAllTasksAsync_ShouldReturnEmptyList_WhenUserIsNotAdminAndOwnsNoTasks()
-		{	
+		{
 			//Arrange: Create new model and user, and another user
-			var model = new AppTaskCreateViewModel
+			AppTaskCreateViewModel model = new AppTaskCreateViewModel
 			{
 				Title = "Task 1",
 				Description = "Test description 1",
@@ -255,7 +255,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 			bool isAdmin = false;
 
 			//Act: fetch all tasks of the second user
-			var result = await _appTaskService.GetAllTasksAsync(anotherUserGuid, isAdmin);
+			IEnumerable<AppTaskListViewModel> result = await _appTaskService.GetAllTasksAsync(anotherUserGuid, isAdmin);
 
 			//Assert: Ensure that task list is empty
 			Assert.Empty(result);
@@ -265,7 +265,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 		public async Task GetAllTasksAsync_ShouldReturnResults_WhenUserIsNotCreatorButIsAdmin()
 		{
 			// Arrange: Create two tasks with different non-admin user ID-s
-			var model = new AppTaskCreateViewModel
+			AppTaskCreateViewModel model = new AppTaskCreateViewModel
 			{
 				Title = "Task 1",
 				Description = "Test description 1",
@@ -273,10 +273,10 @@ namespace SimpleTaskManagerApp.Services.Tests
 				StatusId = 1
 			};
 
-			var modelUserId = Guid.NewGuid().ToString();
+			string modelUserId = Guid.NewGuid().ToString();
 			await _appTaskService.CreateAsync(model, modelUserId);
 
-			var anotherModel = new AppTaskCreateViewModel
+			AppTaskCreateViewModel anotherModel = new AppTaskCreateViewModel
 			{
 				Title = "Task 2",
 				Description = "Test description 2",
@@ -284,16 +284,16 @@ namespace SimpleTaskManagerApp.Services.Tests
 				StatusId = 1
 			};
 
-			var anotherModelUserId = Guid.NewGuid().ToString();
+			string anotherModelUserId = Guid.NewGuid().ToString();
 			await _appTaskService.CreateAsync(anotherModel, anotherModelUserId);
 
 			// Arrange: Create an admin user who is not the creator of either task
-			var adminUserId = Guid.NewGuid().ToString();
-			var adminGuid = Guid.Parse(adminUserId);
-			var isAdmin = true;
+			string adminUserId = Guid.NewGuid().ToString();
+			Guid adminGuid = Guid.Parse(adminUserId);
+			bool isAdmin = true;
 
 			// Act: Fetch all tasks as the admin user
-			var result = await _appTaskService.GetAllTasksAsync(adminGuid, isAdmin);
+			IEnumerable<AppTaskListViewModel> result = await _appTaskService.GetAllTasksAsync(adminGuid, isAdmin);
 
 			// Assert: Ensure both tasks are returned for the admin
 			Assert.Equal(2, result.Count());
@@ -305,9 +305,9 @@ namespace SimpleTaskManagerApp.Services.Tests
 		public async Task GetAllTasksAsync_ShouldReturnEmpty_WhenUserGuidIsEmptyAndNotAdmin()
 		{
 			// Arrange: Create a valid task with a real user
-			var userId = Guid.NewGuid().ToString();
+			string userId = Guid.NewGuid().ToString();
 
-			var model = new AppTaskCreateViewModel()
+			AppTaskCreateViewModel model = new AppTaskCreateViewModel()
 			{
 				Title = "Valid Task",
 				Description = "Test Description",
@@ -324,7 +324,32 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Assert.Empty(result);
 		}
 
-		
+		[Fact]
+		public async Task GetAllTasksAsync_ShouldIncludeStatusNameInResult()
+		{
+			// Arrange: Create a task with known status
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+			bool isAdmin = false;
+
+			var model = new AppTaskCreateViewModel()
+			{
+				Title = "Status Test Task",
+				Description = "Checking status name in DTO",
+				DueDate = DateTime.Now.AddDays(1),
+				StatusId = 1 //"Pending"
+			};
+
+			await _appTaskService.CreateAsync(model, userId);
+
+			// Act: Retrieve tasks for that user
+			IEnumerable<AppTaskListViewModel> result = await _appTaskService.GetAllTasksAsync(userGuid, isAdmin);
+
+			// Assert: Ensure status name is included and correct
+			AppTaskListViewModel? task = result.FirstOrDefault();
+			Assert.NotNull(task);
+			Assert.Equal("Pending", task.StatusName);
+		}
 
 		// -------------------------
 		// Cleanup
