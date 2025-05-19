@@ -248,7 +248,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 			string ownerUserId = Guid.NewGuid().ToString();
 			await _appTaskService.CreateAsync(model, ownerUserId);
-			
+
 			//Create second user, who has no tasks and is not admin
 			string anotherUserId = Guid.NewGuid().ToString();
 			Guid anotherUserGuid = Guid.Parse(anotherUserId);
@@ -315,7 +315,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 				StatusId = 1
 			};
 
-			await _appTaskService.CreateAsync(model,userId);
+			await _appTaskService.CreateAsync(model, userId);
 
 			// Act: Attempt to retrieve tasks with Guid.Empty as user ID and not admin
 			var result = await _appTaskService.GetAllTasksAsync(Guid.Empty, isAdmin: false);
@@ -332,7 +332,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Guid userGuid = Guid.Parse(userId);
 			bool isAdmin = false;
 
-			var model = new AppTaskCreateViewModel()
+			AppTaskCreateViewModel model = new AppTaskCreateViewModel()
 			{
 				Title = "Status Test Task",
 				Description = "Checking status name in DTO",
@@ -349,6 +349,22 @@ namespace SimpleTaskManagerApp.Services.Tests
 			AppTaskListViewModel? task = result.FirstOrDefault();
 			Assert.NotNull(task);
 			Assert.Equal("Pending", task.StatusName);
+		}
+
+		// -------------------------
+		// GET CREATE VIEW MODEL ASYNC TESTS
+		// -------------------------
+
+		[Fact]
+		public async Task GetCreateViewModelAsync_ShouldReturnStatusesInViewModel()
+		{
+			//Act
+			var result = await _appTaskService.GetCreateViewModelAsync();
+
+			Assert.NotNull(result);
+			Assert.NotNull(result.Statuses);
+			Assert.True(result.Statuses.Any());
+			Assert.Contains(result.Statuses, s => s.Name == "Pending");
 		}
 
 		// -------------------------
