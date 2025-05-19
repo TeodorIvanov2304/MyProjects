@@ -540,6 +540,49 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 
 		// -------------------------
+		// POST DELETE VIEW MODEL ASYNC TESTS
+		// ----
+		[Fact]
+		public async Task PostDeleteViewModelAsync_ShouldReturnTrue_WhenUserIsOwner()
+		{
+			// Arrange: Create a user and a task assigned to them
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+			bool isAdmin = false;
+
+			var task = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "Task to delete",
+				Description = "To be deleted",
+				UserId = userId,
+				IsDeleted = false,
+				StatusId = 1,
+				Status = await _context.Statuses.FirstAsync(s => s.Id == 1),
+				User = new ApplicationUser
+				{
+					Id = userId,
+					FirstName = "Peter",
+					LastName = "Petersen"
+				}
+			};
+
+			// Save task to the in-memory database
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			// Act: Attempt to delete the task as the owner
+			bool result = await _appTaskService.PostDeleteViewModelAsync(task.Id, userGuid, isAdmin);
+
+			// Assert: The deletion should be successful
+			Assert.True(result);
+
+			// Assert: Task should be marked as deleted in the database (soft delete)
+			AppTask taskToDelete = await _context.AppTasks.FirstAsync(t => t.Id == task.Id);
+			Assert.True(taskToDelete.IsDeleted);
+		}
+
+		// -------------------------
 		// Cleanup
 		// -------------------------
 
