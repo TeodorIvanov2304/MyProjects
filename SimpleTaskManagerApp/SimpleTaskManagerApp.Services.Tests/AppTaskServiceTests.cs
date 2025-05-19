@@ -368,6 +368,61 @@ namespace SimpleTaskManagerApp.Services.Tests
 		}
 
 		// -------------------------
+		// GET DETAILS VIEW MODEL ASYNC TESTS
+		// ----
+
+		[Fact]
+		public async Task GetDetailsViewModelAsync_ShouldReturnDetails_WhenUserIsOwner()
+		{
+			// Arrange: Create a user and a task owned by that user
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+			DateTime createdAt = DateTime.UtcNow;
+			bool isAdmin = false;
+
+			// Add a user so we can test username generation
+			AppTask task = new AppTask()
+			{
+				Id = Guid.NewGuid(),
+				Title = "Task Title",
+				Description = "Task Description",
+				CreatedAt = createdAt,
+				DueDate = createdAt.AddDays(1),
+				UserId = userId,
+				StatusId = 1,
+				Status = await _context.Statuses.FirstAsync(s => s.Id == 1), 
+				User = new ApplicationUser
+				{
+					Id = userId,
+					FirstName = "Peter",
+					LastName = "Petersen"
+				} 
+			};
+
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			// Act: Call the service to get the task details for the user (who is not admin but is the owner)
+			var result = await _appTaskService.GetDetailsViewModelAsync(task.Id, userGuid, isAdmin);
+
+			// Assert: Ensure the result contains the correct data from the task
+			Assert.NotNull(result);
+			Assert.IsType<DetailsAppTaskViewModel>(result); 
+			Assert.Equal("Peter Petersen", result.Username); 
+			Assert.Equal("Task Title", result.Title);
+			Assert.Equal("Task Description", result.Description);
+			Assert.Equal(createdAt, result.CreatedAt);
+			Assert.Equal(createdAt.AddDays(1), result.DueDate);
+			Assert.Equal("Pending", result.StatusName); 
+		}
+
+		[Fact]
+		public async Task GetDetailsViewModel_ShouldReturnNull_WhenUserIsNotOwnerAndNotAdmin()
+		{
+
+		}
+
+		// -------------------------
 		// Cleanup
 		// -------------------------
 
