@@ -1,8 +1,4 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.SqlServer.Server;
-using Moq;
-using NuGet.DependencyResolver;
 using SimpleTaskManagerApp.Data;
 using SimpleTaskManagerApp.Data.Data.Repositories;
 using SimpleTaskManagerApp.Data.Data.Repositories.Interfaces;
@@ -10,7 +6,6 @@ using SimpleTaskManagerApp.Data.Models.Models;
 using SimpleTaskManagerApp.Services.Data;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.AppTask;
-using System.Threading.Tasks;
 
 namespace SimpleTaskManagerApp.Services.Tests
 {
