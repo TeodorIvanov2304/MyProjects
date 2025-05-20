@@ -5,7 +5,7 @@ using SimpleTaskManagerApp.Services.Data;
 
 namespace SimpleTaskManagerApp.Services.Tests
 {
-	public class StatusTaskServiceTests
+	public class StatusTaskServiceTests : IDisposable
 	{
 		private readonly TaskManagerDbContext _context;
 		private readonly StatusTaskService _statusService;
@@ -20,19 +20,31 @@ namespace SimpleTaskManagerApp.Services.Tests
 			_context = new TaskManagerDbContext(options);
 			_statusService = new StatusTaskService(_context);
 
-			// Seed statuses
-			if (!_context.Statuses.Any())
-			{
-				_context.Statuses.AddRange(
-					new Status { Id = 1, Name = "Pending" },
-					new Status { Id = 2, Name = "In Progress" },
-					new Status { Id = 3, Name = "Completed" }
-				);
-				_context.SaveChanges();
-			}
 		}
 
+		[Fact]
+		public async Task GetAllStatusesAsync_ShouldReturnAllStatuses()
+		{
+			// Arrange: Seed test statuses in the in-memory database
+			_context.Statuses.AddRange(
+					new Status { Id = 1, Name = "Pending" },
+					new Status { Id = 2, Name = "In Progress" },
+					new Status { Id = 3, Name = "Completed" },
+					new Status { Id = 4, Name = "Canceled" }
+				);
+			await _context.SaveChangesAsync();
 
+			//Act: Fetch all statuses from the service
+			var result = (await _statusService.GetAllStatusesAsync()).ToList();
+
+			// Assert: Verify that all expected statuses are returned
+
+			Assert.Equal(4, result.Count);
+			Assert.Contains(result, s => s.Name == "Pending");
+			Assert.Contains(result, s => s.Name == "In Progress");
+			Assert.Contains(result, s => s.Name == "Completed");
+			Assert.Contains(result, s => s.Name == "Canceled");
+		}
 
 
 		// -------------------------
