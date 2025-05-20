@@ -1080,6 +1080,54 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Assert.Equal(1, taskFromDb?.StatusId);
 		}
 
+		[Fact]
+		public async Task PostEditViewModelAsync_ShouldReturnFalse_WhenUserIsNotOwnerAndIsNotAdmin()
+		{
+			// Arrange: Create a valid task for a specific user, and another user who is neither the owner nor an admin
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+			Guid anotherUserGuid = Guid.NewGuid();
+			bool isAdmin = false;
+
+			AppTask task = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "Valid User Title",
+				Description = "Valid User Description",
+				DueDate = DateTime.UtcNow.AddDays(2),
+				StatusId = 1,
+				UserId = userId,
+				IsDeleted = false
+			};
+
+			// Save the task to the in-memory database
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			// Prepare an updated view model with new values
+			EditTaskViewModel updatedModel = new EditTaskViewModel
+			{
+				Id = task.Id,
+				Title = "Invalid User Title",
+				Description = "Invalid User Description",
+				DueDate = DateTime.UtcNow.AddDays(5),
+				StatusId = 2
+			};
+
+			// Act: Attempt to update the task with a user who is neither the owner nor an admin
+			bool result = await _appTaskService.PostEditViewModelAsync(task.Id, anotherUserGuid, isAdmin, updatedModel);
+
+			// Assert: Editing should fail because the user is unauthorized
+			Assert.False(result);
+
+			// Assert: The task should remain unchanged in the database
+			AppTask? updatedTask = await _taskRepository.GetByIdAsync(task.Id);
+			Assert.Equal("Valid User Title", updatedTask?.Title);
+			Assert.Equal("Valid User Description", updatedTask?.Description);
+			Assert.Equal(1, updatedTask?.StatusId);
+			Assert.Equal(task.DueDate, updatedTask?.DueDate);
+		}
+
 		// -------------------------
 		// Cleanup
 		// -------------------------
