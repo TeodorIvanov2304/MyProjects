@@ -980,13 +980,58 @@ namespace SimpleTaskManagerApp.Services.Tests
 			//Assert: Ensure that updates are successful
 			Assert.True(result);
 
-			//Asser: Ensure thah values are correct
+			//Asser: Ensure that values are correct
 			AppTask? updatedTask = await _taskRepository.GetByIdAsync(task.Id);
 			Assert.Equal("Admin Title", updatedTask?.Title);
 			Assert.Equal("Admin Description", updatedTask?.Description);
 			Assert.Equal(updatedTask?.DueDate, task.DueDate);
 			Assert.Equal(2, updatedTask?.StatusId);
 		}
+
+		[Fact]
+		public async Task PostEditViewModelAsync_ShouldReturnFalse_WhenTaskDoesNotExist()
+		{
+			// Arrange: Create a user and a valid task
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+			bool isAdmin = false;
+
+			AppTask task = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "User Title",
+				Description = "User Description",
+				DueDate = DateTime.UtcNow.AddDays(2),
+				StatusId = 1,
+				UserId = userId,
+				IsDeleted = false
+			};
+
+			// Save the task to the in-memory database
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			//Prepare an edited view model 
+			EditTaskViewModel updatedModel = new EditTaskViewModel
+			{
+				Id = task.Id,
+				Title = "Edited Title",
+				Description = "Edited Description",
+				DueDate = DateTime.UtcNow.AddDays(5),
+				StatusId = 2
+			};
+
+			//Use a non-existent task ID 
+			Guid nonExistentTaskId = Guid.Empty;
+
+			//Act: Attempt to edit a task that does not exist
+			bool result = await _appTaskService.PostEditViewModelAsync(nonExistentTaskId, userGuid, isAdmin, updatedModel);
+
+			//Assert: The edit should fail since the task with the provided ID doesn't exist
+			Assert.False(result);
+		}
+
+		
 
 		// -------------------------
 		// Cleanup
