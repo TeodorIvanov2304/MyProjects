@@ -2,6 +2,7 @@
 using SimpleTaskManagerApp.Data;
 using SimpleTaskManagerApp.Data.Models.Models;
 using SimpleTaskManagerApp.Services.Data;
+using SimpleTaskManagerApp.ViewModels.Status;
 
 namespace SimpleTaskManagerApp.Services.Tests
 {
@@ -35,7 +36,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 			await _context.SaveChangesAsync();
 
 			//Act: Fetch all statuses from the service
-			var result = (await _statusService.GetAllStatusesAsync()).ToList();
+			List<StatusViewModel> result = (await _statusService.GetAllStatusesAsync()).ToList();
 
 			// Assert: Verify that all expected statuses are returned
 
@@ -46,6 +47,18 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Assert.Contains(result, s => s.Name == "Canceled");
 		}
 
+		[Fact]
+		public async Task GetAllStatusesAsync_ShouldReturnEmptyList_WhenNoStatusesExist()
+		{
+			// Arrange: No need to seed statuses – DB is empty
+
+			// Act: Try to fetch statuses
+			List<StatusViewModel> result = (await _statusService.GetAllStatusesAsync()).ToList();
+
+			// Assert: Ensure the result is an empty list
+
+			Assert.Empty(result);
+		}
 
 		// -------------------------
 		// Cleanup
