@@ -1031,7 +1031,54 @@ namespace SimpleTaskManagerApp.Services.Tests
 			Assert.False(result);
 		}
 
-		
+		[Fact]
+		public async Task PostEditViewModelAsync_ShouldReturnFalse_WhenTaskIsDeleted()
+		{
+			// Arrange: Create a user and a task that is already soft-deleted
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+			bool isAdmin = false;
+
+			AppTask task = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "Some Title",
+				Description = "Some Description",
+				DueDate = DateTime.UtcNow.AddDays(2),
+				StatusId = 1,
+				UserId = userId,
+				IsDeleted = true
+			};
+
+			// Save the task to the in-memory database
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			// Prepare an updated view model with new values
+			EditTaskViewModel updatedModel = new EditTaskViewModel
+			{
+				Id = task.Id,
+				Title = "Edited Title",
+				Description = "Edited Description",
+				DueDate = DateTime.UtcNow.AddDays(5),
+				StatusId = 2
+			};
+
+			// Act: Attempt to edit a task that is already marked as deleted
+			bool result = await _appTaskService.PostEditViewModelAsync(task.Id, userGuid, isAdmin, updatedModel);
+
+			// Assert: Editing should fail because the task is deleted
+			Assert.False(result);
+
+			// Assert: The task should still be marked as deleted in the database
+			AppTask? taskFromDb = await _context.AppTasks.FindAsync(task.Id);
+			Assert.True(taskFromDb?.IsDeleted);
+
+			// Assert: Ensure that task details were not changed
+			Assert.Equal("Some Title", taskFromDb?.Title);
+			Assert.Equal("Some Description", taskFromDb?.Description);
+			Assert.Equal(1, taskFromDb?.StatusId);
+		}
 
 		// -------------------------
 		// Cleanup
