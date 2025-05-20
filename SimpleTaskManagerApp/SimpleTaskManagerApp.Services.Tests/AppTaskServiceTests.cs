@@ -420,13 +420,15 @@ namespace SimpleTaskManagerApp.Services.Tests
 		[Fact]
 		public async Task GetDetailsViewModel_ShouldReturnNull_WhenUserIsNotOwnerAndNotAdmin()
 		{
-			//Arrange 
-			string userId = Guid.NewGuid().ToString();
+			// Arrange: Create a task that belongs to a different user
+			string userId = Guid.NewGuid().ToString();     
+			
+			//Craete another user
 			Guid anotherUserGuid = Guid.NewGuid();
 			DateTime createdAt = DateTime.UtcNow;
 			bool isAdmin = false;
 
-			// Add a user so we can test username generation
+			// Create a task with the specified owner
 			AppTask task = new AppTask()
 			{
 				Id = Guid.NewGuid(),
@@ -445,13 +447,14 @@ namespace SimpleTaskManagerApp.Services.Tests
 				}
 			};
 
+			// Save the task to the in-memory database
 			await _context.AppTasks.AddAsync(task);
 			await _context.SaveChangesAsync();
 
-			//Act 
+			// Act: Try to get task details as a user who is not the owner and not an admin
 			var result = await _appTaskService.GetDetailsViewModelAsync(task.Id, anotherUserGuid, isAdmin);
 
-			//Assert
+			// Assert: The method should return null because the user is unauthorized to view this task
 			Assert.Null(result);
 		}
 
@@ -542,6 +545,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 		// -------------------------
 		// POST DELETE VIEW MODEL ASYNC TESTS
 		// ----
+
 
 		[Fact]
 		public async Task PostDeleteViewModelAsync_ShouldReturnTrue_WhenUserIsOwner()
@@ -882,6 +886,55 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 			//Assert: Ensure that the service returns false result
 			Assert.False(result);
+		}
+
+		// -------------------------
+		// POST EDIT VIEW MODEL ASYNC TESTS
+		// ----
+
+
+		[Fact]
+		public async Task PostEditViewModelAsync_ShouldEditTask_WhenUserIsOwner()
+		{
+			// Arrange: Setup user, task and model with new data
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+			bool isAdmin = false;
+
+			AppTask originalTask = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "Original Title",
+				Description = "Original Description",
+				DueDate = DateTime.UtcNow.AddDays(2),
+				StatusId = 1,
+				UserId = userId,
+				IsDeleted = false
+			};
+
+			await _context.AppTasks.AddAsync(originalTask);
+			await _context.SaveChangesAsync();
+
+			EditTaskViewModel updatedModel = new EditTaskViewModel
+			{
+				Id = originalTask.Id,
+				Title = "Updated Title",
+				Description = "Updated Description",
+				DueDate = DateTime.UtcNow.AddDays(5),
+				StatusId = 2
+			};
+
+			// Act: Try to edit the model
+			bool  result = await _appTaskService.PostEditViewModelAsync(originalTask.Id, userGuid, isAdmin, updatedModel);
+
+			// Assert: Ensure that update is successful
+			Assert.True(result);
+
+			AppTask? updatedTask = await _context.AppTasks.FindAsync(originalTask.Id);
+			Assert.Equal("Updated Title", updatedTask.Title);
+			Assert.Equal("Updated Description", updatedTask.Description);
+			Assert.Equal(updatedModel.DueDate, updatedTask.DueDate);
+			Assert.Equal(2, updatedTask.StatusId);
 		}
 
 
