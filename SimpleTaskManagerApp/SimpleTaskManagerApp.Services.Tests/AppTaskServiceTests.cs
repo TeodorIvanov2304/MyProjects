@@ -10,6 +10,7 @@ using SimpleTaskManagerApp.Data.Models.Models;
 using SimpleTaskManagerApp.Services.Data;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.AppTask;
+using System.Threading.Tasks;
 
 namespace SimpleTaskManagerApp.Services.Tests
 {
@@ -930,14 +931,62 @@ namespace SimpleTaskManagerApp.Services.Tests
 			// Assert: Ensure that update is successful
 			Assert.True(result);
 
-			AppTask? updatedTask = await _context.AppTasks.FindAsync(originalTask.Id);
-			Assert.Equal("Updated Title", updatedTask.Title);
-			Assert.Equal("Updated Description", updatedTask.Description);
-			Assert.Equal(updatedModel.DueDate, updatedTask.DueDate);
-			Assert.Equal(2, updatedTask.StatusId);
+			AppTask? updatedTask = await _taskRepository.GetByIdAsync(originalTask.Id);
+			Assert.Equal("Updated Title", updatedTask?.Title);
+			Assert.Equal("Updated Description", updatedTask?.Description);
+			Assert.Equal(updatedModel.DueDate, updatedTask?.DueDate);
+			Assert.Equal(2, updatedTask?.StatusId);
 		}
 
+		[Fact]
+		public async Task PostEditViewModelAsync_ShouldEditTask_WhenUserIsAdmin()
+		{
+			// Arrange: Setup user, task and model with new data
+			string userId = Guid.NewGuid().ToString();
+			Guid userGuid = Guid.Parse(userId);
+			bool isAdmin = true;
 
+			//Create admin ID
+			Guid adminGuid = Guid.NewGuid();
+
+			AppTask task = new AppTask
+			{
+				Id = Guid.NewGuid(),
+				Title = "User Title",
+				Description = "User Description",
+				DueDate = DateTime.UtcNow.AddDays(2),
+				StatusId = 1,
+				UserId = userId,
+				IsDeleted = false
+			};
+
+			// Save the task to the in-memory database
+			await _context.AppTasks.AddAsync(task);
+			await _context.SaveChangesAsync();
+
+			//Edit the view model
+			EditTaskViewModel updatedModel = new EditTaskViewModel
+			{
+				Id = task.Id,
+				Title = "Admin Title",
+				Description = "Admin Description",
+				DueDate = DateTime.UtcNow.AddDays(5),
+				StatusId = 2
+			};
+
+			//Act: Try to edit the model with admin ID
+			bool result = await _appTaskService.PostEditViewModelAsync(task.Id, adminGuid, isAdmin, updatedModel);
+
+			//Assert: Ensure that updates are successful
+			Assert.True(result);
+
+			//Asser: Ensure thah values are correct
+			AppTask? updatedTask = await _taskRepository.GetByIdAsync(task.Id);
+			Assert.Equal("Admin Title", updatedTask?.Title);
+			Assert.Equal("Admin Description", updatedTask?.Description);
+			Assert.Equal(updatedTask?.DueDate, task.DueDate);
+			Assert.Equal(2, updatedTask?.StatusId);
+		}
 
 		// -------------------------
 		// Cleanup
