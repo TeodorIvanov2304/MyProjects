@@ -38,7 +38,8 @@ namespace SimpleTaskManagerApp
 
 					//Deactivate email confirmation during development
 					options.SignIn.RequireConfirmedAccount = false
-			)
+			)	
+				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<TaskManagerDbContext>();
 
 			builder.Services.AddControllersWithViews();
