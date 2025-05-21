@@ -6,12 +6,13 @@ using SimpleTaskManagerApp.Data.Data.Repositories.Interfaces;
 using SimpleTaskManagerApp.Data.Models.Models;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.Services.Data;
+using SimpleTaskManagerApp.Data.Data.Configuration;
 
 namespace SimpleTaskManagerApp
 {
     public class Program
 	{
-		public static void Main(string[] args)
+		public static async Task Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +35,7 @@ namespace SimpleTaskManagerApp
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 			builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
-					
+
 					//Deactivate email confirmation during development
 					options.SignIn.RequireConfirmedAccount = false
 			)
@@ -43,6 +44,8 @@ namespace SimpleTaskManagerApp
 			builder.Services.AddControllersWithViews();
 
 			var app = builder.Build();
+
+			
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
@@ -61,12 +64,19 @@ namespace SimpleTaskManagerApp
 
 			app.UseRouting();
 
+			app.UseAuthentication();
 			app.UseAuthorization();
-
+			
 			app.MapControllerRoute(
 				name: "default",
 				pattern: "{controller=Home}/{action=Index}/{id?}");
 			app.MapRazorPages();
+
+			using (var scope = app.Services.CreateScope())
+			{
+				var services = scope.ServiceProvider;
+				await DatabaseSeeder.SeedRolesAsync(services);
+			}
 
 			app.Run();
 		}
