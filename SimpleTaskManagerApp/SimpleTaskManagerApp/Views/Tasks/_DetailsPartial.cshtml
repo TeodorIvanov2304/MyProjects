@@ -7,6 +7,6 @@
 	<p><strong>Username:</strong> @Model.Username</p>
 	<p><strong>Description:</strong> @Model.Description</p>
 	<p><strong>Due Date:</strong> @Model?.DueDate?.ToString("dd/MM/yyyy HH:mm")</p>
-	<p><strong>Status:</strong> @Model.StatusName</p>
-	<p><strong>Created At:</strong> @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+	<p><strong>Status:</strong> @Model?.StatusName</p>
+	<p><strong>Created At:</strong> @Model?.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
 </div>

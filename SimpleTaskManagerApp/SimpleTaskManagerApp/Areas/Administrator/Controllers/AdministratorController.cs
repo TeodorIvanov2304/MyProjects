@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SimpleTaskManagerApp.Data;
+using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.Administrator;
 
 namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
@@ -10,25 +11,22 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 	[Authorize(Roles = "Administrator")]
 	public class AdministratorController : Controller
 	{
-		private readonly TaskManagerDbContext _context;
+		private readonly IAdministratorService _administratorService;
 
-        public AdministratorController(TaskManagerDbContext context)
+        public AdministratorController(IAdministratorService administratorService)
         {
-            this._context = context;
+            this._administratorService = administratorService;
         }
 
         public async Task<IActionResult> Index()
 		{
-			var totalUsers = await _context.Users.CountAsync();
-			var totalTasks = await _context.AppTasks.CountAsync();
-			var completedTasks = await _context.AppTasks.CountAsync(t => t.Status.Name == "Completed");
+			
+			var model = await this._administratorService.GetDashboardDataAsync();
 
-			var model = new AdminDashboardViewModel
+			if (!ModelState.IsValid)
 			{
-				TotalUsers = totalUsers,
-				TotalTasks = totalTasks,
-				CompletedTasks = completedTasks
-			};
+				return NotFound();
+			}
 
 			return View(model);
 		}
