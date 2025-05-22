@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SimpleTaskManagerApp.Common\SimpleTaskManagerApp.Common.csproj" />
     <ProjectReference Include="..\SimpleTaskManagerApp.Data.Models\SimpleTaskManagerApp.Data.Models.csproj" />
     <ProjectReference Include="..\SimpleTaskManagerApp.Data\SimpleTaskManagerApp.Data.csproj" />

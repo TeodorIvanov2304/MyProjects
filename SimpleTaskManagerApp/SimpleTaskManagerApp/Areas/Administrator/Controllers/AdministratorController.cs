@@ -18,7 +18,8 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
             this._administratorService = administratorService;
         }
 
-        public async Task<IActionResult> Index()
+		[HttpGet]
+		public async Task<IActionResult> Index()
 		{
 			
 			var model = await this._administratorService.GetDashboardDataAsync();

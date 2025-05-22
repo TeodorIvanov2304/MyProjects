@@ -32,6 +32,9 @@ namespace SimpleTaskManagerApp
 			//Register StatusService
 			builder.Services.AddScoped<IStatusService, StatusTaskService>();
 
+			//Register AdministratorService
+			builder.Services.AddScoped<IAdministratorService, AdministratorService>();
+
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 			builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
@@ -67,10 +70,15 @@ namespace SimpleTaskManagerApp
 
 			app.UseAuthentication();
 			app.UseAuthorization();
-			
+
+			app.MapControllerRoute(
+				name: "areas",
+				pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
 			app.MapControllerRoute(
 				name: "default",
 				pattern: "{controller=Home}/{action=Index}/{id?}");
+
 			app.MapRazorPages();
 
 			using (var scope = app.Services.CreateScope())

@@ -1,0 +1,34 @@
+﻿@using SimpleTaskManagerApp.ViewModels.Administrator
+@model AdminDashboardViewModel
+@{
+	ViewData["Title"] = "Admin Dashboard";
+}
+
+<h1 class="mb-4">Admin Dashboard</h1>
+
+<div class="row">
+	<div class="col-md-3">
+		<div class="card text-white bg-primary mb-3">
+			<div class="card-header">Total Users</div>
+			<div class="card-body">
+				<h5 class="card-title">@Model.TotalUsers</h5>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="card text-white bg-success mb-3">
+			<div class="card-header">Total Tasks</div>
+			<div class="card-body">
+				<h5 class="card-title">@Model.TotalTasks</h5>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="card text-white bg-info mb-3">
+			<div class="card-header">Completed Tasks</div>
+			<div class="card-body">
+				<h5 class="card-title">@Model.CompletedTasks</h5>
+			</div>
+		</div>
+	</div>
+</div>
