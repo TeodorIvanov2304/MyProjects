@@ -10,5 +10,6 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 	public interface IAdministratorService
 	{
 		Task<AdminDashboardViewModel> GetDashboardDataAsync();
+		Task<IEnumerable<AdminUserViewModel>> GetAllUsersAsync();
 	}
 }

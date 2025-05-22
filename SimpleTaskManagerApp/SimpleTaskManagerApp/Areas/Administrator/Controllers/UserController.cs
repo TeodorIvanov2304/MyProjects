@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SimpleTaskManagerApp.Services.Data.Interfaces;
 
 namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 {
@@ -7,9 +8,16 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 	[Authorize(Roles ="Administrator")]
 	public class UserController : Controller
 	{
-		public IActionResult Index()
+		private readonly IAdministratorService _administratorService;
+
+        public UserController(IAdministratorService administratorService)
+        {
+            this._administratorService = administratorService;
+        }
+        public async Task<IActionResult> Index()
 		{
-			return View();
+			var users = await _administratorService.GetAllUsersAsync();
+			return View(users);
 		}
 	}
 }

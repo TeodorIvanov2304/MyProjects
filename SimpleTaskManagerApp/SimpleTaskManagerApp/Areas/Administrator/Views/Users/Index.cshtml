@@ -1,0 +1,30 @@
+﻿@using SimpleTaskManagerApp.ViewModels.Administrator
+@model IEnumerable<AdminUserViewModel>
+
+@{
+	ViewData["Title"] = "Users";
+}
+
+<h2 class="mb-4">All Users</h2>
+
+<table class="table table-bordered table-hover">
+	<thead class="table-light">
+		<tr>
+			<th>Email</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Roles</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var user in Model)
+		{
+			<tr>
+				<td>@user.Email</td>
+				<td>@user.FirstName</td>
+				<td>@user.LastName</td>
+				<td>@string.Join(", ", user.Roles)</td>
+			</tr>
+		}
+	</tbody>
+</table>
