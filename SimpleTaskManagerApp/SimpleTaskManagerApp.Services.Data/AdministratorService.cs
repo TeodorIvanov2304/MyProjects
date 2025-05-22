@@ -27,11 +27,12 @@ namespace SimpleTaskManagerApp.Services.Data
 			{
 				IList<string> roles = await _userManager.GetRolesAsync(user);
 				AdminUserViewModel userToAdd = new AdminUserViewModel
-				{
+				{	
+					Id = user.Id,
 					Email = user.Email!,
 					FirstName = user.FirstName!,
 					LastName = user.LastName!,
-					Roles = roles
+					IsAdmin = roles.Contains("Administrator")
 				};
 
 				result.Add(userToAdd);

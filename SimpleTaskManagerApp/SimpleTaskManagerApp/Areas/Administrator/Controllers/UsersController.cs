@@ -6,15 +6,17 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 {
 	[Area("Administrator")]
 	[Authorize(Roles ="Administrator")]
-	public class UserController : Controller
+	public class UsersController : Controller
 	{
 		private readonly IAdministratorService _administratorService;
 
-        public UserController(IAdministratorService administratorService)
+        public UsersController(IAdministratorService administratorService)
         {
             this._administratorService = administratorService;
         }
-        public async Task<IActionResult> Index()
+
+		[HttpGet]
+		public async Task<IActionResult> Index()
 		{
 			var users = await _administratorService.GetAllUsersAsync();
 			return View(users);
