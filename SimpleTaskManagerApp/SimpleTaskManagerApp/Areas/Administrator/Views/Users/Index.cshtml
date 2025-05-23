@@ -30,14 +30,14 @@
 					{
 						<form asp-action="MakeAdmin" asp-controller="Users" asp-area="Administrator" method="post">
 							<input type="hidden" name="id" value="@user.Id" />
-							<button class="btn btn-sm btn-success" type="submit">Make Admin</button>
+							<button class="btn btn-sm btn-success" style="width:130px;" type="submit">Make Admin</button>
 						</form>
 					}
 					else
 					{
 						<form asp-action="RemoveAdmin" asp-controller="Users" asp-area="Administrator" method="post">
 							<input type="hidden" name="id" value="@user.Id" />
-							<button class="btn btn-sm btn-danger" type="submit">Remove Admin</button>
+							<button class="btn btn-sm btn-danger" style="width:130px;" type="submit">Remove Admin</button>
 						</form>
 					}
 				</td>

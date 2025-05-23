@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SimpleTaskManagerApp.Controllers;
 using SimpleTaskManagerApp.Data;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.Administrator;
@@ -9,7 +10,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 {
 	[Area("Administrator")]
 	[Authorize(Roles = "Administrator")]
-	public class AdministratorController : Controller
+	public class AdministratorController : BaseController
 	{
 		private readonly IAdministratorService _administratorService;
 
@@ -31,5 +32,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 
 			return View(model);
 		}
+
+		
 	}
 }

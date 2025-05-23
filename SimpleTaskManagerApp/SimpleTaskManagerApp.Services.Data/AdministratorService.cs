@@ -4,6 +4,7 @@ using SimpleTaskManagerApp.Data;
 using SimpleTaskManagerApp.Data.Models.Models;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.Administrator;
+using static SimpleTaskManagerApp.Common.Utility;
 
 namespace SimpleTaskManagerApp.Services.Data
 {
@@ -55,6 +56,31 @@ namespace SimpleTaskManagerApp.Services.Data
 			};
 
 			return model;
+		}
+
+		public async Task<bool> PromoteToAdminAsync(string userId, string? currentUserId)
+		{
+			Guid userGuid = Guid.Empty;
+			bool isUserValid = IsGuidValid(userId, ref userGuid);
+
+			if (!isUserValid || userId == currentUserId) 
+			{
+				return false;
+			}
+
+			ApplicationUser? user = await _userManager.FindByIdAsync(userId);
+			bool isUserAdmin = await _userManager.IsInRoleAsync(user!, "Administrator");
+
+
+			if (user == null || isUserAdmin) 
+			{
+				return false;
+			}
+
+			//Try to promote user in role Administrator
+			IdentityResult result = await _userManager.AddToRoleAsync(user, "Administrator");
+
+			return result.Succeeded;
 		}
 	}
 }
