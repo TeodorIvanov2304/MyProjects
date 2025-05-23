@@ -7,15 +7,15 @@ using static SimpleTaskManagerApp.Common.Utility;
 namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 {
 	[Area("Administrator")]
-	[Authorize(Roles ="Administrator")]
+	[Authorize(Roles="Administrator")]
 	public class UsersController : BaseController
 	{
 		private readonly IAdministratorService _administratorService;
 
-        public UsersController(IAdministratorService administratorService)
-        {
-            this._administratorService = administratorService;
-        }
+		public UsersController(IAdministratorService administratorService)
+		{
+			this._administratorService = administratorService;
+		}
 
 		[HttpGet]
 		public async Task<IActionResult> Index()
@@ -65,11 +65,12 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 		}
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Delete(string id)
-		{	
-			
+		{
+
 			Guid userId = Guid.Empty;
-			bool isUserValid = IsGuidValid(id,ref userId);
+			bool isUserValid = IsGuidValid(id, ref userId);
 
 			if (!isUserValid)
 			{
@@ -78,7 +79,35 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 
 			var result = await _administratorService.RemoveUserAsync(id);
 
+			if (!result)
+			{
+				return NotFound();
+			}
+
 			return RedirectToAction(nameof(Index));
 		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> LockUser(string id)
+		{
+			Guid userId = Guid.Empty;
+			bool isUserValid = IsGuidValid(id, ref userId);
+
+			if (!isUserValid)
+			{
+				return NotFound();
+			}
+
+			var result = await _administratorService.LockOnUserAsync(id);
+
+			if (!result)
+			{
+				return NotFound();
+			}
+
+			return RedirectToAction(nameof(Index));
+		}
+
 	}
 }

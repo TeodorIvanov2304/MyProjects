@@ -14,5 +14,6 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 		Task<bool> PromoteToAdminAsync(string userId, string? currentUserId);
 		Task<bool> DemoteFromAdminAsync(string userId, string? currentUserId);
 		Task<bool> RemoveUserAsync(string userId);
+		Task<bool> LockOnUserAsync(string userId);
 	}
 }

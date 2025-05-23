@@ -120,5 +120,20 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			return true;
 		}
+
+		public async Task<bool> LockOnUserAsync(string userId)
+		{
+			var user = await _userManager.FindByIdAsync(userId);
+
+			if(user == null)
+			{
+				return false;
+			}
+
+			//Block for maximum time
+			await _userManager.SetLockoutEndDateAsync(user,DateTimeOffset.MaxValue);
+
+			return true;
+		}
 	}
 }
