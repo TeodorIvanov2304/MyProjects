@@ -82,5 +82,29 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			return result.Succeeded;
 		}
+
+		public async Task<bool> DemoteFromAdminAsync(string userId, string? currentUserId)
+		{
+			Guid userGuid = Guid.Empty;
+			bool isUserValid = IsGuidValid(userId, ref userGuid);
+
+			if (!isUserValid || userId == currentUserId)
+			{
+				return false;
+			}
+
+			ApplicationUser? user = await _userManager.FindByIdAsync(userId);
+			bool isUserAdmin = await _userManager.IsInRoleAsync(user!, "Administrator");
+
+
+			if (user == null || !isUserAdmin)
+			{
+				return false;
+			}
+
+			IdentityResult result = await _userManager.RemoveFromRoleAsync(user, "Administrator");
+
+			return result.Succeeded;
+		}
 	}
 }

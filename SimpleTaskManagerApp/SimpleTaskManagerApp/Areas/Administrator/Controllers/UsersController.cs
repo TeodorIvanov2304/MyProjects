@@ -43,5 +43,24 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
+		[HttpPost]
+		[AutoValidateAntiforgeryToken]
+		public async Task<IActionResult> RemoveAdmin(string id)
+		{
+			string? currentUserId = GetCurrentUserId();
+
+			var result = await _administratorService.DemoteFromAdminAsync(id, currentUserId);
+
+			if (result)
+			{
+				TempData["Success"] = "User demoted from Administrator.";
+			}
+			else
+			{
+				TempData["Error"] = "Could not demote user.";
+			}
+
+			return RedirectToAction(nameof(Index));
+		}
 	}
 }
