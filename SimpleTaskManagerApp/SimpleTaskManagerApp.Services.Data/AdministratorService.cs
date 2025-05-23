@@ -106,5 +106,18 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			return result.Succeeded;
 		}
+
+		public async Task<bool> RemoveUserAsync(string userId)
+		{
+			var user = await _userManager.FindByIdAsync(userId);
+			if (user == null) 
+			{
+				return false;
+			}
+
+			await _userManager.DeleteAsync(user);
+
+			return true;
+		}
 	}
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SimpleTaskManagerApp.Controllers;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
+using static SimpleTaskManagerApp.Common.Utility;
 
 namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 {
@@ -59,6 +60,23 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 			{
 				TempData["Error"] = "Could not demote user.";
 			}
+
+			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Delete(string id)
+		{	
+			
+			Guid userId = Guid.Empty;
+			bool isUserValid = IsGuidValid(id,ref userId);
+
+			if (!isUserValid)
+			{
+				return NotFound();
+			}
+
+			var result = await _administratorService.RemoveUserAsync(id);
 
 			return RedirectToAction(nameof(Index));
 		}
