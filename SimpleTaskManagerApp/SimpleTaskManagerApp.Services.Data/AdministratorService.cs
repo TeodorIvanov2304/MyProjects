@@ -33,7 +33,8 @@ namespace SimpleTaskManagerApp.Services.Data
 					Email = user.Email!,
 					FirstName = user.FirstName!,
 					LastName = user.LastName!,
-					IsAdmin = roles.Contains("Administrator")
+					IsAdmin = roles.Contains("Administrator"),
+					IsLockedOut = await _userManager.IsLockedOutAsync(user),
 				};
 
 				result.Add(userToAdd);
