@@ -7,7 +7,7 @@ using static SimpleTaskManagerApp.Common.Utility;
 namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 {
 	[Area("Administrator")]
-	[Authorize(Roles="Administrator")]
+	[Authorize(Roles = "Administrator")]
 	public class UsersController : BaseController
 	{
 		private readonly IAdministratorService _administratorService;
@@ -109,5 +109,26 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> UnlockUser(string id)
+		{
+			Guid userId = Guid.Empty;
+			bool isUserValid = IsGuidValid(id, ref userId);
+
+			if (!isUserValid)
+			{
+				return NotFound();
+			}
+
+			var result = await _administratorService.UnlockUserAsync(id);
+
+			if (!result)
+			{
+				return NotFound();
+			}
+
+			return RedirectToAction(nameof(Index));
+		}
 	}
 }

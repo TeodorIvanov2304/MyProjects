@@ -50,7 +50,7 @@
 							<form asp-action="LockUser" asp-controller="Users" asp-area="Administrator" method="post" class="d-inline">
 								@Html.AntiForgeryToken()
 								<input type="hidden" name="id" value="@user.Id" />
-								<button class="btn btn-warning btn-sm" style="width:130px;">Block</button>
+								<button class="btn btn-outline-primary btn-sm" style="width:130px;">Block</button>
 							</form>
 						}
 						else
@@ -58,7 +58,7 @@
 							<form asp-action="UnlockUser" asp-controller="Users" asp-area="Administrator" method="post" class="d-inline">
 								@Html.AntiForgeryToken()
 								<input type="hidden" name="id" value="@user.Id" />
-								<button class="btn btn-success btn-sm" style="width:130px;">Unblock</button>
+								<button class="btn btn-primary btn-sm" style="width:130px;">Unblock</button>
 							</form>
 						}
 

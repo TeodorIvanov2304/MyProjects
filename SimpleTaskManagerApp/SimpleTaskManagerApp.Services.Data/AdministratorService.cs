@@ -135,5 +135,20 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			return true;
 		}
+
+		public async Task<bool> UnlockUserAsync(string userId)
+		{
+			var user = await _userManager.FindByIdAsync(userId);
+
+			if (user == null) 
+			{
+				return false;
+			}
+
+			//Unlock the user now
+			await _userManager.SetLockoutEndDateAsync(user, null);
+
+			return true;
+		}
 	}
 }
