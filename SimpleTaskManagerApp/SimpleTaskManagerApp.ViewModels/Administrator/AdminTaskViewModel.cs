@@ -14,6 +14,7 @@ namespace SimpleTaskManagerApp.ViewModels.Administrator
 		public DateTime CreatedAt { get; set; }
 		public DateTime? DueDate { get; set; }
 		public string Status = null!;
+		public string CreatedByEmail { get; set; } = null!;
 		public bool IsDeleted { get; set; }
 	}
 }

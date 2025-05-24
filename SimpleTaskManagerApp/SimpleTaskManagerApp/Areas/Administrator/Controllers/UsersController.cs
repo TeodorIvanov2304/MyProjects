@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SimpleTaskManagerApp.Controllers;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
+using SimpleTaskManagerApp.ViewModels.Administrator;
 using static SimpleTaskManagerApp.Common.Utility;
 
 namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
@@ -20,7 +21,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Index()
 		{
-			var users = await _administratorService.GetAllUsersAsync();
+			IEnumerable<AdminUserViewModel> users = await _administratorService.GetAllUsersAsync();
 			return View(users);
 		}
 
@@ -30,7 +31,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 		{
 			string? currentUserId = GetCurrentUserId();
 
-			var result = await _administratorService.PromoteToAdminAsync(id, currentUserId);
+			bool result = await _administratorService.PromoteToAdminAsync(id, currentUserId);
 
 			if (result)
 			{
@@ -50,7 +51,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 		{
 			string? currentUserId = GetCurrentUserId();
 
-			var result = await _administratorService.DemoteFromAdminAsync(id, currentUserId);
+			bool result = await _administratorService.DemoteFromAdminAsync(id, currentUserId);
 
 			if (result)
 			{
@@ -77,7 +78,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 				return NotFound();
 			}
 
-			var result = await _administratorService.RemoveUserAsync(id);
+			bool result = await _administratorService.RemoveUserAsync(id);
 
 			if (!result)
 			{
@@ -99,7 +100,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 				return NotFound();
 			}
 
-			var result = await _administratorService.LockOnUserAsync(id);
+			bool result = await _administratorService.LockOnUserAsync(id);
 
 			if (!result)
 			{
@@ -121,7 +122,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 				return NotFound();
 			}
 
-			var result = await _administratorService.UnlockUserAsync(id);
+			bool result = await _administratorService.UnlockUserAsync(id);
 
 			if (!result)
 			{
