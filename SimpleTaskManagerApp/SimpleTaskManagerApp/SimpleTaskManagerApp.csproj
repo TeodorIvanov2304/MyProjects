@@ -27,8 +27,4 @@
     <ProjectReference Include="..\SimpleTaskManagerApp.ViewModels\SimpleTaskManagerApp.ViewModels.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\Administrator\Views\Tasks\" />
-  </ItemGroup>
-
 </Project>

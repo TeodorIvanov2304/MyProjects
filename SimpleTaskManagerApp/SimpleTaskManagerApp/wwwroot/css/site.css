@@ -20,3 +20,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.table-danger-deep {
+    --bs-table-bg: #7a1e1e;
+    --bs-table-color: #fff;
+    --bs-table-hover-bg: #922727;
+    color: var(--bs-table-color) !important;
+    background-color: var(--bs-table-bg) !important;
+}
