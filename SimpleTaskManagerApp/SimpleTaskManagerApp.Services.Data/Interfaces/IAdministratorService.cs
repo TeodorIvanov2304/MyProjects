@@ -8,13 +8,18 @@ using System.Threading.Tasks;
 namespace SimpleTaskManagerApp.Services.Data.Interfaces
 {
 	public interface IAdministratorService
-	{
+	{	
+		//Administrator
 		Task<AdminDashboardViewModel> GetDashboardDataAsync();
+
+		//Users
 		Task<IEnumerable<AdminUserViewModel>> GetAllUsersAsync();
 		Task<bool> PromoteToAdminAsync(string userId, string? currentUserId);
 		Task<bool> DemoteFromAdminAsync(string userId, string? currentUserId);
 		Task<bool> RemoveUserAsync(string userId);
 		Task<bool> LockOnUserAsync(string userId);
 		Task<bool> UnlockUserAsync(string userId);
+
+		//Tasks
 	}
 }
