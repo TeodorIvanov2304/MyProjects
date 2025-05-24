@@ -18,6 +18,24 @@ namespace SimpleTaskManagerApp.Services.Data
 			this._userManager = userManager;
         }
 
+		//Administrator
+		public async Task<AdminDashboardViewModel> GetDashboardDataAsync()
+		{
+			int totalUsers = await _context.Users.CountAsync();
+			int totalTasks = await _context.AppTasks.CountAsync();
+			int completedTasks = await _context.AppTasks.CountAsync(t => t.Status.Name == "Completed");
+
+			AdminDashboardViewModel model = new AdminDashboardViewModel
+			{
+				TotalUsers = totalUsers,
+				TotalTasks = totalTasks,
+				CompletedTasks = completedTasks
+			};
+
+			return model;
+		}
+
+		//Users
 		public async Task<IEnumerable<AdminUserViewModel>> GetAllUsersAsync()
 		{
 			List<ApplicationUser> users = await _userManager.Users.ToListAsync();
@@ -43,21 +61,6 @@ namespace SimpleTaskManagerApp.Services.Data
 			return result;
 		}
 
-		public async Task<AdminDashboardViewModel> GetDashboardDataAsync()
-		{
-			int totalUsers = await _context.Users.CountAsync();
-			int totalTasks = await _context.AppTasks.CountAsync();
-			int completedTasks = await _context.AppTasks.CountAsync(t => t.Status.Name == "Completed");
-
-			AdminDashboardViewModel model = new AdminDashboardViewModel
-			{
-				TotalUsers = totalUsers,
-				TotalTasks = totalTasks,
-				CompletedTasks = completedTasks
-			};
-
-			return model;
-		}
 
 		public async Task<bool> PromoteToAdminAsync(string userId, string? currentUserId)
 		{
@@ -149,6 +152,37 @@ namespace SimpleTaskManagerApp.Services.Data
 			await _userManager.SetLockoutEndDateAsync(user, null);
 
 			return true;
+		}
+
+		//Tasks
+		public async Task<IEnumerable<AdminTaskViewModel>> GetAllTasksAsync()
+		{
+			List<AppTask> tasks = await _context.AppTasks
+				.AsNoTracking()
+				.Include(u => u.User)
+				.Include(s => s.Status)
+				.ToListAsync();
+
+			List<AdminTaskViewModel> result = new List<AdminTaskViewModel>();
+
+			foreach (var task in tasks)
+			{
+				var taskToAdd = new AdminTaskViewModel
+				{
+					Id = task.Id.ToString(),
+					Title = task.Title,
+					Description = task.Description,
+					CreatedAt = task.CreatedAt,
+					DueDate = task.DueDate,
+					Status = task.Status.Name,
+					IsDeleted = task.IsDeleted,
+					CreatedByEmail = task.User.Email!
+
+				};
+
+				result.Add(taskToAdd);
+			}
+			return result;
 		}
 	}
 }

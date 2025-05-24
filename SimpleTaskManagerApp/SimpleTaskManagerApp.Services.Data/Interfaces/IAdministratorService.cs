@@ -21,5 +21,6 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 		Task<bool> UnlockUserAsync(string userId);
 
 		//Tasks
+		Task<IEnumerable<AdminTaskViewModel>> GetAllTasksAsync();
 	}
 }

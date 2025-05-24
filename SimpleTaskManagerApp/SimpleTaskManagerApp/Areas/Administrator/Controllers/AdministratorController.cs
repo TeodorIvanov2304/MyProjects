@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SimpleTaskManagerApp.Controllers;
-using SimpleTaskManagerApp.Data;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.Administrator;
 
@@ -22,8 +20,8 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Index()
 		{
-			
-			var model = await this._administratorService.GetDashboardDataAsync();
+
+			AdminDashboardViewModel model = await this._administratorService.GetDashboardDataAsync();
 
 			if (!ModelState.IsValid)
 			{
