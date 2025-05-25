@@ -47,6 +47,20 @@ namespace SimpleTaskManagerApp.Data.Data.Repositories
 			return true;
 		}
 
+		public async Task<bool> DeletePermanently(Guid id)
+		{
+			AppTask? entity = await this.GetByIdAsync(id);
+
+			if(entity == null)
+			{
+				return false;
+			}
+
+			_dbContext.AppTasks.Remove(entity);
+			await _dbContext.SaveChangesAsync();
+			return true;
+		}
+
 		public async Task<AppTask?> GetByIdAsync(Guid id)
 		{
 			var entity = await this._dbContext.AppTasks.FirstOrDefaultAsync(t => t.Id == id);
