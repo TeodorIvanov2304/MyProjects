@@ -23,5 +23,6 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 		//Tasks
 		Task<IEnumerable<AdminTaskViewModel>> GetAllTasksAsync();
 		Task<bool> DeleteTaskPermanentlyAsync(Guid id);
+		Task<bool> SoftDeleteTaskAsync(Guid id);
 	}
 }

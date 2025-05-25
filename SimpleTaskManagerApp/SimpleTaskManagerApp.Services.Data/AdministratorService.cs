@@ -201,5 +201,20 @@ namespace SimpleTaskManagerApp.Services.Data
 			//_logger.LogInformation("Task with ID {TaskId} permanently deleted by admin.", id);
 			return true;
 		}
+
+		public async Task<bool> SoftDeleteTaskAsync(Guid id)
+		{
+			var task = await this._context.AppTasks.FindAsync(id);
+
+			if (task == null || task.IsDeleted)
+			{
+				return false;
+			}
+
+			task.IsDeleted = true;
+			await _context.SaveChangesAsync();
+
+			return true;
+		}
 	}
 }

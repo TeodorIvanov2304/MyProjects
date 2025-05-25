@@ -32,6 +32,27 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> SoftDelete(string id)
+		{
+			Guid taskGuid = Guid.Empty;
+			bool isValid = IsGuidValid(id, ref taskGuid);
+			if (!isValid)
+			{
+				return NotFound();
+			}
+
+			bool isDeleted = await this._administratorService.SoftDeleteTaskAsync(taskGuid);
+
+			if (!isDeleted)
+			{
+				return BadRequest("Unable to delete task.");
+			}
+
+			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeletePermanently(string id)
 		{
 			Guid taskGuid = Guid.Empty;
