@@ -32,6 +32,7 @@ namespace SimpleTaskManagerApp.Data.Data.Repositories
 			await this._dbContext.SaveChangesAsync();
 		}
 
+		//Soft delete
 		public async Task<bool> DeleteAsync(Guid id)
 		{
 			AppTask? entity = await this.GetByIdAsync(id);
@@ -47,6 +48,7 @@ namespace SimpleTaskManagerApp.Data.Data.Repositories
 			return true;
 		}
 
+		//Hard delete
 		public async Task<bool> DeletePermanently(Guid id)
 		{
 			AppTask? entity = await this.GetByIdAsync(id);
@@ -58,6 +60,7 @@ namespace SimpleTaskManagerApp.Data.Data.Repositories
 
 			_dbContext.AppTasks.Remove(entity);
 			await _dbContext.SaveChangesAsync();
+
 			return true;
 		}
 

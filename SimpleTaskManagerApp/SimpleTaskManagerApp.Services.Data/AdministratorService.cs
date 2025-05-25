@@ -184,5 +184,22 @@ namespace SimpleTaskManagerApp.Services.Data
 			}
 			return result;
 		}
+
+		public async Task<bool> DeleteTaskPermanentlyAsync(Guid id)
+		{
+			AppTask? task = await this._context.AppTasks.FindAsync(id);
+
+			if (task == null || !task.IsDeleted) 
+			{
+				return false;
+			}
+
+			this._context.AppTasks.Remove(task);
+			await this._context.SaveChangesAsync();
+
+			//Future logger
+			//_logger.LogInformation("Task with ID {TaskId} permanently deleted by admin.", id);
+			return true;
+		}
 	}
 }
