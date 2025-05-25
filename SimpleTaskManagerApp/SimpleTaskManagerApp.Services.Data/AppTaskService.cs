@@ -205,10 +205,18 @@ namespace SimpleTaskManagerApp.Services.Data
 			task.Id = model.Id;
 			task.Title = model.Title;
 			task.Description = model.Description;
-			task.DueDate = model.DueDate;
+			task.DueDate = model.DueDate?.ToUniversalTime();
 			task.StatusId = model.StatusId;
 
-			await this._taskRepository.SaveChangesAsync();
+			try
+			{
+				await this._taskRepository.SaveChangesAsync();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("SaveChangesAsync ERROR: " + ex.Message);
+				throw; 
+			}
 
 			return true;
 		}
