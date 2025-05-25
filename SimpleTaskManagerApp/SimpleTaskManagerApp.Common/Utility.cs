@@ -22,5 +22,16 @@
 
 			return true;
 		}
+
+		//Ensure DateTime is UTC
+		public static DateTime? EnsureUtc(DateTime? dt)
+		{
+			if (!dt.HasValue)
+			{
+				return null;
+			}
+
+			return DateTime.SpecifyKind(dt.Value, DateTimeKind.Utc);
+		}
 	}
 }

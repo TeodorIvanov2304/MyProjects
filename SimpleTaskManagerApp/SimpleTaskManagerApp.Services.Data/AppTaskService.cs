@@ -6,6 +6,7 @@ using SimpleTaskManagerApp.Data.Models.Models.Enums;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.AppTask;
 using static SimpleTaskManagerApp.Common.EntityValidationConstants;
+using static SimpleTaskManagerApp.Common.Utility;
 
 namespace SimpleTaskManagerApp.Services.Data
 {
@@ -205,7 +206,7 @@ namespace SimpleTaskManagerApp.Services.Data
 			task.Id = model.Id;
 			task.Title = model.Title;
 			task.Description = model.Description;
-			task.DueDate = model.DueDate?.ToUniversalTime();
+			task.DueDate = EnsureUtc(model.DueDate);
 			task.StatusId = model.StatusId;
 
 			try

@@ -75,13 +75,22 @@ function setupEditFormSubmit() {
             const form = e.target;
             const token = form.querySelector('input[name="__RequestVerificationToken"]').value;
 
+            const formData = new FormData(form);
+
+            // Convert DueDate to UTC
+            const dueDateInput = form.querySelector('input[name="DueDate"]');
+            if (dueDateInput && dueDateInput.value) {
+                const localDate = new Date(dueDateInput.value); 
+                formData.set("DueDate", localDate.toISOString()); // format to UTC
+            }
+
             fetch('/Tasks/EditPartial', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'RequestVerificationToken': token
                 },
-                body: new URLSearchParams(new FormData(form))
+                body: new URLSearchParams(new FormData(formData))
             })
                 .then(response => {
                     if (!response.ok) throw new Error("Edit failed");
