@@ -28,3 +28,12 @@ body {
     color: var(--bs-table-color) !important;
     background-color: var(--bs-table-bg) !important;
 }
+
+.table-dark-custom {
+    background-color: #1e1e1e;
+    color: #fff;
+}
+
+.deleted-row {
+    background-color: #5c0000 !important;
+}

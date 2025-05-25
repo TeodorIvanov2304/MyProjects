@@ -5,49 +5,76 @@
 	ViewData["Title"] = "Tasks";
 }
 
-<div class="p-3 mb-2 bg-primary-subtle text-primary-emphasis">
+<div class="p-4 mb-3 bg-dark text-white rounded shadow">
 	<h2 class="mb-4">All Tasks</h2>
 
-	<table class="table table-bordered table-dark">
-		<thead>
-			<tr>
-				<th>Title</th>
-				<th>Description</th>
-				<th>Status</th>
-				<th>Created At</th>
-				<th>Due Date</th>
-				<th>Is Deleted</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var task in Model)
-			{
-				<tr class="@(task.IsDeleted ? "table-danger-deep" : "")">
-					<td>@task.Title</td>
-					<td>@task.Description</td>
-					<td>@task.Status</td>
-					<td>@task.CreatedAt.ToString("g")</td>
-					<td>@task.DueDate?.ToString("g")</td>
-					<td>@(task.IsDeleted ? "Yes" : "No")</td>
-					<td>
-						<a asp-action="Details" asp-route-id="@task.Id" class="btn btn-sm btn-outline-info" style="width:90px;">Details</a>
-
-						@if (!task.IsDeleted)
-						{
-							<form asp-action="Delete" asp-route-id="@task.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this task?');">
-								@Html.AntiForgeryToken()
-								<button class="btn btn-sm btn-outline-warning" style="width:90px;">Delete</button>
-							</form>
-						}
-					</td>
+	<div class="table-responsive rounded shadow">
+		<table class="table table-dark table-bordered table-hover table-striped align-middle mb-0">
+			<thead class="table-active">
+				<tr>
+					<th>Title</th>
+					<th>Description</th>
+					<th>Status</th>
+					<th>Created At</th>
+					<th>Due Date</th>
+					<th>Is Deleted</th>
+					<th>CreatedByEmail</th>
+					<th>Actions</th>
 				</tr>
-			}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				@foreach (var task in Model)
+				{
+					<tr class="@(task.IsDeleted ? "deleted-row" : "")">
+						<td>@task.Title</td>
+						<td>@task.Description</td>
+						<td>@task.Status</td>
+						<td>@task.CreatedAt.ToString("g")</td>
+						<td>@task.DueDate?.ToString("g")</td>
+						<td>
+							@if (task.IsDeleted)
+							{
+								<span class="badge bg-danger">Yes</span>
+							}
+							else
+							{
+								<span class="badge bg-success">No</span>
+							}
+						</td>
+						<td>@task.CreatedByEmail</td>
+						<td class="d-flex flex-wrap gap-1">
+							<a asp-action="Details" asp-route-id="@task.Id" class="btn btn-sm btn-outline-info" style="width:90px;">Details</a>
 
-	<div class="text-center mb-3">
-		<a asp-area="Administrator" asp-controller="Administrator" asp-action="Index" class="btn btn-outline-dark">
+							@if (!task.IsDeleted)
+							{
+								<form asp-action="Delete" asp-route-id="@task.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this task?');">
+									@Html.AntiForgeryToken()
+									<button class="btn btn-sm btn-outline-danger" type="submit" style="width:90px;">Delete</button>
+								</form>
+							}
+							else
+							{
+								<form asp-action="Restore" asp-controller="Tasks" asp-area="Administrator" method="post">
+									@Html.AntiForgeryToken()
+									<input type="hidden" name="id" value="@task.Id" />
+									<button class="btn btn-sm btn-outline-success" type="submit" style="width:90px;">Restore</button>
+								</form>
+
+								<form asp-action="DeletePermanently" asp-controller="Tasks" asp-area="Administrator" method="post" onsubmit="return confirm('Are you sure you want to permanently delete this task?');">
+									@Html.AntiForgeryToken()
+									<input type="hidden" name="id" value="@task.Id" />
+									<button class="btn btn-sm btn-danger" type="submit" style="width:90px;">Delete</button>
+								</form>
+							}
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="text-center mt-4">
+		<a asp-area="Administrator" asp-controller="Administrator" asp-action="Index" class="btn btn-outline-light">
 			← Back to Dashboard
 		</a>
 	</div>
