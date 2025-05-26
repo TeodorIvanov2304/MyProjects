@@ -4,6 +4,7 @@ using SimpleTaskManagerApp.Data;
 using SimpleTaskManagerApp.Data.Models.Models;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.Administrator;
+using System.Reflection.Metadata.Ecma335;
 using static SimpleTaskManagerApp.Common.Utility;
 
 namespace SimpleTaskManagerApp.Services.Data
@@ -212,6 +213,21 @@ namespace SimpleTaskManagerApp.Services.Data
 			}
 
 			task.IsDeleted = true;
+			await _context.SaveChangesAsync();
+
+			return true;
+		}
+
+		public async Task<bool> RestoreTaskAsync(Guid id)
+		{
+			var task = await this._context.AppTasks.FindAsync(id);
+
+			if(task == null || !task.IsDeleted)
+			{
+				return false;
+			}
+
+			task.IsDeleted = false;
 			await _context.SaveChangesAsync();
 
 			return true;

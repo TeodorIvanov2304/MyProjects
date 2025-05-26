@@ -72,5 +72,26 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Restore(string id)
+		{
+			Guid taskGuid = Guid.Empty;
+			bool isValid = IsGuidValid(id, ref taskGuid);
+			
+			if (!isValid)
+			{
+				return NotFound();
+			}
+
+			bool isRestored = await this._administratorService.RestoreTaskAsync(taskGuid);
+
+			if (!isRestored)
+			{
+				return BadRequest("Unable to restore task.");
+			}
+
+			return RedirectToAction(nameof(Index));
+		}
 	}
 }
