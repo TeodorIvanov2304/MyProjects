@@ -25,6 +25,7 @@
 			<tbody>
 				@foreach (var task in Model)
 				{
+
 					<tr class="@(task.IsDeleted ? "deleted-row" : "")">
 						<td>@task.Title</td>
 						<td>@task.Description</td>
