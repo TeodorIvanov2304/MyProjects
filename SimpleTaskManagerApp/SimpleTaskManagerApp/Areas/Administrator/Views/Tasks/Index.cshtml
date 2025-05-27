@@ -25,6 +25,7 @@
 			<tbody>
 				@foreach (var task in Model)
 				{
+					var collapseId = "edit-collapse-" + task.Id;
 
 					<tr class="@(task.IsDeleted ? "deleted-row" : "")">
 						<td>@task.Title</td>
@@ -44,7 +45,7 @@
 						</td>
 						<td>@task.CreatedByEmail</td>
 						<td class="d-flex flex-wrap gap-1">
-							<a asp-action="Details" asp-route-id="@task.Id" class="btn btn-sm btn-outline-info" style="width:90px;">Details</a>
+									<button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#@collapseId" data-task-id="@task.Id" onclick="loadEditForm('@task.Id')" style="width:90px;">Edit</button>
 
 							@if (!task.IsDeleted)
 							{
@@ -69,6 +70,12 @@
 							}
 						</td>
 					</tr>
+					<tr class="collapse" id="@collapseId">
+						<td colspan="8" id="edit-container-@task.Id" class="bg-light text-dark p-3">
+							<em>Loading edit form...</em>
+						</td>
+					</tr>
+
 				}
 			</tbody>
 		</table>
