@@ -401,3 +401,4 @@ FodyWeavers.xsd
 
 # Ignore client-side libraries like Bootstrap
 wwwroot/lib/
+/SimpleTaskManagerApp/SimpleTaskManagerApp/wwwroot/lib/
