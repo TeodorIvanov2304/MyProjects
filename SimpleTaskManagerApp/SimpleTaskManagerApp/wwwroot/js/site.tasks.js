@@ -228,7 +228,7 @@ function setupCancelEdit() {
         if (e.target && e.target.classList.contains("cancel-edit")) {
             const formContainer = e.target.closest("form")?.parentElement;
             if (formContainer) {
-                formContainer.innerHTML = "";
+                formContainer.style.display = "none";
             }
         }
     });
