@@ -1,0 +1,46 @@
+﻿@model SimpleTaskManagerApp.ViewModels.AppTask.EditTaskViewModel
+
+<form id="editTaskForm" method="post" asp-action="EditPartial" asp-controller="Tasks" asp-area="Administrator">
+	@Html.AntiForgeryToken()
+
+	<div class="bg-dark text-white p-3 rounded">
+		<div class="mb-3">
+			<label asp-for="Title" class="form-label"></label>
+			<input asp-for="Title" class="form-control bg-secondary text-white" />
+			<span asp-validation-for="Title" class="text-danger"></span>
+		</div>
+
+		<div class="mb-3">
+			<label asp-for="Description" class="form-label"></label>
+			<textarea asp-for="Description" class="form-control bg-secondary text-white" rows="4"></textarea>
+			<span asp-validation-for="Description" class="text-danger"></span>
+		</div>
+
+		<div class="mb-3">
+			<label asp-for="StatusId" class="form-label"></label>
+			<select asp-for="StatusId" class="form-select bg-secondary text-white"
+					asp-items="@(new SelectList(Model.Statuses, "Id", "Name"))">
+				<option value="">-- Select Status --</option>
+			</select>
+			<span asp-validation-for="StatusId" class="text-danger"></span>
+		</div>
+
+		<div class="mb-3">
+			<label asp-for="DueDate" class="form-label"></label>
+			<input asp-for="DueDate" class="form-control bg-secondary text-white datepicker" type="text"
+				   value="@(Model.DueDate?.ToString("yyyy-MM-dd HH:mm") ?? "")" />
+			<span asp-validation-for="DueDate" class="text-danger"></span>
+		</div>
+
+		<input type="hidden" asp-for="Id" />
+
+		<div class="d-flex justify-content-end gap-2 border-top pt-3">
+			<button type="submit" class="btn btn-success">Save</button>
+			<button type="button" class="btn btn-secondary cancel-edit">Cancel</button>
+		</div>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

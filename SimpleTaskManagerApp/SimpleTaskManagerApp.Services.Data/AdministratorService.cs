@@ -4,7 +4,9 @@ using SimpleTaskManagerApp.Data;
 using SimpleTaskManagerApp.Data.Models.Models;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.Administrator;
+using SimpleTaskManagerApp.ViewModels.AppTask;
 using System.Reflection.Metadata.Ecma335;
+using System.Threading.Tasks;
 using static SimpleTaskManagerApp.Common.Utility;
 
 namespace SimpleTaskManagerApp.Services.Data
@@ -13,10 +15,12 @@ namespace SimpleTaskManagerApp.Services.Data
 	{
 		private readonly TaskManagerDbContext _context;
 		private readonly UserManager<ApplicationUser> _userManager;
-        public AdministratorService(TaskManagerDbContext context, UserManager<ApplicationUser> userManager)
+		private readonly IStatusService _statusService;
+        public AdministratorService(TaskManagerDbContext context, UserManager<ApplicationUser> userManager, IStatusService statusService)
         {
             this._context = context;
 			this._userManager = userManager;
+			this._statusService = statusService;
         }
 
 		//Administrator
@@ -231,6 +235,34 @@ namespace SimpleTaskManagerApp.Services.Data
 			await _context.SaveChangesAsync();
 
 			return true;
+		}
+
+		public async Task<EditTaskViewModel?> GetEditViewModelAsync(Guid id)
+		{
+			var task = await _context.AppTasks.FindAsync(id);
+
+			if(task == null)
+			{
+				return null!;
+			}
+
+			var statuses = await this._statusService.GetAllStatusesAsync();
+
+			var model = new EditTaskViewModel
+			{
+				Id = task.Id,
+				Title = task.Title,
+				Description = task.Description,
+				DueDate = task.DueDate,
+				StatusId = task.StatusId,
+				Statuses = statuses.Select(s => new AppTaskStatusViewModel
+				{
+					Id = s.Id,
+					Name = s.Name
+				})
+			};
+
+			return model;
 		}
 	}
 }

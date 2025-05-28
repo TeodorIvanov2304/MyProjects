@@ -57,14 +57,14 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 		{
 			Guid taskGuid = Guid.Empty;
 			bool isValid = IsGuidValid(id, ref taskGuid);
-			if (!isValid) 
+			if (!isValid)
 			{
 				return NotFound();
 			}
 
 			bool isDeleted = await this._administratorService.DeleteTaskPermanentlyAsync(taskGuid);
 
-			if (!isDeleted) 
+			if (!isDeleted)
 			{
 				return BadRequest("Unable to delete task.");
 			}
@@ -78,7 +78,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 		{
 			Guid taskGuid = Guid.Empty;
 			bool isValid = IsGuidValid(id, ref taskGuid);
-			
+
 			if (!isValid)
 			{
 				return NotFound();
@@ -92,6 +92,19 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 			}
 
 			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> EditPartial(Guid id)
+		{
+			var model = await _administratorService.GetEditViewModelAsync(id);
+
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return PartialView("_EditPartial", model);
 		}
 	}
 }

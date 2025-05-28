@@ -1,5 +1,4 @@
-﻿// INIT FUNCTIONS
-
+﻿
 document.addEventListener("DOMContentLoaded", function () {
     setupCreateButton();
     setupCreateFormSubmit();
@@ -7,17 +6,25 @@ document.addEventListener("DOMContentLoaded", function () {
     setupEditFormSubmit();
     setupDeleteSubmit();
     setupDetailsModal();
+    loadEditModalAdmin();
+    setupCancelEdit();
 });
 
 // CREATE TASK HANDLERS
 
 function setupCreateButton() {
-    document.getElementById("load-create-form").addEventListener("click", function () {
+    const btn = document.getElementById("load-create-form");
+    if (!btn) return;
+
+    btn.addEventListener("click", function () {
         fetch("/Tasks/CreatePartial")
             .then(response => response.text())
             .then(html => {
-                document.getElementById("modal-form-container").innerHTML = html;
-                initFlatpickr();
+                const container = document.getElementById("modal-form-container");
+                if (container) {
+                    container.innerHTML = html;
+                    initFlatpickr();
+                }
             });
     });
 }
@@ -39,7 +46,8 @@ function setupCreateFormSubmit() {
             })
                 .then(response => {
                     if (!response.ok) throw new Error("Request failed");
-                    bootstrap.Modal.getInstance(document.getElementById('createTaskModal')).hide();
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('createTaskModal'));
+                    if (modal) modal.hide();
                     showToast("Task added!");
                     location.reload();
                 })
@@ -60,9 +68,12 @@ function setupEditButton() {
             fetch(`/Tasks/EditPartial?id=${taskId}`)
                 .then(response => response.text())
                 .then(html => {
-                    document.getElementById('edit-modal-form-container').innerHTML = html;
-                    new bootstrap.Modal(document.getElementById('editTaskModal')).show();
-                    initFlatpickr();
+                    const container = document.getElementById('edit-modal-form-container');
+                    if (container) {
+                        container.innerHTML = html;
+                        new bootstrap.Modal(document.getElementById('editTaskModal')).show();
+                        initFlatpickr();
+                    }
                 });
         }
     });
@@ -77,11 +88,10 @@ function setupEditFormSubmit() {
 
             const formData = new FormData(form);
 
-            // Convert DueDate to UTC
             const dueDateInput = form.querySelector('input[name="DueDate"]');
             if (dueDateInput && dueDateInput.value) {
-                const localDate = new Date(dueDateInput.value); 
-                formData.set("DueDate", localDate.toISOString()); // format to UTC
+                const localDate = new Date(dueDateInput.value);
+                formData.set("DueDate", localDate.toISOString());
             }
 
             fetch('/Tasks/EditPartial', {
@@ -90,11 +100,12 @@ function setupEditFormSubmit() {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'RequestVerificationToken': token
                 },
-                body: new URLSearchParams(new FormData(formData))
+                body: new URLSearchParams(formData)
             })
                 .then(response => {
                     if (!response.ok) throw new Error("Edit failed");
-                    bootstrap.Modal.getInstance(document.getElementById('editTaskModal')).hide();
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editTaskModal'));
+                    if (modal) modal.hide();
                     showToast("Task updated!");
                     location.reload();
                 })
@@ -117,32 +128,41 @@ function setupDeleteSubmit() {
         }
     });
 
-    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
-        if (!currentDeleteTaskId) return;
-        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+    const deleteBtn = document.getElementById('confirmDeleteBtn');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', function () {
+            if (!currentDeleteTaskId) return;
 
-        fetch(`/Tasks/Delete/${currentDeleteTaskId}`, {
-            method: 'POST',
-            headers: {
-                'RequestVerificationToken': token
+            const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+            if (!tokenInput) {
+                showToast("Token not found.");
+                return;
             }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Delete failed")
-                };
-                bootstrap.Modal.getInstance(document.getElementById('deleteConfirmModal')).hide();
-                showToast("Task deleted!");
-                location.reload();
-            })
-            .catch(() => {
-                showToast("Failed to delete task.");
-            });
-    });
 
+            fetch(`/Tasks/Delete/${currentDeleteTaskId}`, {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': tokenInput.value
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Delete failed");
+                    }
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('deleteConfirmModal'));
+                    if (modal) modal.hide();
+                    showToast("Task deleted!");
+                    location.reload();
+                })
+                .catch(() => {
+                    showToast("Failed to delete task.");
+                });
+        });
+    }
 }
 
-//DETAILS TASK HANDLER
+// DETAILS TASK HANDLER
+
 function setupDetailsModal() {
     document.addEventListener('click', function (e) {
         if (e.target && e.target.classList.contains('load-details-modal')) {
@@ -151,9 +171,12 @@ function setupDetailsModal() {
             fetch(`/Tasks/DetailsPartial?id=${taskId}`)
                 .then(response => response.text())
                 .then(html => {
-                    document.getElementById('details-modal-form-container').innerHTML = html;
-                    const modal = new bootstrap.Modal(document.getElementById('detailsTaskModal'));
-                    modal.show();
+                    const container = document.getElementById('details-modal-form-container');
+                    if (container) {
+                        container.innerHTML = html;
+                        const modal = new bootstrap.Modal(document.getElementById('detailsTaskModal'));
+                        modal.show();
+                    }
                 })
                 .catch(() => {
                     showToast("Failed to load task details.");
@@ -162,6 +185,54 @@ function setupDetailsModal() {
     });
 }
 
+// EDIT TASK HANDLER ADMIN
+
+function loadEditModalAdmin() {
+    console.log("loadEditModalAdmin initialized");
+
+    document.addEventListener('click', async function (e) {
+        const button = e.target.closest('.load-admin-edit-form');
+        if (!button) {
+            return;
+        }
+        console.log("Edit admin button clicked");
+
+        const taskId = button.getAttribute("data-task-id");
+        const editContainerId = "edit-container-" + taskId;
+
+        console.log(`Fetching EditPartial for ID: ${taskId}`);
+
+        const response = await fetch(`/Administrator/Tasks/EditPartial?id=${taskId}`);
+        const editContainer = document.getElementById(editContainerId);
+
+        if (!response.ok) {
+            console.error("Failed to fetch partial:", response.status);
+            if (editContainer) {
+                editContainer.innerHTML = `<div class="text-danger">Failed to load form.</div>`;
+            }
+            return;
+        }
+
+        const partialHtml = await response.text();
+        if (editContainer) {
+            editContainer.innerHTML = partialHtml;
+
+            initFlatpickr();
+        }
+    });
+}
+
+//Remove EditPartial from Administrator/Tasks
+function setupCancelEdit() {
+    document.addEventListener("click", function (e) {
+        if (e.target && e.target.classList.contains("cancel-edit")) {
+            const formContainer = e.target.closest("form")?.parentElement;
+            if (formContainer) {
+                formContainer.innerHTML = "";
+            }
+        }
+    });
+}
 // FLATPICKR INIT
 
 function initFlatpickr() {

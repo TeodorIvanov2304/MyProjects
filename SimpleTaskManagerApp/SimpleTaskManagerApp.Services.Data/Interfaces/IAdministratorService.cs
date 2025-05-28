@@ -1,4 +1,5 @@
 ﻿using SimpleTaskManagerApp.ViewModels.Administrator;
+using SimpleTaskManagerApp.ViewModels.AppTask;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,5 +26,6 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 		Task<bool> DeleteTaskPermanentlyAsync(Guid id);
 		Task<bool> SoftDeleteTaskAsync(Guid id);
 		Task<bool> RestoreTaskAsync(Guid id);
+		Task<EditTaskViewModel?> GetEditViewModelAsync(Guid id);
 	}
 }

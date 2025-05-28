@@ -45,7 +45,7 @@
 						</td>
 						<td>@task.CreatedByEmail</td>
 						<td class="d-flex flex-wrap gap-1">
-									<button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#@collapseId" data-task-id="@task.Id" onclick="loadEditForm('@task.Id')" style="width:90px;">Edit</button>
+							<button class="btn btn-sm btn-outline-primary load-admin-edit-form" data-task-id="@task.Id" data-bs-toggle="collapse" data-bs-target="#@collapseId" style="width:90px;"> Edit</button>
 
 							@if (!task.IsDeleted)
 							{
