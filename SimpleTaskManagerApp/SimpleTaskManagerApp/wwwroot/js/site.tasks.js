@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     setupDetailsModal();
     loadEditModalAdmin();
     setupCancelEdit();
+    setupAdminCreateButton();
 });
 
 // CREATE TASK HANDLERS
@@ -233,6 +234,38 @@ function setupCancelEdit() {
         }
     });
 }
+
+//Admin Create
+function setupAdminCreateButton() {
+    const button = document.getElementById("load-admin-create-form");
+    const container = document.getElementById("admin-create-form-container");
+
+    button.addEventListener("click", function () {
+
+        //If there is form, hide it
+        if (container.innerHTML.trim() !== "") {
+            container.innerHTML = "";
+            button.textContent = '+ New Task'
+            return;
+        }
+
+        //If not, load the form
+        fetch("/Tasks/CreatePartial")
+            .then(res => res.text())
+            .then(html => {
+                container.innerHTML = html;
+                initFlatpickr();
+                button.textContent = 'Cancel';
+            })
+            .catch(err => {
+                console.error(err);
+                showToast("Failed to load create form.");
+            });
+    });
+}
+
+
+
 // FLATPICKR INIT
 
 function initFlatpickr() {
