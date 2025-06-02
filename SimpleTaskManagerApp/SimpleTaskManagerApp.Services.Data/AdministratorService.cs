@@ -264,5 +264,72 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			return model;
 		}
+
+		public async Task<IEnumerable<AdminTaskViewModel>> GetFilteredTaskAsync(FilterAppTaskViewModel filter)
+		{
+			IQueryable<AppTask> query = _context.AppTasks
+				.AsNoTracking()
+				.Include(t => t.Status)
+				.Include(t => t.User)
+				.AsQueryable();
+
+			if (!String.IsNullOrWhiteSpace(filter.TitleKeyword))
+			{
+				query = query.Where(t => t.Title.Contains(filter.TitleKeyword));
+			}
+
+			if (!String.IsNullOrWhiteSpace(filter.CreatedByEmail))
+			{
+				query = query.Where(t => t.User.Email!.Contains(filter.CreatedByEmail));
+			}
+
+			if (filter.StatusId.HasValue)
+			{
+				query = query.Where(t => t.StatusId == filter.StatusId);
+			}
+
+			if (filter.IsDeleted.HasValue)
+			{
+				query = query.Where(t => t.IsDeleted == filter.IsDeleted.Value);
+			}
+
+			if (filter.CreatedAtFrom.HasValue)
+			{
+				query = query.Where(t => t.CreatedAt >= filter.CreatedAtFrom.Value);
+			}
+
+
+			if (filter.CreatedAtTo.HasValue)
+			{
+				query = query.Where(t => t.CreatedAt <= filter.CreatedAtTo.Value);
+			}
+
+			if (filter.DueDateFrom.HasValue)
+			{
+				query = query.Where(t => t.DueDate >= filter.DueDateFrom.Value);
+			}
+
+			if (filter.DueDateTo.HasValue)
+			{
+				query = query.Where(t => t.DueDate <= filter.DueDateTo.Value);
+			}
+
+			var tasks = await query
+			   .OrderByDescending(t => t.CreatedAt)
+			   .Select(t => new AdminTaskViewModel
+			   {
+				   Id = t.Id.ToString(),
+				   Title = t.Title,
+				   Description = t.Description,
+				   Status = t.Status.Name,
+				   CreatedAt = t.CreatedAt,
+				   DueDate = t.DueDate,
+				   IsDeleted = t.IsDeleted,
+				   CreatedByEmail = t.User.Email!
+			   })
+			   .ToListAsync();
+
+			return tasks;
+		}
 	}
 }

@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SimpleTaskManagerApp.Controllers;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
+using SimpleTaskManagerApp.ViewModels.Administrator;
+using SimpleTaskManagerApp.ViewModels.AppTask;
+using SimpleTaskManagerApp.ViewModels.Status;
 using static SimpleTaskManagerApp.Common.Utility;
 
 namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
@@ -13,19 +17,29 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 
 
 		private readonly IAdministratorService _administratorService;
-
-		public TasksController(IAdministratorService administratorService)
+		private readonly IStatusService _statusService;
+		public TasksController(IAdministratorService administratorService, IStatusService statusService)
 		{
 			this._administratorService = administratorService;
+			this._statusService = statusService;
 		}
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(FilterAppTaskViewModel filter)
 		{
-			var model = await _administratorService.GetAllTasksAsync();
+			var tasks = await _administratorService.GetFilteredTaskAsync(filter);
+			var statuses = await _statusService.GetAllStatusesAsync();
 
-			if (!ModelState.IsValid)
+			var statusSelectList = statuses.Select(s => new SelectListItem
 			{
-				return NotFound();
-			}
+				Value = s.Id.ToString(),
+				Text = s.Name
+			});
+
+			var model = new AdminTasksIndexViewModel
+			{
+				Tasks = tasks,
+				Filter = filter,
+				Statuses = statusSelectList
+			};
 
 			return View(model);
 		}

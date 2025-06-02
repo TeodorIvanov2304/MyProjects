@@ -4,6 +4,7 @@ using SimpleTaskManagerApp.Data.Data.Repositories.Interfaces;
 using SimpleTaskManagerApp.Data.Models.Models;
 using SimpleTaskManagerApp.Data.Models.Models.Enums;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
+using SimpleTaskManagerApp.ViewModels.Administrator;
 using SimpleTaskManagerApp.ViewModels.AppTask;
 using static SimpleTaskManagerApp.Common.EntityValidationConstants;
 using static SimpleTaskManagerApp.Common.Utility;
@@ -166,9 +167,10 @@ namespace SimpleTaskManagerApp.Services.Data
 			return model;
 		}
 
+
 		public async Task<bool> PostDeleteViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin)
 		{
-			var task = await this._taskRepository.GetByIdAsync(taskGuid);
+			AppTask? task = await this._taskRepository.GetByIdAsync(taskGuid);
 
 			if (task == null || task.IsDeleted)
 			{
