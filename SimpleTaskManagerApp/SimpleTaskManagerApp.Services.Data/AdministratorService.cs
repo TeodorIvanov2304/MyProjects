@@ -295,23 +295,26 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			if (filter.CreatedAtFrom.HasValue)
 			{
-				query = query.Where(t => t.CreatedAt >= filter.CreatedAtFrom.Value);
+				var fromUtc = DateTime.SpecifyKind(filter.CreatedAtFrom.Value, DateTimeKind.Utc).ToUniversalTime();
+				query = query.Where(t => t.CreatedAt >= fromUtc);
 			}
-
 
 			if (filter.CreatedAtTo.HasValue)
 			{
-				query = query.Where(t => t.CreatedAt <= filter.CreatedAtTo.Value);
+				var toUtc = DateTime.SpecifyKind(filter.CreatedAtTo.Value, DateTimeKind.Utc).ToUniversalTime();
+				query = query.Where(t => t.CreatedAt <= toUtc);
 			}
 
 			if (filter.DueDateFrom.HasValue)
 			{
-				query = query.Where(t => t.DueDate >= filter.DueDateFrom.Value);
+				var fromUtc = DateTime.SpecifyKind(filter.DueDateFrom.Value, DateTimeKind.Utc).ToUniversalTime();
+				query = query.Where(t => t.DueDate >= fromUtc);
 			}
 
 			if (filter.DueDateTo.HasValue)
 			{
-				query = query.Where(t => t.DueDate <= filter.DueDateTo.Value);
+				var toUtc = DateTime.SpecifyKind(filter.DueDateTo.Value, DateTimeKind.Utc).ToUniversalTime();
+				query = query.Where(t => t.DueDate <= toUtc);
 			}
 
 			var tasks = await query

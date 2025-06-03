@@ -5,40 +5,45 @@
 	ViewData["Title"] = "Tasks";
 }
 
-<form method="get" class="row g-3 mb-4">
-	<div class="col-md-3">
-		<input type="text" name="TitleKeyword" class="form-control" placeholder="Search by Title..." value="@Model.Filter.TitleKeyword" />
-	</div>
+<div class="p-4 mb-4 bg-dark text-white rounded shadow">
+	<h4 class="mb-3">Filter Tasks</h4>
+	<form method="get" class="row g-3">
+		<div class="col-md-3">
+			<input type="text" name="TitleKeyword" class="form-control bg-dark text-white" placeholder="Search by Title..." value="@Model.Filter.TitleKeyword" />
+		</div>
 
-	<div class="col-md-2">
-		<select name="StatusId" class="form-select">
-			<option value="">All Statuses</option>
-			@foreach (var status in Model.Statuses)
-			{
-				<option value="@status.Value" selected="@(status.Value == Model.Filter.StatusId?.ToString())">@status.Text</option>
-			}
-		</select>
-	</div>
+		<div class="col-md-2">
+			<select name="StatusId" class="form-select bg-dark text-white">
+				<option value="">All Statuses</option>
+				@foreach (var status in Model.Statuses)
+				{
+					<option value="@status.Value" selected="@(status.Value == Model.Filter.StatusId?.ToString())">@status.Text</option>
+				}
+			</select>
+		</div>
 
-	<div class="col-md-2">
-		<input type="date" name="CreatedAtFrom" class="form-control" value="@(Model.Filter.CreatedAtFrom?.ToString("yyyy-MM-dd"))" />
-	</div>
-	<div class="col-md-2">
-		<input type="date" name="CreatedAtTo" class="form-control" value="@(Model.Filter.CreatedAtTo?.ToString("yyyy-MM-dd"))" />
-	</div>
+		<div class="col-md-2">
+			<input type="date" name="CreatedAtFrom" class="form-control bg-dark text-white datepicker" value="@(Model.Filter.CreatedAtFrom?.ToString("yyyy-MM-dd"))" placeholder="Created From" />
+		</div>
 
-	<div class="col-md-2">
-		<input type="date" name="DueDateFrom" class="form-control" value="@(Model.Filter.DueDateFrom?.ToString("yyyy-MM-dd"))" />
-	</div>
-	<div class="col-md-2">
-		<input type="date" name="DueDateTo" class="form-control" value="@(Model.Filter.DueDateTo?.ToString("yyyy-MM-dd"))" />
-	</div>
+		<div class="col-md-2">
+			<input type="date" name="CreatedAtTo" class="form-control bg-dark text-white datepicker" value="@(Model.Filter.CreatedAtTo?.ToString("yyyy-MM-dd"))" placeholder="Created To" />
+		</div>
 
-	<div class="col-md-12 d-flex gap-2">
-		<button type="submit" class="btn btn-outline-primary">Filter</button>
-		<a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
-	</div>
-</form>
+		<div class="col-md-2">
+			<input type="date" name="DueDateFrom" class="form-control bg-dark text-white datepicker" value="@(Model.Filter.DueDateFrom?.ToString("yyyy-MM-dd"))" placeholder="Due From" />
+		</div>
+
+		<div class="col-md-2">
+			<input type="date" name="DueDateTo" class="form-control bg-dark text-white datepicker" value="@(Model.Filter.DueDateTo?.ToString("yyyy-MM-dd"))" placeholder="Due To" />
+		</div>
+
+		<div class="col-md-12 d-flex gap-2">
+			<button type="submit" class="btn btn-outline-light">Filter</button>
+			<a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+		</div>
+	</form>
+</div>
 
 <div class="p-4 mb-3 bg-dark text-white rounded shadow">
 	<h2 class="mb-4">All Tasks</h2>
@@ -127,3 +132,13 @@
 		</a>
 	</div>
 </div>
+
+@section Scripts {
+	<script>
+			flatpickr(".datepicker", {
+			enableTime: true,
+			dateFormat: "Y-m-d H:i",
+			time_24hr: true
+		});
+	</script>
+}

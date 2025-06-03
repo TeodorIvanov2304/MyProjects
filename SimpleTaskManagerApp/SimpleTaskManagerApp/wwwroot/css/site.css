@@ -37,3 +37,21 @@ body {
 .deleted-row {
     background-color: #5c0000 !important;
 }
+
+/*Placeholder for dark theme*/
+.bg-dark ::placeholder {
+    color: white;
+    opacity: 1; 
+}
+
+.bg-dark input::placeholder {
+    color: white;
+}
+
+.bg-dark input[type="date"]::-webkit-input-placeholder {
+    color: white;
+}
+
+.bg-dark input[type="date"]::-moz-placeholder {
+    color: white;
+}
