@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     loadEditModalAdmin();
     setupCancelEdit();
     setupAdminCreateButton();
+    setupModalBackdropFix();
 });
 
 // CREATE TASK HANDLERS
@@ -74,6 +75,7 @@ function setupEditButton() {
                         container.innerHTML = html;
                         new bootstrap.Modal(document.getElementById('editTaskModal')).show();
                         initFlatpickr();
+                        setupModalBackdropFix();
                     }
                 });
         }
@@ -300,4 +302,19 @@ function showToast(message) {
         </div>`;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
+}
+
+//Manualy remove backdrop
+function setupModalBackdropFix() {
+    const modals = document.querySelectorAll('.modal');
+
+    modals.forEach(modalEl => {
+        modalEl.addEventListener('hidden.bs.modal', () => {
+            document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        });
+    });
 }
