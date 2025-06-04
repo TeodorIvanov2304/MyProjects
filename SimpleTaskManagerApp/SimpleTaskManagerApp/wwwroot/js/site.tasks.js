@@ -175,7 +175,14 @@ function setupDetailsModal() {
                     const container = document.getElementById('details-modal-form-container');
                     if (container) {
                         container.innerHTML = html;
-                        const modal = new bootstrap.Modal(document.getElementById('detailsTaskModal'));
+                        const modalEl = document.getElementById('detailsTaskModal');
+                        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                        modalEl.addEventListener('hidden.bs.modal', function () {
+                            const backdrops = document.querySelectorAll('.modal-backdrop');
+                            backdrops.forEach(b => b.remove());
+                        });
+
+
                         modal.show();
                     }
                 })
@@ -239,6 +246,10 @@ function setupCancelEdit() {
 function setupAdminCreateButton() {
     const button = document.getElementById("load-admin-create-form");
     const container = document.getElementById("admin-create-form-container");
+
+    if (!button || !container) {
+        return
+    };
 
     button.addEventListener("click", function () {
 
