@@ -295,29 +295,29 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			if (filter.CreatedAtFrom.HasValue)
 			{
-				var fromUtc = DateTime.SpecifyKind(filter.CreatedAtFrom.Value, DateTimeKind.Utc).ToUniversalTime();
+				DateTime fromUtc = DateTime.SpecifyKind(filter.CreatedAtFrom.Value, DateTimeKind.Utc).ToUniversalTime();
 				query = query.Where(t => t.CreatedAt >= fromUtc);
 			}
 
 			if (filter.CreatedAtTo.HasValue)
 			{
-				var toUtc = DateTime.SpecifyKind(filter.CreatedAtTo.Value, DateTimeKind.Utc).ToUniversalTime();
+				DateTime toUtc = DateTime.SpecifyKind(filter.CreatedAtTo.Value, DateTimeKind.Utc).ToUniversalTime();
 				query = query.Where(t => t.CreatedAt <= toUtc);
 			}
 
 			if (filter.DueDateFrom.HasValue)
 			{
-				var fromUtc = DateTime.SpecifyKind(filter.DueDateFrom.Value, DateTimeKind.Utc).ToUniversalTime();
+				DateTime fromUtc = DateTime.SpecifyKind(filter.DueDateFrom.Value, DateTimeKind.Utc).ToUniversalTime();
 				query = query.Where(t => t.DueDate >= fromUtc);
 			}
 
 			if (filter.DueDateTo.HasValue)
 			{
-				var toUtc = DateTime.SpecifyKind(filter.DueDateTo.Value, DateTimeKind.Utc).ToUniversalTime();
+				DateTime toUtc = DateTime.SpecifyKind(filter.DueDateTo.Value, DateTimeKind.Utc).ToUniversalTime();
 				query = query.Where(t => t.DueDate <= toUtc);
 			}
 
-			var tasks = await query
+			List<AdminTaskViewModel> tasks = await query
 			   .OrderByDescending(t => t.CreatedAt)
 			   .Select(t => new AdminTaskViewModel
 			   {

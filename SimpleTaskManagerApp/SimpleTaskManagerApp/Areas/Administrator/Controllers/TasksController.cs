@@ -24,16 +24,16 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 		}
 		public async Task<IActionResult> Index(FilterAppTaskViewModelAdmin filter)
 		{
-			var tasks = await _administratorService.GetFilteredTaskAsync(filter);
-			var statuses = await _statusService.GetAllStatusesAsync();
+			IEnumerable<AdminTaskViewModel> tasks = await _administratorService.GetFilteredTaskAsync(filter);
+			IEnumerable<StatusViewModel> statuses = await _statusService.GetAllStatusesAsync();
 
-			var statusSelectList = statuses.Select(s => new SelectListItem
+			IEnumerable<SelectListItem> statusSelectList = statuses.Select(s => new SelectListItem
 			{
 				Value = s.Id.ToString(),
 				Text = s.Name
 			});
 
-			var model = new AdminTasksIndexViewModel
+			AdminTasksIndexViewModel model = new AdminTasksIndexViewModel
 			{
 				Tasks = tasks,
 				Filter = filter,
