@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SimpleTaskManagerApp.Services.Data.Interfaces
 {
-	public interface IAdministratorService
+    public interface IAdministratorService
 	{	
 		//Administrator
 		Task<AdminDashboardViewModel> GetDashboardDataAsync();
@@ -27,7 +27,7 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 		Task<bool> SoftDeleteTaskAsync(Guid id);
 		Task<bool> RestoreTaskAsync(Guid id);
 		Task<EditTaskViewModel?> GetEditViewModelAsync(Guid id);
-		Task<IEnumerable<AdminTaskViewModel>> GetFilteredTaskAsync(FilterAppTaskViewModel filter);
+		Task<IEnumerable<AdminTaskViewModel>> GetFilteredTaskAsync(FilterAppTaskViewModelAdmin filter);
 	
 	}
 }

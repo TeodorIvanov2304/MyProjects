@@ -4,13 +4,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using SimpleTaskManagerApp.Controllers;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.Administrator;
-using SimpleTaskManagerApp.ViewModels.AppTask;
 using SimpleTaskManagerApp.ViewModels.Status;
 using static SimpleTaskManagerApp.Common.Utility;
 
 namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 {
-	[Area("Administrator")]
+    [Area("Administrator")]
 	[Authorize(Roles = "Administrator")]
 	public class TasksController : BaseController
 	{
@@ -23,7 +22,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 			this._administratorService = administratorService;
 			this._statusService = statusService;
 		}
-		public async Task<IActionResult> Index(FilterAppTaskViewModel filter)
+		public async Task<IActionResult> Index(FilterAppTaskViewModelAdmin filter)
 		{
 			var tasks = await _administratorService.GetFilteredTaskAsync(filter);
 			var statuses = await _statusService.GetAllStatusesAsync();

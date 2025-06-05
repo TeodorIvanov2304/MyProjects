@@ -11,7 +11,7 @@ using static SimpleTaskManagerApp.Common.Utility;
 
 namespace SimpleTaskManagerApp.Services.Data
 {
-	public class AdministratorService : IAdministratorService
+    public class AdministratorService : IAdministratorService
 	{
 		private readonly TaskManagerDbContext _context;
 		private readonly UserManager<ApplicationUser> _userManager;
@@ -265,7 +265,7 @@ namespace SimpleTaskManagerApp.Services.Data
 			return model;
 		}
 
-		public async Task<IEnumerable<AdminTaskViewModel>> GetFilteredTaskAsync(FilterAppTaskViewModel filter)
+		public async Task<IEnumerable<AdminTaskViewModel>> GetFilteredTaskAsync(FilterAppTaskViewModelAdmin filter)
 		{
 			IQueryable<AppTask> query = _context.AppTasks
 				.AsNoTracking()
