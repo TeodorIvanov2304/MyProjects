@@ -8,7 +8,7 @@ namespace SimpleTaskManagerApp.ViewModels.AppTask
 {
 	public class AppTaskViewModel
 	{
-		public int Id { get; set; }
+		public string Id { get; set; } = null!;
 
 		public string Title { get; set; } = null!;
 

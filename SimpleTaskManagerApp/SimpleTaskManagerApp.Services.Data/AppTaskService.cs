@@ -120,7 +120,7 @@ namespace SimpleTaskManagerApp.Services.Data
 				return null!;
 			}
 
-			var detailsTask = new DetailsAppTaskViewModel ()
+			var detailsTask = new DetailsAppTaskViewModel()
 			{
 				Username = task.User.FirstName + " " + task.User.LastName,
 				Title = task.Title,
@@ -142,7 +142,7 @@ namespace SimpleTaskManagerApp.Services.Data
 				return null;
 			}
 
-			
+
 			if (!isAdmin && task.UserId != userGuid.ToString())
 			{
 				return null!;
@@ -151,7 +151,7 @@ namespace SimpleTaskManagerApp.Services.Data
 			var statuses = await this._statusService.GetAllStatusesAsync();
 
 			var model = new EditTaskViewModel
-			{	
+			{
 				Id = task.Id,
 				Title = task.Title,
 				Description = task.Description,
@@ -167,7 +167,6 @@ namespace SimpleTaskManagerApp.Services.Data
 			return model;
 		}
 
-
 		public async Task<bool> PostDeleteViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin)
 		{
 			AppTask? task = await this._taskRepository.GetByIdAsync(taskGuid);
@@ -177,7 +176,7 @@ namespace SimpleTaskManagerApp.Services.Data
 				return false;
 			}
 
-			if (task.UserId != userGuid.ToString() && !isAdmin) 
+			if (task.UserId != userGuid.ToString() && !isAdmin)
 			{
 				return false;
 			}
@@ -218,10 +217,62 @@ namespace SimpleTaskManagerApp.Services.Data
 			catch (Exception ex)
 			{
 				Console.WriteLine("SaveChangesAsync ERROR: " + ex.Message);
-				throw; 
+				throw;
 			}
 
 			return true;
 		}
+
+		public async Task<IEnumerable<AppTaskViewModel>> GetFilteredTasksAsync(string userId, FilterAppTaskViewModelUser filter)
+		{
+			var query = _dbContext.AppTasks
+				.AsNoTracking()
+				.Where(t => !t.IsDeleted && t.User.Id.ToString() == userId);
+
+			if (!string.IsNullOrWhiteSpace(filter.TitleKeyword))
+			{
+				query = query.Where(t => t.Title.ToLower().Contains(filter.TitleKeyword.ToLower()));
+			}
+
+			if (filter.StatusId.HasValue)
+			{
+				query = query.Where(t => t.StatusId == filter.StatusId.Value);
+			}
+
+			if (filter.CreatedAtFrom.HasValue)
+			{
+				query = query.Where(t => t.CreatedAt >= filter.CreatedAtFrom.Value);
+			}
+
+			if (filter.CreatedAtTo.HasValue)
+			{
+				query = query.Where(t => t.CreatedAt <= filter.CreatedAtTo.Value);
+			}
+
+			if (filter.DueDateFrom.HasValue)
+			{
+				query = query.Where(t => t.DueDate >= filter.DueDateFrom.Value);
+			}
+
+			if (filter.DueDateTo.HasValue)
+			{
+				query = query.Where(t => t.DueDate <= filter.DueDateTo.Value);
+			}
+
+			return await query
+				.OrderByDescending(t => t.CreatedAt)
+				.Select(t => new AppTaskViewModel
+				{
+					Id = t.Id.ToString(),
+					Title = t.Title,
+					Description = t.Description,
+					Status = t.Status.ToString()!,
+					CreatedAt = t.CreatedAt,
+					DueDate = t.DueDate
+				})
+				.ToListAsync();
+		}
 	}
+
 }
+

@@ -13,5 +13,6 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 		Task<bool> PostDeleteViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin);
 		Task<DetailsAppTaskViewModel?> GetDetailsViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin);
 
+		Task<IEnumerable<AppTaskViewModel>> GetFilteredTasksAsync(string userId, FilterAppTaskViewModelUser filter);
 	}
 }
