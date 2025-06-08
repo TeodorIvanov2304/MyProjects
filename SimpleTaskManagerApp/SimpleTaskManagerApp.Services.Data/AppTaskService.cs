@@ -240,22 +240,26 @@ namespace SimpleTaskManagerApp.Services.Data
 			}
 
 			if (filter.CreatedAtFrom.HasValue)
-			{
+			{	
+				DateTime fromUtc = DateTime.SpecifyKind(filter.CreatedAtFrom.Value, DateTimeKind.Utc).ToUniversalTime();
 				query = query.Where(t => t.CreatedAt >= filter.CreatedAtFrom.Value);
 			}
 
 			if (filter.CreatedAtTo.HasValue)
-			{
+			{	
+				DateTime toUtc = DateTime.SpecifyKind(filter.CreatedAtTo.Value, DateTimeKind.Utc).ToUniversalTime();
 				query = query.Where(t => t.CreatedAt <= filter.CreatedAtTo.Value);
 			}
 
 			if (filter.DueDateFrom.HasValue)
-			{
+			{	
+				DateTime fromUtc = DateTime.SpecifyKind(filter.DueDateFrom.Value, DateTimeKind.Utc).ToUniversalTime();
 				query = query.Where(t => t.DueDate >= filter.DueDateFrom.Value);
 			}
 
 			if (filter.DueDateTo.HasValue)
 			{
+				DateTime toUtc = DateTime.SpecifyKind(filter.DueDateTo.Value, DateTimeKind.Utc).ToUniversalTime();
 				query = query.Where(t => t.DueDate <= filter.DueDateTo.Value);
 			}
 
