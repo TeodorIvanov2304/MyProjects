@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace SimpleTaskManagerApp.ViewModels.AppTask
 	public class UserTasksIndexViewModel
 	{
 		public FilterAppTaskViewModelUser Filter { get; set; } = new();
-		public IEnumerable<AppTaskListViewModel> Tasks { get; set; } = new List<AppTaskListViewModel>();
+		public IEnumerable<AppTaskViewModel> Tasks { get; set; } = new List<AppTaskViewModel>();
+		public IEnumerable<SelectListItem> Statuses { get; set; } = new List<SelectListItem>();
 	}
 }

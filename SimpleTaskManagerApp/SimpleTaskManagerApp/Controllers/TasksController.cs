@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.AppTask;
 using SimpleTaskManagerApp.ViewModels.Status;
-using System.Security.Claims;
 using static SimpleTaskManagerApp.Common.Utility;
 
 namespace SimpleTaskManagerApp.Controllers
@@ -20,7 +19,7 @@ namespace SimpleTaskManagerApp.Controllers
         }
 
 		[HttpGet]
-		public async Task<IActionResult> Index([FromQuery] FilterAppTaskViewModelUser filter)
+		public async Task<IActionResult> Index(FilterAppTaskViewModelUser filter)
 		{
 			string? userId = GetCurrentUserId();
 
@@ -32,12 +31,21 @@ namespace SimpleTaskManagerApp.Controllers
 
 			bool isAdmin = User.IsInRole("Administrator");
 
-			var tasks = await _appTaskService.GetFilteredTasksAsync(userId, filter, isAdmin);
+			IEnumerable<AppTaskViewModel> tasks = await _appTaskService.GetFilteredTasksAsync(userId, filter, isAdmin);
 
-			var model = new UserTasksIndexViewModel
+			IEnumerable<StatusViewModel> statuses = await _statusService.GetAllStatusesAsync();
+
+			IEnumerable<SelectListItem> statusSelectList = statuses.Select(s => new SelectListItem
+			{
+				Value = s.Id.ToString(),
+				Text = s.Name
+			});
+
+			UserTasksIndexViewModel model = new UserTasksIndexViewModel
 			{
 				Filter = filter,
-				Tasks = (IEnumerable<AppTaskListViewModel>)tasks
+				Statuses = statusSelectList,
+				Tasks = tasks
 			};
 
 			return View(model);

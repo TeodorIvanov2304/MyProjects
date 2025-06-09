@@ -1,11 +1,51 @@
 ﻿@using SimpleTaskManagerApp.ViewModels.AppTask
-@model IEnumerable<AppTaskListViewModel>
+@model UserTasksIndexViewModel
 
 @{
 	ViewData["Title"] = "All Tasks";
 }
 
 <h1 class="mt-4">All Tasks</h1>
+
+<div class="p-4 mb-4 bg-white text-dark rounded shadow">
+	<h4 class="mb-3">Filter Tasks</h4>
+	<form method="get" class="row g-3">
+		<div class="col-md-3">
+			<input type="text" name="TitleKeyword" class="form-control bg-white text-dark" placeholder="Search by Title..." value="@Model.Filter.TitleKeyword" />
+		</div>
+
+		<div class="col-md-2">
+			<select name="StatusId" class="form-select bg-white text-dark">
+				<option value="">All Statuses</option>
+				@foreach (var status in Model.Statuses)
+				{
+					<option value="@status.Value" selected="@(status.Value == Model.Filter.StatusId?.ToString())">@status.Text</option>
+				}
+			</select>
+		</div>
+
+		<div class="col-md-2">
+			<input type="text" name="CreatedAtFrom" class="form-control bg-white text-dark datepicker" value="@(Model.Filter.CreatedAtFrom?.ToString("yyyy-MM-dd HH:mm"))" placeholder="Created From" />
+		</div>
+
+		<div class="col-md-2">
+			<input type="text" name="CreatedAtTo" class="form-control bg-white text-dark datepicker" value="@(Model.Filter.CreatedAtTo?.ToString("yyyy-MM-dd HH:mm"))" placeholder="Created To" />
+		</div>
+
+		<div class="col-md-2">
+			<input type="text" name="DueDateFrom" class="form-control bg-white text-dark datepicker" value="@(Model.Filter.DueDateFrom?.ToString("yyyy-MM-dd HH:mm"))" placeholder="Due From" />
+		</div>
+
+		<div class="col-md-2">
+			<input type="text" name="DueDateTo" class="form-control bg-white text-dark datepicker" value="@(Model.Filter.DueDateTo?.ToString("yyyy-MM-dd HH:mm"))" placeholder="Due To" />
+		</div>
+
+		<div class="col-md-12 d-flex gap-2">
+			<button type="submit" class="btn btn-outline-dark">Filter</button>
+			<a asp-action="Index" class="btn btn-outline-dark">Clear</a>
+		</div>
+	</form>
+</div>
 
 @* Modal button + Bootstrap icon*@
 <button id="load-create-form" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createTaskModal">
@@ -23,11 +63,11 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach (var task in Model)
+		@foreach (var task in Model.Tasks)
 		{
 			<tr>
 				<td>@task.Title</td>
-				<td>@task.StatusName</td>
+				<td>@task.Status</td>
 				<td>@task.CreatedAt</td>
 				<td>@task.DueDate</td>
 				<td>
@@ -115,4 +155,12 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 	<script src="~/js/site.tasks.js"></script>
+
+	<script>
+			flatpickr(".datepicker", {
+			enableTime: true,
+			dateFormat: "Y-m-d H:i",
+			time_24hr: true
+		});
+	</script>
 }
