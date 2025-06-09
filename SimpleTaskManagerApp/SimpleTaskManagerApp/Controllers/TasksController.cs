@@ -20,27 +20,29 @@ namespace SimpleTaskManagerApp.Controllers
         }
 
 		[HttpGet]
-        public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index([FromQuery] FilterAppTaskViewModelUser filter)
 		{
 			string? userId = GetCurrentUserId();
 
-			Guid userGuid = Guid.Empty;
-
-			bool isValid = IsGuidValid(userId,ref userGuid);
-
-			if (!isValid)
+			if (!Guid.TryParse(userId, out Guid userGuid))
 			{
-				//Soon
-				//return RedirectToAction("Custom404","Error");
 				return NotFound();
-			}
+			}	
+				
 
 			bool isAdmin = User.IsInRole("Administrator");
 
-			IEnumerable<AppTaskListViewModel> models = await _appTaskService.GetAllTasksAsync(userGuid, isAdmin);
+			var tasks = await _appTaskService.GetFilteredTasksAsync(userId, filter, isAdmin);
 
-			return View(models);
+			var model = new UserTasksIndexViewModel
+			{
+				Filter = filter,
+				Tasks = (IEnumerable<AppTaskListViewModel>)tasks
+			};
+
+			return View(model);
 		}
+
 
 		[HttpGet]
 		[Authorize]

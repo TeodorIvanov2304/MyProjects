@@ -223,11 +223,16 @@ namespace SimpleTaskManagerApp.Services.Data
 			return true;
 		}
 
-		public async Task<IEnumerable<AppTaskViewModel>> GetFilteredTasksAsync(string userId, FilterAppTaskViewModelUser filter)
+		public async Task<IEnumerable<AppTaskViewModel>> GetFilteredTasksAsync(string userId, FilterAppTaskViewModelUser filter, bool isAdmin)
 		{
 			var query = _dbContext.AppTasks
 				.AsNoTracking()
-				.Where(t => !t.IsDeleted && t.User.Id.ToString() == userId);
+				.Where(t => !t.IsDeleted);
+
+			if (!isAdmin)
+			{
+				query = query.Where(t => t.User.Id.ToString() == userId);
+			}
 
 			if (!string.IsNullOrWhiteSpace(filter.TitleKeyword))
 			{
@@ -240,27 +245,27 @@ namespace SimpleTaskManagerApp.Services.Data
 			}
 
 			if (filter.CreatedAtFrom.HasValue)
-			{	
-				DateTime fromUtc = DateTime.SpecifyKind(filter.CreatedAtFrom.Value, DateTimeKind.Utc).ToUniversalTime();
-				query = query.Where(t => t.CreatedAt >= filter.CreatedAtFrom.Value);
+			{
+				var fromUtc = DateTime.SpecifyKind(filter.CreatedAtFrom.Value, DateTimeKind.Utc);
+				query = query.Where(t => t.CreatedAt >= fromUtc);
 			}
 
 			if (filter.CreatedAtTo.HasValue)
-			{	
-				DateTime toUtc = DateTime.SpecifyKind(filter.CreatedAtTo.Value, DateTimeKind.Utc).ToUniversalTime();
-				query = query.Where(t => t.CreatedAt <= filter.CreatedAtTo.Value);
+			{
+				var toUtc = DateTime.SpecifyKind(filter.CreatedAtTo.Value, DateTimeKind.Utc);
+				query = query.Where(t => t.CreatedAt <= toUtc);
 			}
 
 			if (filter.DueDateFrom.HasValue)
-			{	
-				DateTime fromUtc = DateTime.SpecifyKind(filter.DueDateFrom.Value, DateTimeKind.Utc).ToUniversalTime();
-				query = query.Where(t => t.DueDate >= filter.DueDateFrom.Value);
+			{
+				var fromUtc = DateTime.SpecifyKind(filter.DueDateFrom.Value, DateTimeKind.Utc);
+				query = query.Where(t => t.DueDate >= fromUtc);
 			}
 
 			if (filter.DueDateTo.HasValue)
 			{
-				DateTime toUtc = DateTime.SpecifyKind(filter.DueDateTo.Value, DateTimeKind.Utc).ToUniversalTime();
-				query = query.Where(t => t.DueDate <= filter.DueDateTo.Value);
+				var toUtc = DateTime.SpecifyKind(filter.DueDateTo.Value, DateTimeKind.Utc);
+				query = query.Where(t => t.DueDate <= toUtc);
 			}
 
 			return await query
@@ -270,7 +275,7 @@ namespace SimpleTaskManagerApp.Services.Data
 					Id = t.Id.ToString(),
 					Title = t.Title,
 					Description = t.Description,
-					Status = t.Status.ToString()!,
+					Status = t.Status.Name,
 					CreatedAt = t.CreatedAt,
 					DueDate = t.DueDate
 				})
