@@ -268,6 +268,10 @@ namespace SimpleTaskManagerApp.Services.Data
 				query = query.Where(t => t.DueDate <= toUtc);
 			}
 
+			query = query.OrderByDescending(t => t.CreatedAt)
+				.Skip((filter.PageNumber - 1) * filter.PageSize)
+				.Take(filter.PageSize);
+
 			return await query
 				.OrderByDescending(t => t.CreatedAt)
 				.Select(t => new AppTaskViewModel
