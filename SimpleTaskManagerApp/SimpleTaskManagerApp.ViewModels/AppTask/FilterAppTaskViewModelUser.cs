@@ -15,6 +15,7 @@ namespace SimpleTaskManagerApp.ViewModels.AppTask
 		public DateTime? DueDateTo { get; set; }
 		public int? StatusId { get; set; }
 
+		//For pagination
 		public int PageNumber { get; set; }
 		public int PageSize { get; set; }
 	}
