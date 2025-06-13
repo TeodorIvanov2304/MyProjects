@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using static SimpleTaskManagerApp.Common.EntityValidationConstants;
 
 namespace SimpleTaskManagerApp.ViewModels.AppTask
 {
@@ -16,7 +12,7 @@ namespace SimpleTaskManagerApp.ViewModels.AppTask
 		public int? StatusId { get; set; }
 
 		//For pagination
-		public int PageNumber { get; set; } = 1;
-		public int PageSize { get; set; } = 10;
+		public int PageNumber { get; set; } = AppTaskIndexPageNumber;
+		public int PageSize { get; set; } = AppTaskIndexPageSize;
 	}
 }
