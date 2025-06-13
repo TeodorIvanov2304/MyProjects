@@ -266,14 +266,12 @@ namespace SimpleTaskManagerApp.Services.Data
 			{
 				var toUtc = DateTime.SpecifyKind(filter.DueDateTo.Value, DateTimeKind.Utc);
 				query = query.Where(t => t.DueDate <= toUtc);
-			}
-
-			query = query.OrderByDescending(t => t.CreatedAt)
-				.Skip((filter.PageNumber - 1) * filter.PageSize)
-				.Take(filter.PageSize);
+			}				
 
 			return await query
 				.OrderByDescending(t => t.CreatedAt)
+				.Skip((filter.PageNumber - 1) * filter.PageSize)
+				.Take(filter.PageSize)
 				.Select(t => new AppTaskViewModel
 				{
 					Id = t.Id.ToString(),
@@ -284,6 +282,55 @@ namespace SimpleTaskManagerApp.Services.Data
 					DueDate = t.DueDate
 				})
 				.ToListAsync();
+		}
+
+		//Tasks counter
+		public async Task<int> GetFilteredTasksCountAsync(string userId, FilterAppTaskViewModelUser filter, bool isAdmin)
+		{
+			var query = _dbContext.AppTasks
+				.AsNoTracking()
+				.Where(t => !t.IsDeleted);
+
+			if (!isAdmin)
+			{
+				query = query.Where(t => t.User.Id.ToString() == userId);
+			}
+
+			if (!string.IsNullOrWhiteSpace(filter.TitleKeyword))
+			{
+				query = query.Where(t => t.Title.ToLower().Contains(filter.TitleKeyword.ToLower()));
+			}
+
+			if (filter.StatusId.HasValue)
+			{
+				query = query.Where(t => t.StatusId == filter.StatusId.Value);
+			}
+
+			if (filter.CreatedAtFrom.HasValue)
+			{
+				var fromUtc = DateTime.SpecifyKind(filter.CreatedAtFrom.Value, DateTimeKind.Utc);
+				query = query.Where(t => t.CreatedAt >= fromUtc);
+			}
+
+			if (filter.CreatedAtTo.HasValue)
+			{
+				var toUtc = DateTime.SpecifyKind(filter.CreatedAtTo.Value, DateTimeKind.Utc);
+				query = query.Where(t => t.CreatedAt <= toUtc);
+			}
+
+			if (filter.DueDateFrom.HasValue)
+			{
+				var fromUtc = DateTime.SpecifyKind(filter.DueDateFrom.Value, DateTimeKind.Utc);
+				query = query.Where(t => t.DueDate >= fromUtc);
+			}
+
+			if (filter.DueDateTo.HasValue)
+			{
+				var toUtc = DateTime.SpecifyKind(filter.DueDateTo.Value, DateTimeKind.Utc);
+				query = query.Where(t => t.DueDate <= toUtc);
+			}
+
+			return await query.CountAsync();
 		}
 	}
 

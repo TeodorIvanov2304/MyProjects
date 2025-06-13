@@ -14,5 +14,6 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 		Task<DetailsAppTaskViewModel?> GetDetailsViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin);
 
 		Task<IEnumerable<AppTaskViewModel>> GetFilteredTasksAsync(string userId, FilterAppTaskViewModelUser filter, bool isAdmin);
+		Task<int> GetFilteredTasksCountAsync(string userId, FilterAppTaskViewModelUser filter, bool isAdmin);
 	}
 }

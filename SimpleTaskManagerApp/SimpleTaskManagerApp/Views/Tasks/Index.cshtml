@@ -80,6 +80,19 @@
 	</tbody>
 </table>
 
+@* Pagination *@
+<nav>
+	<ul class="pagination">
+		@for (int i = 1; i <= Model.TotalPages; i++)
+		{
+			<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+				<a class="page-link" href="?PageNumber=@i&TitleKeyword=@Model.Filter.TitleKeyword&StatusId=@Model.Filter.StatusId">
+					@i
+				</a>
+			</li>
+		}
+	</ul>
+</nav>
 
 @* Bootstrap Create modal *@
 <div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true">

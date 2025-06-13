@@ -31,6 +31,8 @@ namespace SimpleTaskManagerApp.Controllers
 
 			bool isAdmin = User.IsInRole("Administrator");
 
+			int totalTaskCount = await _appTaskService.GetFilteredTasksCountAsync(userId, filter, isAdmin);
+
 			IEnumerable<AppTaskViewModel> tasks = await _appTaskService.GetFilteredTasksAsync(userId, filter, isAdmin);
 
 			IEnumerable<StatusViewModel> statuses = await _statusService.GetAllStatusesAsync();
@@ -41,11 +43,14 @@ namespace SimpleTaskManagerApp.Controllers
 				Text = s.Name
 			});
 
+
 			UserTasksIndexViewModel model = new UserTasksIndexViewModel
 			{
 				Filter = filter,
 				Statuses = statusSelectList,
-				Tasks = tasks
+				Tasks = tasks,
+				CurrentPage = filter.PageNumber,
+				TotalPages = (int)Math.Ceiling(totalTaskCount / (double)filter.PageSize)
 			};
 
 			return View(model);
