@@ -1,4 +1,5 @@
-﻿namespace SimpleTaskManagerApp.ViewModels.Administrator
+﻿using static SimpleTaskManagerApp.Common.EntityValidationConstants;
+namespace SimpleTaskManagerApp.ViewModels.Administrator
 {
     public class FilterAppTaskViewModelAdmin
     {
@@ -12,5 +13,9 @@
         public DateTime? CreatedAtTo { get; set; }
         public string? SortBy { get; set; }
         public bool SortDescending { get; set; } = false;
-    }
+
+		//For pagination
+		public int PageNumber { get; set; } = AppTaskIndexPageNumber;
+		public int PageSize { get; set; } = AppTaskIndexPageSize;
+	}
 }
