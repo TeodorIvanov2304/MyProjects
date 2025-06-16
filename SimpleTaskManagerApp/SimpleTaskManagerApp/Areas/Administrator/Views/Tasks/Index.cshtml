@@ -133,8 +133,9 @@
 	</div>
 </div>
 
+@* Pagination *@
 <nav>
-	<ul class="pagination">
+	<ul class="pagination justify-content-center">
 		@for (int i = 1; i <= Model.TotalPages; i++)
 		{
 			<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
