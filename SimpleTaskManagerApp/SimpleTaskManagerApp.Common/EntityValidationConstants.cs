@@ -20,5 +20,8 @@
 		//Pagination
 		public const byte AppTaskIndexPageNumber = 1;
 		public const byte AppTaskIndexPageSize = 10;
+
+		public const byte UserIndexPageNumber = 1;
+		public const byte UserIndexPageSize = 10;
 	}
 }
