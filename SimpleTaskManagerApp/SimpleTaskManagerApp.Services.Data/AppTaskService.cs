@@ -332,6 +332,8 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			return await query.CountAsync();
 		}
+
+		
 	}
 
 }

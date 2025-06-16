@@ -334,5 +334,57 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			return tasks;
 		}
+
+		//Task counter
+		public async Task<int> GetFilteredTaskCountAsync(FilterAppTaskViewModelAdmin filter)
+		{
+			IQueryable<AppTask> query = _context.AppTasks.AsNoTracking();
+
+			if (!string.IsNullOrWhiteSpace(filter.TitleKeyword))
+			{
+				query = query.Where(t => t.Title.Contains(filter.TitleKeyword));
+			}
+
+			if (!string.IsNullOrWhiteSpace(filter.CreatedByEmail))
+			{
+				query = query.Where(t => t.User.Email!.Contains(filter.CreatedByEmail));
+			}
+
+			if (filter.StatusId.HasValue)
+			{
+				query = query.Where(t => t.StatusId == filter.StatusId);
+			}
+
+			if (filter.IsDeleted.HasValue)
+			{
+				query = query.Where(t => t.IsDeleted == filter.IsDeleted.Value);
+			}
+
+			if (filter.CreatedAtFrom.HasValue)
+			{
+				var fromUtc = DateTime.SpecifyKind(filter.CreatedAtFrom.Value, DateTimeKind.Utc).ToUniversalTime();
+				query = query.Where(t => t.CreatedAt >= fromUtc);
+			}
+
+			if (filter.CreatedAtTo.HasValue)
+			{
+				var toUtc = DateTime.SpecifyKind(filter.CreatedAtTo.Value, DateTimeKind.Utc).ToUniversalTime();
+				query = query.Where(t => t.CreatedAt <= toUtc);
+			}
+
+			if (filter.DueDateFrom.HasValue)
+			{
+				var fromUtc = DateTime.SpecifyKind(filter.DueDateFrom.Value, DateTimeKind.Utc).ToUniversalTime();
+				query = query.Where(t => t.DueDate >= fromUtc);
+			}
+
+			if (filter.DueDateTo.HasValue)
+			{
+				var toUtc = DateTime.SpecifyKind(filter.DueDateTo.Value, DateTimeKind.Utc).ToUniversalTime();
+				query = query.Where(t => t.DueDate <= toUtc);
+			}
+
+			return await query.CountAsync();
+		}
 	}
 }
