@@ -319,6 +319,8 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			List<AdminTaskViewModel> tasks = await query
 			   .OrderByDescending(t => t.CreatedAt)
+			   .Skip((filter.PageNumber - 1) * filter.PageSize)
+			   .Take(filter.PageSize)
 			   .Select(t => new AdminTaskViewModel
 			   {
 				   Id = t.Id.ToString(),
@@ -334,7 +336,7 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			return tasks;
 		}
-
+			
 		//Task counter
 		public async Task<int> GetFilteredTaskCountAsync(FilterAppTaskViewModelAdmin filter)
 		{

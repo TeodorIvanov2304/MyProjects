@@ -34,6 +34,8 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 				filter.PageSize = 10;
 			}
 
+			int totalTaskCount = await _administratorService.GetFilteredTaskCountAsync(filter);
+
 			IEnumerable<AdminTaskViewModel> tasks = await _administratorService.GetFilteredTaskAsync(filter);
 			IEnumerable<StatusViewModel> statuses = await _statusService.GetAllStatusesAsync();
 
@@ -47,7 +49,9 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 			{
 				Tasks = tasks,
 				Filter = filter,
-				Statuses = statusSelectList
+				Statuses = statusSelectList,
+				CurrentPage = filter.PageNumber,
+				TotalPages = (int)Math.Ceiling(totalTaskCount / (double)filter.PageSize)
 			};
 
 			return View(model);

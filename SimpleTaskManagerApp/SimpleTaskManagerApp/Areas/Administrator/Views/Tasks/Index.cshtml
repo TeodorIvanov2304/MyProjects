@@ -133,6 +133,19 @@
 	</div>
 </div>
 
+<nav>
+	<ul class="pagination">
+		@for (int i = 1; i <= Model.TotalPages; i++)
+		{
+			<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+				<a class="page-link" href="?PageNumber=@i&TitleKeyword=@Model.Filter.TitleKeyword&StatusId=@Model.Filter.StatusId">
+					@i
+				</a>
+			</li>
+		}
+	</ul>
+</nav>
+
 @section Scripts {
 	<script>
 			flatpickr(".datepicker", {

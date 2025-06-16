@@ -28,6 +28,7 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 		Task<bool> RestoreTaskAsync(Guid id);
 		Task<EditTaskViewModel?> GetEditViewModelAsync(Guid id);
 		Task<IEnumerable<AdminTaskViewModel>> GetFilteredTaskAsync(FilterAppTaskViewModelAdmin filter);
-	
+
+		Task<int> GetFilteredTaskCountAsync(FilterAppTaskViewModelAdmin filter);
 	}
 }
