@@ -27,7 +27,16 @@ namespace SimpleTaskManagerApp.Controllers
 			{
 				return NotFound();
 			}	
-				
+			
+			if(filter.PageNumber <= 0)
+			{
+				filter.PageNumber = 1;
+			}
+
+			if(filter.PageSize <= 0 || filter.PageSize > 100)
+			{
+				filter.PageSize = 10;
+			}
 
 			bool isAdmin = User.IsInRole("Administrator");
 
