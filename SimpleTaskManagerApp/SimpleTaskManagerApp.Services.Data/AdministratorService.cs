@@ -41,23 +41,57 @@ namespace SimpleTaskManagerApp.Services.Data
 		}
 
 		//Users
-		public async Task<IEnumerable<AdminUserViewModel>> GetAllUsersAsync()
+		public async Task<IEnumerable<AdminUserViewModel>> GetFilteredUsersAsync(FilterUserViewModelAdmin filter)
 		{
-			List<ApplicationUser> users = await _userManager.Users.ToListAsync();
+			IQueryable<ApplicationUser> usersQuery = _userManager.Users.AsQueryable();
+
+			if (!string.IsNullOrWhiteSpace(filter.EmailKeyword))
+			{
+				usersQuery = usersQuery.Where(u => u.Email!.Contains(filter.EmailKeyword));
+			}
+
+			if (!string.IsNullOrWhiteSpace(filter.FirstNameKeyword))
+			{
+				usersQuery = usersQuery.Where(u => u.FirstName!.Contains(filter.FirstNameKeyword));
+			}
+
+			if (!string.IsNullOrWhiteSpace(filter.LastNameKeyword))
+			{
+				usersQuery = usersQuery.Where(u => u.LastName!.Contains(filter.LastNameKeyword));
+			}
+
+
+			List<ApplicationUser> users = await usersQuery
+				.Skip((filter.PageNumber - 1) * filter.PageSize)
+				.Take(filter.PageSize)
+				.ToListAsync();
 
 			HashSet<AdminUserViewModel> result = new();
 
 			foreach (ApplicationUser user in users) 
 			{
 				IList<string> roles = await _userManager.GetRolesAsync(user);
+				bool isAdmin = roles.Contains("Administrator");
+				bool isLocked = await _userManager.IsLockedOutAsync(user);
+
+				if (filter.IsAdmin.HasValue && filter.IsAdmin != isAdmin)
+				{
+					continue;
+				}
+
+				if (filter.IsLockedOut.HasValue && filter.IsLockedOut != isLocked)
+				{
+					continue;
+				}
+
 				AdminUserViewModel userToAdd = new AdminUserViewModel
 				{	
 					Id = user.Id,
 					Email = user.Email!,
 					FirstName = user.FirstName!,
 					LastName = user.LastName!,
-					IsAdmin = roles.Contains("Administrator"),
-					IsLockedOut = await _userManager.IsLockedOutAsync(user),
+					IsAdmin = isAdmin,
+					IsLockedOut = isLocked,
 				};
 
 				result.Add(userToAdd);

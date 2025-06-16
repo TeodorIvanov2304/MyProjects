@@ -19,9 +19,9 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(FilterUserViewModelAdmin filter)
 		{
-			IEnumerable<AdminUserViewModel> users = await _administratorService.GetAllUsersAsync();
+			var users = await _administratorService.GetFilteredUsersAsync(filter);
 			return View(users);
 		}
 

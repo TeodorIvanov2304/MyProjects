@@ -14,7 +14,7 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 		Task<AdminDashboardViewModel> GetDashboardDataAsync();
 
 		//Users
-		Task<IEnumerable<AdminUserViewModel>> GetAllUsersAsync();
+		Task<IEnumerable<AdminUserViewModel>> GetFilteredUsersAsync(FilterUserViewModelAdmin filter);
 		Task<bool> PromoteToAdminAsync(string userId, string? currentUserId);
 		Task<bool> DemoteFromAdminAsync(string userId, string? currentUserId);
 		Task<bool> RemoveUserAsync(string userId);
