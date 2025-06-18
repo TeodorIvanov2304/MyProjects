@@ -5,13 +5,11 @@ using SimpleTaskManagerApp.Data.Models.Models;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.Administrator;
 using SimpleTaskManagerApp.ViewModels.AppTask;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading.Tasks;
 using static SimpleTaskManagerApp.Common.Utility;
 
 namespace SimpleTaskManagerApp.Services.Data
 {
-    public class AdministratorService : IAdministratorService
+	public class AdministratorService : IAdministratorService
 	{
 		private readonly TaskManagerDbContext _context;
 		private readonly UserManager<ApplicationUser> _userManager;
@@ -100,6 +98,51 @@ namespace SimpleTaskManagerApp.Services.Data
 			return result;
 		}
 
+
+		//UserCounter
+		public async Task<int> GetFilteredUsersCountAsync(FilterUserViewModelAdmin filter)
+		{
+			IQueryable<ApplicationUser> usersQuery = _userManager.Users.AsQueryable();
+
+			if (!string.IsNullOrWhiteSpace(filter.EmailKeyword))
+			{
+				usersQuery = usersQuery.Where(u => u.Email!.Contains(filter.EmailKeyword));
+			}
+
+			if (!string.IsNullOrWhiteSpace(filter.FirstNameKeyword))
+			{
+				usersQuery = usersQuery.Where(u => u.FirstName!.Contains(filter.FirstNameKeyword));
+			}
+
+			if (!string.IsNullOrWhiteSpace(filter.LastNameKeyword)) 
+			{
+				usersQuery = usersQuery.Where(u => u.LastName!.Contains(filter.LastNameKeyword));
+			}
+
+			List<ApplicationUser> users = await usersQuery.ToListAsync();
+			int count = 0;
+
+			foreach (ApplicationUser user in users) 
+			{
+				IList<string> roles = await _userManager.GetRolesAsync(user);
+				bool isAdmin = roles.Contains("Administrator");
+				bool isLocked = await _userManager.IsLockedOutAsync(user);
+
+				if (filter.IsAdmin.HasValue && filter.IsAdmin != isAdmin)
+				{
+					continue;
+				}
+
+				if(filter.IsLockedOut.HasValue && filter.IsLockedOut != isLocked)
+				{
+					continue;
+				}
+
+				count++;
+			}
+
+			return count;
+		}
 
 		public async Task<bool> PromoteToAdminAsync(string userId, string? currentUserId)
 		{

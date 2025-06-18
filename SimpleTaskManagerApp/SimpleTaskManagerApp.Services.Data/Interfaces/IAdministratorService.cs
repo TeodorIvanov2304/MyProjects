@@ -30,5 +30,7 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 		Task<IEnumerable<AdminTaskViewModel>> GetFilteredTaskAsync(FilterAppTaskViewModelAdmin filter);
 
 		Task<int> GetFilteredTaskCountAsync(FilterAppTaskViewModelAdmin filter);
+
+		Task<int> GetFilteredUsersCountAsync(FilterUserViewModelAdmin filter);
 	}
 }
