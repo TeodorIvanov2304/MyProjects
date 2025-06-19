@@ -33,5 +33,18 @@
 
 			return DateTime.SpecifyKind(dt.Value, DateTimeKind.Utc);
 		}
+		
+		public static void CheckPages(int pageNumber, int pageSize)
+		{
+			if(pageNumber <= 0)
+			{
+				pageNumber = 1;
+			}
+
+			if (pageSize <= 0 || pageSize > 100) 
+			{
+				pageSize = 10;
+			}
+		}
 	}
 }

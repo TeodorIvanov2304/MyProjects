@@ -21,15 +21,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Index(FilterUserViewModelAdmin filter)
 		{	
-			if(filter.PageNumber <= 0)
-			{
-				filter.PageNumber = 1;
-			}
-
-			if (filter.PageSize <= 0 || filter.PageSize > 100)
-			{
-				filter.PageSize = 10;
-			}
+			CheckPages(filter.PageNumber, filter.PageSize);
 
 			var users = await _administratorService.GetFilteredUsersAsync(filter);
 			int totalCount = await _administratorService.GetFilteredUsersCountAsync(filter);

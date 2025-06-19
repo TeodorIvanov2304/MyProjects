@@ -24,15 +24,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 		}
 		public async Task<IActionResult> Index(FilterAppTaskViewModelAdmin filter)
 		{
-			if (filter.PageNumber <= 0)
-			{
-				filter.PageNumber = 1;
-			}
-
-			if (filter.PageSize <= 0 || filter.PageSize > 100)
-			{
-				filter.PageSize = 10;
-			}
+			CheckPages(filter.PageNumber, filter.PageSize);
 
 			int totalTaskCount = await _administratorService.GetFilteredTaskCountAsync(filter);
 
