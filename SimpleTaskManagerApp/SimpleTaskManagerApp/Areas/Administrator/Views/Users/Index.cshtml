@@ -1,5 +1,5 @@
 ﻿@using SimpleTaskManagerApp.ViewModels.Administrator
-@model IEnumerable<AdminUserViewModel>
+@model AdminUsersIndexViewModel
 
 @{
 	ViewData["Title"] = "Users";
@@ -8,6 +8,32 @@
 
 <div class="p-4 mb-3 bg-dark text-white rounded shadow">
 	<h2 class="mb-4">All Users</h2>
+
+	<form method="get" class="row g-3 mb-4 text-white">
+	<div class="col-md-4">
+		<label class="form-label">Email</label>
+		<input type="text" class="form-control" name="EmailKeyword" value="@Model.Filter.EmailKeyword" />
+	</div>
+	<div class="col-md-2">
+		<label class="form-label">Is Admin</label>
+		<select class="form-select" name="IsAdmin">
+			<option value="">All</option>
+				<option value="true" selected="@(Model.Filter.IsAdmin == true ? "selected" : null)">Yes</option>
+			<option value="false" selected ="@(Model.Filter.IsAdmin == false ? "selected" : null)">No</option>
+		</select>
+	</div>
+	<div class="col-md-2">
+		<label class="form-label">Locked Out</label>
+		<select class="form-select" name="IsLockedOut">
+			<option value="">All</option>
+			<option value="true" selected="@(Model.Filter.IsLockedOut == true ? "selected" : null)">Yes</option>
+			<option value="false" selected ="@(Model.Filter.IsLockedOut == false ? "selected" : null)">No</option>
+		</select>
+	</div>
+	<div class="col-md-2 align-self-end">
+		<button type="submit" class="btn btn-outline-light w-100">Filter</button>
+	</div>
+</form>
 
 	<table class="table table-dark table-bordered table-hover table-striped align-middle mb-0">
 		<thead>
@@ -20,7 +46,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var user in Model)
+			@foreach (var user in Model.Users)
 			{
 				<tr>
 					<td>@user.Email</td>

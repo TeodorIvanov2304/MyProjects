@@ -34,7 +34,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 				TotalPages = (int)Math.Ceiling(totalCount / (double)filter.PageSize)
 			};
 
-			return View(users);
+			return View(model);
 		}
 
 		[HttpPost]
