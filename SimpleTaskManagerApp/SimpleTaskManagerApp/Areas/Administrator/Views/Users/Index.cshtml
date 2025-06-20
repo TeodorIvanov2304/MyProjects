@@ -30,8 +30,9 @@
 			<option value="false" selected ="@(Model.Filter.IsLockedOut == false ? "selected" : null)">No</option>
 		</select>
 	</div>
-	<div class="col-md-2 align-self-end">
-		<button type="submit" class="btn btn-outline-light w-100">Filter</button>
+		<div class="col-md-12 d-flex gap-2">
+		<button type="submit" class="btn btn-outline-light">Filter</button>
+			<a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
 	</div>
 </form>
 
