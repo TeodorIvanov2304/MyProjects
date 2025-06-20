@@ -99,6 +99,25 @@
 			}
 		</tbody>
 	</table>
+
+	@* Pagination *@
+	<nav class="d-flex justify-content-center mt-4">
+		<ul class="pagination">
+			@for (int i = 1; i <= Model.TotalPages; i++)
+			{
+				<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+					<a class="page-link"
+					   href="?PageNumber=@i
+					&EmailKeyword=@Model.Filter.EmailKeyword
+					&IsAdmin=@Model.Filter.IsAdmin
+					&IsLockedOut=@Model.Filter.IsLockedOut">
+						@i
+					</a>
+				</li>
+			}
+		</ul>
+	</nav>
+
 	<div class="text-center mt-4">
 		<a asp-area="Administrator" asp-controller="Administrator" asp-action="Index" class="btn btn-outline-light">
 			← Back to Dashboard
