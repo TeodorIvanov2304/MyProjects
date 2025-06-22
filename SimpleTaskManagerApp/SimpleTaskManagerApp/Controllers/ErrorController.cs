@@ -4,8 +4,8 @@ namespace SimpleTaskManagerApp.Controllers
 {
 	public class ErrorController : Controller
 	{
-		[Route("Error/404")]	
-		public IActionResult NotFoundPage() 
+		[Route("Error/404")]
+		public IActionResult NotFoundPage()
 		{
 			Response.StatusCode = 404;
 			return View("NotFound");
@@ -15,7 +15,6 @@ namespace SimpleTaskManagerApp.Controllers
 		public IActionResult Forbidden()
 		{
 			Response.StatusCode = 403;
-
 			return View("Forbidden");
 		}
 

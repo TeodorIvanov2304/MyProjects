@@ -88,6 +88,8 @@ namespace SimpleTaskManagerApp
 				await DatabaseSeeder.SeedRolesAsync(services);
 			}
 
+			app.MapFallbackToController("NotFoundPage", "Error");
+
 			app.Run();
 		}
 	}
