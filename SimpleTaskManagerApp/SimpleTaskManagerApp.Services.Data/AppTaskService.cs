@@ -231,7 +231,7 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			if (!isAdmin)
 			{
-				query = query.Where(t => t.User.Id.ToString() == userId);
+				query = query.Where(t => t.User.Id == userId);
 			}
 
 			if (!string.IsNullOrWhiteSpace(filter.TitleKeyword))
@@ -293,7 +293,7 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			if (!isAdmin)
 			{
-				query = query.Where(t => t.User.Id.ToString() == userId);
+				query = query.Where(t => t.User.Id == userId);
 			}
 
 			if (!string.IsNullOrWhiteSpace(filter.TitleKeyword))

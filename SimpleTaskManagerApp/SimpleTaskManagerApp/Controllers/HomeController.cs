@@ -35,8 +35,13 @@ namespace SimpleTaskManagerApp.Controllers
 		}
 
 		//Regular user Index
-		public IActionResult Index()
-		{
+		public  IActionResult Index()
+		{	
+			
+			if(User.Identity != null && User.Identity.IsAuthenticated)
+			{
+				ViewBag.UserName = User.Identity.Name;
+			}
 			return View();
 		}
 
