@@ -27,6 +27,7 @@ namespace SimpleTaskManagerApp.Controllers
 				var user = await _userManager.GetUserAsync(User);
 				if (await _userManager.IsInRoleAsync(user!, "Administrator"))
 				{
+					TempData["WelcomeAdminName"] = TempData["WelcomeAdminName"];
 					return RedirectToAction("Index", "Administrator", new { area = "Administrator" });
 				}
 			}

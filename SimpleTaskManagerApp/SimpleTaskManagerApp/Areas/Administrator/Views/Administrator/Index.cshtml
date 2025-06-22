@@ -1,8 +1,18 @@
 ﻿@using SimpleTaskManagerApp.ViewModels.Administrator
 @model AdminDashboardViewModel
+
+@if (ViewBag.WelcomeMessage != null)
+{
+	<div class="alert alert-success mt-4" role="alert">
+		Welcome, Admin <strong>@ViewBag.WelcomeMessage</strong>!
+	</div>
+}
+
 @{
 	ViewData["Title"] = "Admin Dashboard";
 }
+
+
 
 <h1 class="mb-4">Admin Dashboard</h1>
 
