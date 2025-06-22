@@ -116,7 +116,10 @@ namespace SimpleTaskManagerApp.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+
+					//!! LocalRedirect(returnUrl)
+					//Change LocalRedirect, for Administrator and regular user
+					return RedirectToAction("RedirectAfterLogin","Home");
                 }
                 if (result.RequiresTwoFactor)
                 {

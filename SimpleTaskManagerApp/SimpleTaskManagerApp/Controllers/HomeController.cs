@@ -18,7 +18,9 @@ namespace SimpleTaskManagerApp.Controllers
 			_userManager = userManager;
 		}
 
-		public async Task<IActionResult> Index()
+		//Redirect after login
+		[Route("home/redirect")]
+		public async Task<IActionResult> RedirectAfterLogin()
 		{
 			if (User.Identity != null && User.Identity.IsAuthenticated)
 			{
@@ -29,6 +31,12 @@ namespace SimpleTaskManagerApp.Controllers
 				}
 			}
 
+			return RedirectToAction("Index");
+		}
+
+		//Regular user Index
+		public IActionResult Index()
+		{
 			return View();
 		}
 
