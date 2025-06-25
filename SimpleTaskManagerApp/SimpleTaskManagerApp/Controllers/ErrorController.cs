@@ -18,11 +18,11 @@ namespace SimpleTaskManagerApp.Controllers
 			return View("Forbidden");
 		}
 
-		[Route("Error/Error")]
+		[Route("Error/500")]
 		public IActionResult GeneralError()
 		{
 			Response.StatusCode = 500;
-			return View("Error");
+			return View("GeneralError");
 		}
 	}
 }
