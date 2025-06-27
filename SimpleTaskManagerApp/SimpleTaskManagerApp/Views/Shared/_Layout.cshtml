@@ -39,7 +39,7 @@
 				<div class="collapse navbar-collapse" id="adminNavbar">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 						<li class="nav-item">
-							<a class="nav-link" asp-controller="Home" asp-action="Index">
+							<a class="nav-link" asp-area="Administrator" asp-controller="Administrator" asp-action="Index">
 								<i class="fas fa-home me-1"></i>Dashboard
 							</a>
 						</li>
@@ -49,12 +49,12 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" asp-controller="Tasks" asp-action="Create">
+							<a class="nav-link" asp-area="" asp-controller="Tasks" asp-action="Create">
 								<i class="fas fa-plus-circle me-1"></i>Create Task
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" asp-controller="Users" asp-action="Index">
+							<a class="nav-link" asp-area="Administrator" asp-controller="Users" asp-action="Index">
 								<i class="fas fa-users-cog me-1"></i>User Management
 							</a>
 						</li>
