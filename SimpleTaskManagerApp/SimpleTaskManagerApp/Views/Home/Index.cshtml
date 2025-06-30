@@ -16,4 +16,30 @@
 	}
 </div>
 
+<div class="container mt-5">
+	<div class="row justify-content-center g-4">
+		<div class="col-md-6 col-lg-5">
+			<div class="card h-100 shadow-sm">
+				<img src="https://via.placeholder.com/500x200?text=Create+Task" class="card-img-top" alt="Create Task">
+				<div class="card-body d-flex flex-column">
+					<h5 class="card-title">Create New Task</h5>
+					<p class="card-text">Add a new task to your list and keep track of what you need to do.</p>
+					<a asp-controller="Tasks" asp-action="Create" class="btn btn-primary mt-auto">Go to Create</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6 col-lg-5">
+			<div class="card h-100 shadow-sm">
+				<img src="https://via.placeholder.com/500x200?text=View+Tasks" class="card-img-top" alt="View Tasks">
+				<div class="card-body d-flex flex-column">
+					<h5 class="card-title">View All Tasks</h5>
+					<p class="card-text">See all your current tasks and manage their status easily.</p>
+					<a asp-controller="Tasks" asp-action="Index" class="btn btn-success mt-auto">Go to Tasks</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 
