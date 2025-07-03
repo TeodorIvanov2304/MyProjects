@@ -18,28 +18,33 @@
 
 <div class="container mt-5">
 	<div class="row justify-content-center g-4">
+
 		<div class="col-md-6 col-lg-5">
-			<div class="card h-100 shadow-sm">
-				<img src="~/images/create.png" class="card-img-top" alt="Create Task">
-				<div class="card-body d-flex flex-column">
-					<h5 class="card-title">Create New Task</h5>
-					<p class="card-text">Add a new task to your list and keep track of what you need to do.</p>
-					<a asp-controller="Tasks" asp-action="Create" class="btn btn-primary mt-auto">Go to Create</a>
+			<a asp-controller="Tasks" asp-action="Create" class="text-decoration-none text-dark">
+				<div class="card h-100 shadow-sm">
+					<img src="~/images/create.png" class="card-img-top" alt="Create Task">
+					<div class="card-body">
+						<h5 class="card-title">Create New Task</h5>
+						<p class="card-text">Add a new task to your list and keep track of what you need to do.</p>
+					</div>
 				</div>
-			</div>
+			</a>
 		</div>
 
 		<div class="col-md-6 col-lg-5">
-			<div class="card h-100 shadow-sm">
-				<img src="~/images/tasks.png" class="card-img-top" alt="View Tasks">
-				<div class="card-body d-flex flex-column">
-					<h5 class="card-title">View All Tasks</h5>
-					<p class="card-text">See all your current tasks and manage their status easily.</p>
-					<a asp-controller="Tasks" asp-action="Index" class="btn btn-success mt-auto">Go to Tasks</a>
+			<a asp-controller="Tasks" asp-action="Index" class="text-decoration-none text-dark">
+				<div class="card h-100 shadow-sm">
+					<img src="~/images/tasks.png" class="card-img-top" alt="View Tasks">
+					<div class="card-body">
+						<h5 class="card-title">View All Tasks</h5>
+						<p class="card-text">See all your current tasks and manage their status easily.</p>
+					</div>
 				</div>
-			</div>
+			</a>
 		</div>
+
 	</div>
 </div>
+
 
 
