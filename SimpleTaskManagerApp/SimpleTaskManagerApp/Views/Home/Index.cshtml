@@ -1,20 +1,22 @@
 ﻿@{
 	ViewData["Title"] = "Home Page";
-	var name = ViewBag.UserName as string;
+	var welcomeMessage = ViewBag.WelcomeBackMessage as string;
+	bool isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
 }
 
-<div class="mt-4 p-4 bg-light border rounded shadow-sm text-center">
-	@if (!string.IsNullOrEmpty(name))
-	{
-		<h2>Welcome back, @name!</h2>
-		<p class=""></p>
-	}
-	else
-	{
+@if (!string.IsNullOrEmpty(welcomeMessage))
+{
+	<div class="mt-4 p-4 border rounded shadow-sm text-center" style="background-color: rgb(248, 242, 129);">
+		<h2>@welcomeMessage</h2>
+	</div>
+}
+else if (!isAuthenticated)
+{
+	<div class="mt-4 p-4 border rounded shadow-sm text-center">
 		<h2>Welcome to SimpleManagerApp!</h2>
 		<p class="text-muted">Please log in to get started.</p>
-	}
-</div>
+	</div>
+}
 
 <div class="container mt-5 mb-5">
 	<div class="row justify-content-center g-4">

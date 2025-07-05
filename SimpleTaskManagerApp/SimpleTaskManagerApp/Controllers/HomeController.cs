@@ -27,7 +27,7 @@ namespace SimpleTaskManagerApp.Controllers
 				var user = await _userManager.GetUserAsync(User);
 				if (await _userManager.IsInRoleAsync(user!, "Administrator"))
 				{
-					TempData["WelcomeAdminName"] = TempData["WelcomeAdminName"];
+					TempData["WelcomeBack"] = $"Welcome back, {user!.UserName}!";
 					return RedirectToAction("Index", "Administrator", new { area = "Administrator" });
 				}
 			}
@@ -37,11 +37,11 @@ namespace SimpleTaskManagerApp.Controllers
 
 		//Regular user Index
 		public  IActionResult Index()
-		{	
-			
-			if(User.Identity != null && User.Identity.IsAuthenticated)
+		{
+
+			if (User.Identity != null && User.Identity.IsAuthenticated)
 			{
-				ViewBag.UserName = User.Identity.Name;
+				ViewBag.WelcomeBackMessage = TempData["WelcomeBack"];
 			}
 			return View();
 		}
