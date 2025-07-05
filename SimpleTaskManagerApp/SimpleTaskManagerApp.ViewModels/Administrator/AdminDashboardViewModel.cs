@@ -5,5 +5,6 @@
 		public int TotalUsers { get; set; }
 		public int TotalTasks { get; set; }
 		public int CompletedTasks { get; set; }
+		public int TodaysTasks { get; set; }
 	}
 }

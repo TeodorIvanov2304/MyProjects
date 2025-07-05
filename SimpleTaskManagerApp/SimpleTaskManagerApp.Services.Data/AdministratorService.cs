@@ -27,12 +27,15 @@ namespace SimpleTaskManagerApp.Services.Data
 			int totalUsers = await _context.Users.CountAsync();
 			int totalTasks = await _context.AppTasks.CountAsync();
 			int completedTasks = await _context.AppTasks.CountAsync(t => t.Status.Name == "Completed");
+			int todaysTasks = await _context.AppTasks.CountAsync(t => t.DueDate == DateTime.Today.ToUniversalTime());
 
 			AdminDashboardViewModel model = new AdminDashboardViewModel
 			{
 				TotalUsers = totalUsers,
 				TotalTasks = totalTasks,
-				CompletedTasks = completedTasks
+				CompletedTasks = completedTasks,
+				TodaysTasks = todaysTasks
+
 			};
 
 			return model;
