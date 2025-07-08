@@ -16,42 +16,46 @@
 
 <h1 class="mb-4">Admin Dashboard</h1>
 
-<div class="row">
+<div class="row g-4 text-center">
 	<div class="col-md-3">
-		<div class="card text-white bg-primary mb-3">
-			<div class="card-header">Total Users</div>
+		<div class="card bg-dark text-white shadow-sm rounded-4 h-100 border-0">
 			<div class="card-body">
-				<h5 class="card-title">@Model.TotalUsers</h5>
+				<i class="fas fa-users fa-2x mb-3 text-secondary"></i>
+				<h6 class="text-uppercase text-white">Total Users</h6>
+				<h2 class="fw-bold">@Model.TotalUsers</h2>
 			</div>
 		</div>
 	</div>
 	<div class="col-md-3">
-		<div class="card text-white bg-dark mb-3">
-			<div class="card-header">Total Tasks</div>
+		<div class="card bg-dark text-white shadow-sm rounded-4 h-100 border-0">
 			<div class="card-body">
-				<h5 class="card-title">@Model.TotalTasks</h5>
+				<i class="fas fa-tasks fa-2x mb-3 text-secondary"></i>
+				<h6 class="text-uppercase text-white">Total Tasks</h6>
+				<h2 class="fw-bold">@Model.TotalTasks</h2>
 			</div>
 		</div>
 	</div>
 	<div class="col-md-3">
-		<div class="card text-white bg-success mb-3">
-			<div class="card-header">Completed Tasks</div>
+		<div class="card bg-dark text-white shadow-sm rounded-4 h-100 border-0">
 			<div class="card-body">
-				<h5 class="card-title">@Model.CompletedTasks</h5>
+				<i class="fas fa-check-circle fa-2x mb-3 text-success"></i>
+				<h6 class="text-uppercase text-white">Completed Tasks</h6>
+				<h2 class="fw-bold">@Model.CompletedTasks</h2>
 			</div>
 		</div>
 	</div>
 	<div class="col-md-3">
-		<div class="card text-white bg-danger mb-3">
-			<div class="card-header">Tasks for Today</div>
+		<div class="card bg-dark text-white shadow-sm rounded-4 h-100 border-0">
 			<div class="card-body">
-				<h5 class="card-title">@Model.TodaysTasks</h5>
+				<i class="fas fa-calendar-day fa-2x mb-3 text-warning"></i>
+				<h6 class="text-uppercase text-white">Tasks for Today</h6>
+				<h2 class="fw-bold">@Model.TodaysTasks</h2>
 			</div>
 		</div>
 	</div>
 </div>
 
-<ul class="nav mb-3">
+<ul class="nav mb-3 mt-3">
 	<li class="nav-item">
 		<a class="btn btn-primary me-2" asp-area="Administrator" asp-controller="Administrator" asp-action="Index">Dashboard</a>
 	</li>
