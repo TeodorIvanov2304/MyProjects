@@ -1,0 +1,32 @@
+﻿using SimpleTaskManagerApp.Data;
+using SimpleTaskManagerApp.Data.Models.Models;
+using SimpleTaskManagerApp.Services.Data.Interfaces;
+using System.ComponentModel.DataAnnotations;
+
+namespace SimpleTaskManagerApp.Services.Data
+{
+	public class LogEntryService : ILogEntryService
+	{
+		private readonly TaskManagerDbContext _context;
+
+        public LogEntryService(TaskManagerDbContext context)
+        {
+            this._context = context;
+        }
+
+        public async Task LogAsync(string userId, string userEmail, string action, string entityType, string? entityId = null)
+		{
+			var log = new LogEntry
+			{
+				UserId = userId,
+				UserEmail = userEmail,
+				Action = action,
+				EntityType = entityType,
+				EntityId = entityId
+			};
+
+			await _context.LogEntries.AddAsync(log);
+			await _context.SaveChangesAsync();
+		}
+	}
+}
