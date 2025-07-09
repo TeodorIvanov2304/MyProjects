@@ -23,7 +23,7 @@
 	<script src="~/js/site.tasks.js" asp-append-version="true"></script>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
 	@Html.AntiForgeryToken()
 
 	<header>
@@ -80,13 +80,13 @@
 		</nav>
 	</header>
 
-	<div class="container-fluid py-5">
-		<main role="main">
+	<main role="main" class="flex-fill pb-3">
+		<div class="container-fluid mt-4">
 			@RenderBody()
-		</main>
-	</div>
+		</div>
+	</main>
 
-	<footer class="footer mt-auto py-2 border-top text-white" style="background-color: #2F3E6E;">
+	<footer class="text-white py-3" style="background-color: #2F3E6E;">
 		<div class="container text-center small">
 			&copy; 2025 - SimpleTaskManagerApp |
 			<a class="text-decoration-none text-white" asp-controller="Home" asp-action="Privacy">Privacy</a>
