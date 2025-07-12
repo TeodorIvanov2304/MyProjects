@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SimpleTaskManagerApp.Data;
 using SimpleTaskManagerApp.Data.Data.Repositories.Interfaces;
 using SimpleTaskManagerApp.Data.Models.Models;
@@ -16,12 +17,15 @@ namespace SimpleTaskManagerApp.Services.Data
 		private readonly ITaskRepository _taskRepository;
 		private readonly IStatusService _statusService;
 		private readonly TaskManagerDbContext _dbContext;
-
-		public AppTaskService(ITaskRepository taskRepository, IStatusService statusService, TaskManagerDbContext dbContext)
+		private readonly ILogEntryService _logEntryService;
+		private readonly UserManager<ApplicationUser> _userManager;
+		public AppTaskService(ITaskRepository taskRepository, IStatusService statusService, TaskManagerDbContext dbContext, ILogEntryService logEntryService, UserManager<ApplicationUser> userManager)
 		{
 			this._taskRepository = taskRepository;
 			this._statusService = statusService;
 			this._dbContext = dbContext;
+			this._logEntryService = logEntryService;
+			this._userManager = userManager;
 		}
 
 		public async Task CreateAsync(AppTaskCreateViewModel model, string userId)
@@ -56,6 +60,10 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			await _taskRepository.AddAsync(task);
 			await _taskRepository.SaveChangesAsync();
+
+			var user = await _userManager.FindByIdAsync(userId);
+
+			await _logEntryService.LogAsync(userId, user!.Email ?? "Unknown", "Created task", "Task", task.Id.ToString());
 		}
 
 		public async Task<IEnumerable<AppTaskListViewModel>> GetAllTasksAsync(Guid userGuid, bool isAdmin)
@@ -266,7 +274,7 @@ namespace SimpleTaskManagerApp.Services.Data
 			{
 				var toUtc = DateTime.SpecifyKind(filter.DueDateTo.Value, DateTimeKind.Utc);
 				query = query.Where(t => t.DueDate <= toUtc);
-			}				
+			}
 
 			return await query
 				.OrderByDescending(t => t.CreatedAt)
@@ -333,7 +341,7 @@ namespace SimpleTaskManagerApp.Services.Data
 			return await query.CountAsync();
 		}
 
-		
+
 	}
 
 }

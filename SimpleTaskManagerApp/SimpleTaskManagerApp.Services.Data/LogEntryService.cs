@@ -16,7 +16,7 @@ namespace SimpleTaskManagerApp.Services.Data
 
         public async Task LogAsync(string userId, string userEmail, string action, string entityType, string? entityId = null)
 		{
-			var log = new LogEntry
+			LogEntry log = new LogEntry
 			{
 				UserId = userId,
 				UserEmail = userEmail,
