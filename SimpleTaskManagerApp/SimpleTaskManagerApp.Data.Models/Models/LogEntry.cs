@@ -30,8 +30,8 @@ namespace SimpleTaskManagerApp.Data.Models.Models
 		[Comment("The type of object that was changed or used.")]
 		public string EntityType { get; set; } = null!;
 
-		[Comment("The ID of the object")]
-		public string? EntityId { get; set; }
+		[Comment("The name or title of the affected entity")]
+		public string? EntityName { get; set; }
 
 		[Comment("Timestamp of the current log")]
 		public DateTime TimeStamp { get; set; } = DateTime.UtcNow;
