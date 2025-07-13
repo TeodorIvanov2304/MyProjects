@@ -1,4 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Moq;
 using SimpleTaskManagerApp.Data;
 using SimpleTaskManagerApp.Data.Data.Repositories;
 using SimpleTaskManagerApp.Data.Data.Repositories.Interfaces;
@@ -15,7 +19,8 @@ namespace SimpleTaskManagerApp.Services.Tests
 		private readonly ITaskRepository _taskRepository;
 		private readonly IStatusService _statusService;
 		private readonly AppTaskService _appTaskService;
-
+		private readonly ILogEntryService _logEntryService;
+		private readonly UserManager<ApplicationUser> _userManager;
 		public AppTaskServiceTests()
 		{
 			// Create an in-memory DbContext with a unique database name (using Guid)
@@ -32,11 +37,18 @@ namespace SimpleTaskManagerApp.Services.Tests
 			// Initialize the status service
 			_statusService = new StatusTaskService(_context);
 
+			// Initialize the LogEntry service
+			_logEntryService = new LogEntryService(_context);
+
+			_userManager = MockUserManager();
+
 			// Initialize the AppTaskService
 			_appTaskService = new AppTaskService(
 				_taskRepository,
 				_statusService,
-				_context
+				_context,
+				_logEntryService,
+				_userManager
 			);
 
 			// Seed default statuses if not already present
@@ -51,6 +63,34 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 				_context.SaveChanges();
 			}
+		}
+
+		private static UserManager<ApplicationUser> MockUserManager()
+		{
+			var store = new Mock<IUserStore<ApplicationUser>>();
+
+			var options = new Mock<IOptions<IdentityOptions>>();
+			options.Setup(o => o.Value).Returns(new IdentityOptions());
+
+			var passwordHasher = new Mock<IPasswordHasher<ApplicationUser>>();
+			var userValidators = new List<IUserValidator<ApplicationUser>>();
+			var pwdValidators = new List<IPasswordValidator<ApplicationUser>>();
+			var normalizer = new Mock<ILookupNormalizer>();
+			var describer = new Mock<IdentityErrorDescriber>();
+			var serviceProvider = new Mock<IServiceProvider>();
+			var logger = new Mock<ILogger<UserManager<ApplicationUser>>>();
+
+			return new UserManager<ApplicationUser>(
+				store.Object,
+				options.Object,
+				passwordHasher.Object,
+				userValidators,
+				pwdValidators,
+				normalizer.Object,
+				describer.Object,
+				serviceProvider.Object,
+				logger.Object
+			);
 		}
 
 		// -------------------------
