@@ -1,0 +1,46 @@
+﻿@using SimpleTaskManagerApp.Data.Models.Models
+@model List<LogEntry>
+
+@{
+	ViewData["Title"] = "Log";
+}
+
+<div class="p-4 mb-4 bg-dark text-white rounded shadow">
+	<h2 class="mb-4">Audit Log</h2>
+
+	<div class="table-responsive rounded shadow">
+		<table class="table table-dark table-bordered table-hover table-striped align-middle mb-0">
+			<thead class="table-active">
+				<tr>
+					<th>User</th>
+					<th>Action</th>
+					<th>Entity</th>
+					<th>Entity name</th>
+					<th>Time</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var log in Model)
+				{
+					<tr>
+						<td>@log.UserEmail</td>
+						<td>
+							<span class="badge @(log.Action == "Create" ? "bg-success" : log.Action == "Delete" ? "bg-danger" : "bg-warning text-dark")">
+								@log.Action
+							</span>
+						</td>
+						<td>@log.EntityType</td>
+						<td>@log.EntityName</td>
+						<td>@log.TimeStamp.ToString("g")</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="text-center mt-4">
+		<a asp-area="Administrator" asp-controller="Administrator" asp-action="Index" class="btn btn-outline-light">
+			← Back to Dashboard
+		</a>
+	</div>
+</div>
