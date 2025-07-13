@@ -63,7 +63,7 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			var user = await _userManager.FindByIdAsync(userId);
 
-			await _logEntryService.LogAsync(userId, user!.Email ?? "Unknown", "Created task", "Task", task.Id.ToString());
+			await _logEntryService.LogAsync(userId, user!.Email ?? "Unknown", "Created task", "Task", model.Title);
 		}
 
 		public async Task<IEnumerable<AppTaskListViewModel>> GetAllTasksAsync(Guid userGuid, bool isAdmin)

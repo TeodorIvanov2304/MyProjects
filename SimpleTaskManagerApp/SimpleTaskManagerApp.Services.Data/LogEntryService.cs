@@ -14,7 +14,7 @@ namespace SimpleTaskManagerApp.Services.Data
             this._context = context;
         }
 
-        public async Task LogAsync(string userId, string userEmail, string action, string entityType, string? entityId = null)
+        public async Task LogAsync(string userId, string userEmail, string action, string entityType, string? entityName)
 		{
 			LogEntry log = new LogEntry
 			{
@@ -22,7 +22,7 @@ namespace SimpleTaskManagerApp.Services.Data
 				UserEmail = userEmail,
 				Action = action,
 				EntityType = entityType,
-				EntityId = entityId
+				EntityName = entityName
 			};
 
 			await _context.LogEntries.AddAsync(log);
