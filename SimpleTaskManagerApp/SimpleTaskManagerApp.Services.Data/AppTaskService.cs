@@ -7,6 +7,7 @@ using SimpleTaskManagerApp.Data.Models.Models.Enums;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.Administrator;
 using SimpleTaskManagerApp.ViewModels.AppTask;
+using SimpleTaskManagerApp.ViewModels.Status;
 using static SimpleTaskManagerApp.Common.EntityValidationConstants;
 using static SimpleTaskManagerApp.Common.Utility;
 
@@ -207,12 +208,11 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			if (!isAdmin && task.UserId != userGuid.ToString())
 			{
-				return false!;
+				return false;
 			}
 
-			var statuses = await this._statusService.GetAllStatusesAsync();
+			IEnumerable<StatusViewModel> statuses = await this._statusService.GetAllStatusesAsync();
 
-			task.Id = model.Id;
 			task.Title = model.Title;
 			task.Description = model.Description;
 			task.DueDate = EnsureUtc(model.DueDate);
@@ -221,6 +221,10 @@ namespace SimpleTaskManagerApp.Services.Data
 			try
 			{
 				await this._taskRepository.SaveChangesAsync();
+
+				ApplicationUser? user = await _userManager.FindByIdAsync(userGuid.ToString());
+				await _logEntryService.LogAsync(user!.Id, user.Email!, "Edited task", "Task", task.Title);
+
 			}
 			catch (Exception ex)
 			{
