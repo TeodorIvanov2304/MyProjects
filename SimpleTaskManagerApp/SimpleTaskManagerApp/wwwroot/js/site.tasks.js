@@ -16,7 +16,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function setupCreateButton() {
     const btn = document.getElementById("load-create-form");
-    if (!btn) return;
+    if (!btn || btn.dataset.initialized === "true") return;
+
+    btn.dataset.initialized = "true";
 
     btn.addEventListener("click", function () {
         fetch("/Tasks/CreatePartial")
@@ -26,10 +28,43 @@ function setupCreateButton() {
                 if (container) {
                     container.innerHTML = html;
                     initFlatpickr();
+
+                    const form = document.getElementById("createTaskForm");
+                    if (form) {
+                        form.onsubmit = function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            const token = form.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                            fetch('/Tasks/CreatePartial', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                    'RequestVerificationToken': token
+                                },
+                                body: new URLSearchParams(new FormData(form))
+                            })
+                                .then(response => {
+                                    if (!response.ok) throw new Error("Request failed");
+                                    const modal = bootstrap.Modal.getInstance(document.getElementById('createTaskModal'));
+                                    if (modal) modal.hide();
+                                    showToast("Task added!");
+                                    location.reload();
+                                })
+                                .catch(err => {
+                                    console.error("Create error:", err);
+                                    showToast("Something went wrong!");
+                                });
+
+                            return false;
+                        };
+                    }
                 }
             });
     });
 }
+
 
 function setupCreateFormSubmit() {
     document.addEventListener('submit', function (e) {

@@ -198,7 +198,7 @@ namespace SimpleTaskManagerApp.Services.Data
 
 		public async Task<bool> PostEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin, EditTaskViewModel model)
 		{
-			var task = await this._taskRepository.GetByIdAsync(taskGuid);
+			AppTask? task = await this._taskRepository.GetByIdAsync(taskGuid);
 
 			if (task == null || task.IsDeleted)
 			{
