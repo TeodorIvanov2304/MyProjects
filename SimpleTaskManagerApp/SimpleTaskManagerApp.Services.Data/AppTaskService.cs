@@ -5,7 +5,6 @@ using SimpleTaskManagerApp.Data.Data.Repositories.Interfaces;
 using SimpleTaskManagerApp.Data.Models.Models;
 using SimpleTaskManagerApp.Data.Models.Models.Enums;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
-using SimpleTaskManagerApp.ViewModels.Administrator;
 using SimpleTaskManagerApp.ViewModels.AppTask;
 using SimpleTaskManagerApp.ViewModels.Status;
 using static SimpleTaskManagerApp.Common.EntityValidationConstants;
@@ -192,7 +191,11 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			task.IsDeleted = true;
 
+			ApplicationUser? user = await this._userManager.FindByIdAsync(userGuid.ToString());
+			await this._logEntryService.LogAsync(userGuid.ToString(), user!.Email!, "Deleted task", "Task", task.Title);
+			
 			await this._dbContext.SaveChangesAsync();
+
 			return true;
 		}
 
