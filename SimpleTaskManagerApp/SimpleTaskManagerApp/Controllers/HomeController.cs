@@ -11,32 +11,49 @@ namespace SimpleTaskManagerApp.Controllers
 	{
 		private readonly ILogger<HomeController> _logger;
 		private readonly UserManager<ApplicationUser> _userManager;
-
-		public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
+		private readonly ILogEntryService _logService;
+		public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, ILogEntryService logService)
 		{
 			_logger = logger;
 			_userManager = userManager;
+			_logService = logService;
 		}
 
 		//Redirect after login
 		[Route("home/redirect")]
 		public async Task<IActionResult> RedirectAfterLogin()
 		{
-			if (User.Identity != null && User.Identity.IsAuthenticated)
+			if (User.Identity == null || !User.Identity.IsAuthenticated)
 			{
-				var user = await _userManager.GetUserAsync(User);
-				if (await _userManager.IsInRoleAsync(user!, "Administrator"))
-				{
-					TempData["WelcomeBack"] = $"Welcome back, {user!.UserName}!";
-					return RedirectToAction("Index", "Administrator", new { area = "Administrator" });
-				}
+				//User not logged in
+				return RedirectToAction("Index", "Home");
 			}
 
-			return RedirectToAction("Index");
+			ApplicationUser? user = await _userManager.GetUserAsync(User);
+
+			if (user == null)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			bool isAdmin = await _userManager.IsInRoleAsync(user, "Administrator");
+			string message = isAdmin ? "Administrator logged in" : "User logged in";
+			TempData["WelcomeBack"] = $"Welcome back, {user.UserName}!";
+
+			await _logService.LogAsync(user.Id, user.Email ?? "", message, "Authentication", user.UserName);
+
+			if (isAdmin)
+			{
+				return RedirectToAction("Index", "Administrator", new { area = "Administrator" });
+			}
+			else
+			{
+				return RedirectToAction("Index", "Home");
+			}
 		}
 
 		//Regular user Index
-		public  IActionResult Index()
+		public IActionResult Index()
 		{
 
 			if (User.Identity != null && User.Identity.IsAuthenticated)
