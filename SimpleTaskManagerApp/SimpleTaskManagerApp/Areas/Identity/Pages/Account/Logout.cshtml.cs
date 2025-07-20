@@ -30,8 +30,16 @@ namespace SimpleTaskManagerApp.Areas.Identity.Pages.Account
 			var user = await _userManager.GetUserAsync(User);
 
 			if (user != null)
-			{
-				await _logService.LogAsync(user.Id, user.Email ?? "Unknown", "User logged out", "Authentication", user.UserName);
+			{	
+				if(await _userManager.IsInRoleAsync(user, "Administrator"))
+				{
+					await _logService.LogAsync(user.Id, user.Email ?? "Unknown", "Administrator logged out", "Authentication", user.UserName);
+				}
+				else
+				{
+					await _logService.LogAsync(user.Id, user.Email ?? "Unknown", "User logged out", "Authentication", user.UserName);
+
+				}
 			}
 
 			await _signInManager.SignOutAsync();
