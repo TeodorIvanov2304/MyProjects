@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SimpleTaskManagerApp.Controllers;
+using SimpleTaskManagerApp.Data.Models.Models;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.Administrator;
 using SimpleTaskManagerApp.ViewModels.Status;
@@ -17,10 +19,12 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 
 		private readonly IAdministratorService _administratorService;
 		private readonly IStatusService _statusService;
-		public TasksController(IAdministratorService administratorService, IStatusService statusService)
+		private readonly UserManager<ApplicationUser> _userManager;
+		public TasksController(IAdministratorService administratorService, IStatusService statusService, UserManager<ApplicationUser> userManager)
 		{
 			this._administratorService = administratorService;
 			this._statusService = statusService;
+			this._userManager = userManager;
 		}
 		public async Task<IActionResult> Index(FilterAppTaskViewModelAdmin filter)
 		{
@@ -60,7 +64,9 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 				return NotFound();
 			}
 
-			bool isDeleted = await this._administratorService.SoftDeleteTaskAsync(taskGuid);
+			var user = await _userManager.GetUserAsync(User);
+
+			bool isDeleted = await this._administratorService.SoftDeleteTaskAsync(taskGuid,user!.Id);
 
 			if (!isDeleted)
 			{

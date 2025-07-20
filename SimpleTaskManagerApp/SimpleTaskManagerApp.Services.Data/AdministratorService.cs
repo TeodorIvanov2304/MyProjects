@@ -14,11 +14,13 @@ namespace SimpleTaskManagerApp.Services.Data
 		private readonly TaskManagerDbContext _context;
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly IStatusService _statusService;
-        public AdministratorService(TaskManagerDbContext context, UserManager<ApplicationUser> userManager, IStatusService statusService)
+		private readonly ILogEntryService _logEntryService;
+        public AdministratorService(TaskManagerDbContext context, UserManager<ApplicationUser> userManager, IStatusService statusService, ILogEntryService logEntryService)
         {
             this._context = context;
 			this._userManager = userManager;
 			this._statusService = statusService;
+			this._logEntryService = logEntryService;
         }
 
 		//Administrator
@@ -287,9 +289,9 @@ namespace SimpleTaskManagerApp.Services.Data
 			return true;
 		}
 
-		public async Task<bool> SoftDeleteTaskAsync(Guid id)
+		public async Task<bool> SoftDeleteTaskAsync(Guid id,string userId)
 		{
-			var task = await this._context.AppTasks.FindAsync(id);
+			AppTask? task = await this._context.AppTasks.FindAsync(id);
 
 			if (task == null || task.IsDeleted)
 			{
@@ -297,6 +299,10 @@ namespace SimpleTaskManagerApp.Services.Data
 			}
 
 			task.IsDeleted = true;
+
+			ApplicationUser? user = await _userManager.FindByIdAsync(userId);
+			await _logEntryService.LogAsync(userId, user!.Email ?? "Unknown", "Admin deleted task", "Task", task.Title);
+
 			await _context.SaveChangesAsync();
 
 			return true;
