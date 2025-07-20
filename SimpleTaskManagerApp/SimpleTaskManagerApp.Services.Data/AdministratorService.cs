@@ -272,7 +272,7 @@ namespace SimpleTaskManagerApp.Services.Data
 			return result;
 		}
 
-		public async Task<bool> DeleteTaskPermanentlyAsync(Guid id)
+		public async Task<bool> DeleteTaskPermanentlyAsync(Guid id, string userId)
 		{
 			AppTask? task = await this._context.AppTasks.FindAsync(id);
 
@@ -282,10 +282,11 @@ namespace SimpleTaskManagerApp.Services.Data
 			}
 
 			this._context.AppTasks.Remove(task);
+
+			ApplicationUser? user = await _userManager.FindByIdAsync(userId);
+			await _logEntryService.LogAsync(userId, user!.Email ?? "Unknown", "Admin deleted task permanently", "Task", task.Title);
 			await this._context.SaveChangesAsync();
 
-			//Future logger
-			//_logger.LogInformation("Task with ID {TaskId} permanently deleted by admin.", id);
 			return true;
 		}
 

@@ -64,7 +64,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 				return NotFound();
 			}
 
-			var user = await _userManager.GetUserAsync(User);
+			ApplicationUser? user = await _userManager.GetUserAsync(User);
 
 			bool isDeleted = await this._administratorService.SoftDeleteTaskAsync(taskGuid,user!.Id);
 
@@ -87,7 +87,9 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 				return NotFound();
 			}
 
-			bool isDeleted = await this._administratorService.DeleteTaskPermanentlyAsync(taskGuid);
+			ApplicationUser? user = await _userManager.GetUserAsync(User);
+
+			bool isDeleted = await this._administratorService.DeleteTaskPermanentlyAsync(taskGuid, user!.Id);
 
 			if (!isDeleted)
 			{
