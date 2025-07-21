@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SimpleTaskManagerApp.Data;
+using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.Administrator;
 using SimpleTaskManagerApp.ViewModels.LogEntry;
 
@@ -12,29 +13,18 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 	public class LogsController : Controller
 	{
 		private readonly TaskManagerDbContext _context;
-
-        public LogsController(TaskManagerDbContext context)
+		private readonly ILogEntryService _logEntryService;
+        public LogsController(TaskManagerDbContext context, ILogEntryService logEntryService)
         {
             this._context = context;
+			this._logEntryService = logEntryService;
         }
         public async Task<IActionResult> Index(int page = 1,int pageSize = 100)
 		{
 			int totalLogs = await _context.LogEntries.CountAsync();
 			int totalPages = (int)Math.Ceiling(totalLogs / (double)pageSize);
 
-			List<LogEntryViewModel> logs = await _context.LogEntries
-				.OrderByDescending(l => l.TimeStamp)
-				.Skip((page - 1) * pageSize)
-				.Take(pageSize)
-				.Select(l => new LogEntryViewModel
-				{
-					UserEmail = l.UserEmail,
-					Action = l.Action,
-					EntityType = l.EntityType,
-					EntityName = l.EntityName,
-					TimeStamp = l.TimeStamp
-				})
-				.ToListAsync();
+			IEnumerable<LogEntryViewModel> logs = await _logEntryService.GetLogsAsync(page,pageSize);
 
 			AdminLogEntryListViewModel model = new AdminLogEntryListViewModel
 			{
