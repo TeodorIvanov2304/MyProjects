@@ -126,26 +126,28 @@
 		</table>
 	</div>
 
-	<div class="text-center mt-4">
+	<div class="text-center mt-4 pb-4">
 		<a asp-area="Administrator" asp-controller="Administrator" asp-action="Index" class="btn btn-outline-light">
 			← Back to Dashboard
 		</a>
 	</div>
+
+	@* Pagination *@
+	<nav>
+		<ul class="pagination justify-content-center">
+			@for (int i = 1; i <= Model.TotalPages; i++)
+			{
+				<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+					<a class="page-link" href="?PageNumber=@i&TitleKeyword=@Model.Filter.TitleKeyword&StatusId=@Model.Filter.StatusId">
+						@i
+					</a>
+				</li>
+			}
+		</ul>
+	</nav>
 </div>
 
-@* Pagination *@
-<nav>
-	<ul class="pagination justify-content-center">
-		@for (int i = 1; i <= Model.TotalPages; i++)
-		{
-			<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-				<a class="page-link" href="?PageNumber=@i&TitleKeyword=@Model.Filter.TitleKeyword&StatusId=@Model.Filter.StatusId">
-					@i
-				</a>
-			</li>
-		}
-	</ul>
-</nav>
+
 
 @section Scripts {
 	<script>
