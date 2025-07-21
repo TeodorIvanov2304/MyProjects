@@ -1,5 +1,7 @@
 ﻿@using SimpleTaskManagerApp.Data.Models.Models
-@model List<LogEntry>
+@using SimpleTaskManagerApp.ViewModels.Administrator
+@using SimpleTaskManagerApp.ViewModels.LogEntry
+@model AdminLogEntryListViewModel
 
 @{
 	ViewData["Title"] = "Log";
@@ -20,7 +22,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				@foreach (var log in Model)
+				@foreach (var log in Model.Logs)
 				{
 					<tr>
 						<td>@log.UserEmail</td>
@@ -43,4 +45,16 @@
 			← Back to Dashboard
 		</a>
 	</div>
+
+	<nav>
+		<ul class="pagination justify-content-center">
+			@for (int i = 1; i <= Model.TotalPages; i++)
+			{
+				<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+					<a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+				</li>
+			}
+		</ul>
+	</nav>
+
 </div>

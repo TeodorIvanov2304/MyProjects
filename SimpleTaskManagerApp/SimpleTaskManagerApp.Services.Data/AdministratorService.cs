@@ -284,7 +284,7 @@ namespace SimpleTaskManagerApp.Services.Data
 			this._context.AppTasks.Remove(task);
 
 			ApplicationUser? user = await _userManager.FindByIdAsync(userId);
-			await _logEntryService.LogAsync(userId, user!.Email ?? "Unknown", "Admin deleted task permanently", "Task", task.Title);
+			await _logEntryService.LogAsync(userId, user!.Email ?? "Unknown", "Administrator deleted task permanently", "Task", task.Title);
 			await this._context.SaveChangesAsync();
 
 			return true;
@@ -302,7 +302,7 @@ namespace SimpleTaskManagerApp.Services.Data
 			task.IsDeleted = true;
 
 			ApplicationUser? user = await _userManager.FindByIdAsync(userId);
-			await _logEntryService.LogAsync(userId, user!.Email ?? "Unknown", "Admin deleted task", "Task", task.Title);
+			await _logEntryService.LogAsync(userId, user!.Email ?? "Unknown", "Administrator deleted task", "Task", task.Title);
 
 			await _context.SaveChangesAsync();
 
