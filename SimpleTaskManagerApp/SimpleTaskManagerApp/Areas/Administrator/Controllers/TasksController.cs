@@ -111,7 +111,9 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 				return NotFound();
 			}
 
-			bool isRestored = await this._administratorService.RestoreTaskAsync(taskGuid);
+			var user = await _userManager.GetUserAsync(User);
+
+			bool isRestored = await this._administratorService.RestoreTaskAsync(taskGuid, user!.Id);
 
 			if (!isRestored)
 			{

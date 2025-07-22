@@ -25,7 +25,7 @@ namespace SimpleTaskManagerApp.Services.Data.Interfaces
 		Task<IEnumerable<AdminTaskViewModel>> GetAllTasksAsync();
 		Task<bool> DeleteTaskPermanentlyAsync(Guid id, string userId);
 		Task<bool> SoftDeleteTaskAsync(Guid id, string userId);
-		Task<bool> RestoreTaskAsync(Guid id);
+		Task<bool> RestoreTaskAsync(Guid id, string userId);
 		Task<EditTaskViewModel?> GetEditViewModelAsync(Guid id);
 		Task<IEnumerable<AdminTaskViewModel>> GetFilteredTaskAsync(FilterAppTaskViewModelAdmin filter);
 
