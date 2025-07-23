@@ -170,7 +170,8 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			//Try to promote user in role Administrator
 			IdentityResult result = await _userManager.AddToRoleAsync(user, "Administrator");
-			await _logEntryService.LogAsync(userId, user.Email ?? "Unknown", "Promoted user to Administrator", "User", user.UserName);
+
+			await _logEntryService.LogAsync(userId, user.Email ?? "Unknown", "User has been promoted to administrator", "User", user.UserName);
 			return result.Succeeded;
 		}
 
@@ -195,6 +196,7 @@ namespace SimpleTaskManagerApp.Services.Data
 
 			IdentityResult result = await _userManager.RemoveFromRoleAsync(user, "Administrator");
 
+			await _logEntryService.LogAsync(user.Id, user.Email ?? "Unknown", "User has been demoted from Administrator", "User", user.UserName);
 			return result.Succeeded;
 		}
 
