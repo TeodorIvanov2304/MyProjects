@@ -224,6 +224,8 @@ namespace SimpleTaskManagerApp.Services.Data
 				return false;
 			}
 
+			await _logEntryService.LogAsync(userId, user.Email ?? "Unknown", "User has been blocked", "User", user.UserName);
+
 			//Block for maximum time
 			await _userManager.SetLockoutEndDateAsync(user,DateTimeOffset.MaxValue);
 
@@ -238,6 +240,8 @@ namespace SimpleTaskManagerApp.Services.Data
 			{
 				return false;
 			}
+
+			await _logEntryService.LogAsync(userId, user.Email ?? "Unknown", "User has been unblocked", "User", user.UserName);
 
 			//Unlock the user now
 			await _userManager.SetLockoutEndDateAsync(user, null);
