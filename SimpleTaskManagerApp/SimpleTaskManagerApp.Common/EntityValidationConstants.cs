@@ -23,5 +23,11 @@
 
 		public const byte UserIndexPageNumber = 1;
 		public const byte UserIndexPageSize = 10;
+
+		//UrgencyLevel
+		public const byte UrgencyLevelNameMaxLength = 50;
+		public const byte UrgencyLevelColorMaxLength = 20;
+		public const byte UrgencyLevelDescriptionrMaxLength = 100;
+
 	}
 }
