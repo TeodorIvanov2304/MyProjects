@@ -208,6 +208,8 @@ namespace SimpleTaskManagerApp.Services.Data
 				return false;
 			}
 
+			await _logEntryService.LogAsync(userId, user.Email ?? "Unknown", "User has been removed", "User", user.UserName);
+
 			await _userManager.DeleteAsync(user);
 
 			return true;
