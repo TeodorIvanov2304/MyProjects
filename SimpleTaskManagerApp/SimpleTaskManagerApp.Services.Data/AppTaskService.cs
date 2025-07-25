@@ -7,6 +7,7 @@ using SimpleTaskManagerApp.Data.Models.Models.Enums;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.AppTask;
 using SimpleTaskManagerApp.ViewModels.Status;
+using SimpleTaskManagerApp.ViewModels.UrgencyLevel;
 using static SimpleTaskManagerApp.Common.EntityValidationConstants;
 using static SimpleTaskManagerApp.Common.Utility;
 
@@ -19,13 +20,16 @@ namespace SimpleTaskManagerApp.Services.Data
 		private readonly TaskManagerDbContext _dbContext;
 		private readonly ILogEntryService _logEntryService;
 		private readonly UserManager<ApplicationUser> _userManager;
-		public AppTaskService(ITaskRepository taskRepository, IStatusService statusService, TaskManagerDbContext dbContext, ILogEntryService logEntryService, UserManager<ApplicationUser> userManager)
+		private readonly IUrgencyLevelService _urgencyLevelService;
+
+		public AppTaskService(ITaskRepository taskRepository, IStatusService statusService, TaskManagerDbContext dbContext, ILogEntryService logEntryService, UserManager<ApplicationUser> userManager, IUrgencyLevelService urgencyLevelService)
 		{
 			this._taskRepository = taskRepository;
 			this._statusService = statusService;
 			this._dbContext = dbContext;
 			this._logEntryService = logEntryService;
 			this._userManager = userManager;
+			this._urgencyLevelService = urgencyLevelService;
 		}
 
 		public async Task CreateAsync(AppTaskCreateViewModel model, string userId)
@@ -37,6 +41,7 @@ namespace SimpleTaskManagerApp.Services.Data
 				throw new InvalidOperationException($"Invalid status ID: {model.StatusId}");
 			}
 
+			
 			//Check for empty title
 			if (string.IsNullOrWhiteSpace(model.Title))
 			{
@@ -55,7 +60,8 @@ namespace SimpleTaskManagerApp.Services.Data
 				Description = model.Description,
 				DueDate = model.DueDate.ToUniversalTime(),
 				StatusId = model.StatusId,
-				UserId = userId
+				UserId = userId,
+				UrgencyLevelId = model.UrgencyLevelId
 			};
 
 			await _taskRepository.AddAsync(task);
@@ -98,7 +104,8 @@ namespace SimpleTaskManagerApp.Services.Data
 		}
 		public async Task<AppTaskCreateViewModel> GetCreateViewModelAsync()
 		{
-			var statuses = await this._statusService.GetAllStatusesAsync();
+			IEnumerable<StatusViewModel> statuses = await _statusService.GetAllStatusesAsync();
+			IEnumerable<UrgencyLevelViewModel> urgency = await _urgencyLevelService.GetAllAsync();
 
 			return new AppTaskCreateViewModel
 			{
@@ -106,7 +113,8 @@ namespace SimpleTaskManagerApp.Services.Data
 				{
 					Id = s.Id,
 					Name = s.Name
-				})
+				}),
+				UrgencyLevels = urgency 
 			};
 		}
 

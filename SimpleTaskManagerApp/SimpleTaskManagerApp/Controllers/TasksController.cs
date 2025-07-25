@@ -73,7 +73,7 @@ namespace SimpleTaskManagerApp.Controllers
 			if (!ModelState.IsValid)
 			{
 				model.Statuses = (await _appTaskService.GetCreateViewModelAsync()).Statuses;
-
+				model.UrgencyLevels = (await _appTaskService.GetCreateViewModelAsync()).UrgencyLevels;
 				return View(model);
 			}
 
