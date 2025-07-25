@@ -15,6 +15,7 @@ namespace SimpleTaskManagerApp.Data
 		public virtual DbSet<AppTask> AppTasks { get; set; }
 		public virtual DbSet<Status> Statuses { get; set; }
 		public virtual DbSet<LogEntry> LogEntries { get; set; }
+		public virtual DbSet<UrgencyLevel> UrgencyLevels { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{

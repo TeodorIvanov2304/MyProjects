@@ -24,6 +24,6 @@ namespace SimpleTaskManagerApp.Data.Models.Models
 		[Comment("Urgency level description")]
 		public string? Description { get; set; }
 
-		public ICollection<AppTask> Tasks { get; set; } = new List<AppTask>();
+		public virtual ICollection<AppTask> Tasks { get; set; } = new List<AppTask>();
 	}
 }

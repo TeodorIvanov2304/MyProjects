@@ -193,6 +193,10 @@ namespace SimpleTaskManagerApp.Data.Migrations
                         .HasColumnType("character varying(100)")
                         .HasComment("Task title");
 
+                    b.Property<int?>("UrgencyLevelId")
+                        .HasColumnType("integer")
+                        .HasComment("Urgency level identifier");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("text")
@@ -201,6 +205,8 @@ namespace SimpleTaskManagerApp.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("StatusId");
+
+                    b.HasIndex("UrgencyLevelId");
 
                     b.HasIndex("UserId");
 
@@ -363,6 +369,59 @@ namespace SimpleTaskManagerApp.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("SimpleTaskManagerApp.Data.Models.Models.UrgencyLevel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasComment("Urgency level Id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Color")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasComment("Urgency level color");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasComment("Urgency level description");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasComment("Urgency level name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UrgencyLevels");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Color = "Green",
+                            Description = "Not urgent",
+                            Name = "Low"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Color = "Orange",
+                            Description = "Moderately urgent",
+                            Name = "Medium"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Color = "Red",
+                            Description = "Requires immediate attention",
+                            Name = "High"
+                        });
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -422,6 +481,10 @@ namespace SimpleTaskManagerApp.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SimpleTaskManagerApp.Data.Models.Models.UrgencyLevel", "UrgencyLevel")
+                        .WithMany("Tasks")
+                        .HasForeignKey("UrgencyLevelId");
+
                     b.HasOne("SimpleTaskManagerApp.Data.Models.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -430,10 +493,17 @@ namespace SimpleTaskManagerApp.Data.Migrations
 
                     b.Navigation("Status");
 
+                    b.Navigation("UrgencyLevel");
+
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("SimpleTaskManagerApp.Data.Models.Models.Status", b =>
+                {
+                    b.Navigation("Tasks");
+                });
+
+            modelBuilder.Entity("SimpleTaskManagerApp.Data.Models.Models.UrgencyLevel", b =>
                 {
                     b.Navigation("Tasks");
                 });
