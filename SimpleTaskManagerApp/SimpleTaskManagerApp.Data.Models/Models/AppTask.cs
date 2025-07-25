@@ -52,7 +52,7 @@ namespace SimpleTaskManagerApp.Data.Models.Models
 		public Status Status { get; set; } = null!;
 
 		[Comment("Urgency level identifier")]
-		public int? UrgencyLevelId { get; set; }
+		public int UrgencyLevelId { get; set; }
 
 		[ForeignKey(nameof(UrgencyLevelId))]
 		public UrgencyLevel UrgencyLevel { get; set; } = null!;
