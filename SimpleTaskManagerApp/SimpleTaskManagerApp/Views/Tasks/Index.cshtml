@@ -25,6 +25,18 @@
 		</div>
 
 		<div class="col-md-2">
+			<select name="UrgencyLevelId" class="form-select bg-white text-dark">
+				<option value="">All Urgency Levels</option>
+				@foreach (var urgency in Model.UrgencyLevels)
+				{
+					<option value="@urgency.Value" selected="@(urgency.Value == Model.Filter.UrgencyLevelId.ToString())">
+						@urgency.Text
+					</option>
+				}
+			</select>
+		</div>
+
+		<div class="col-md-2">
 			<input type="text" name="CreatedAtFrom" class="form-control bg-white text-dark datepicker" value="@(Model.Filter.CreatedAtFrom?.ToString("yyyy-MM-dd HH:mm"))" placeholder="Created From" />
 		</div>
 
@@ -57,6 +69,7 @@
 		<tr>
 			<th>Title</th>
 			<th>Status</th>
+			<th>Urgency</th>
 			<th>CreatedAt</th>
 			<th>Due Date</th>
 			<th>Actions</th>
@@ -68,6 +81,7 @@
 			<tr>
 				<td>@task.Title</td>
 				<td>@task.Status</td>
+				<td>@task.UrgencyLevelName</td>
 				<td>@task.CreatedAt</td>
 				<td>@task.DueDate</td>
 				<td>
@@ -86,7 +100,7 @@
 		@for (int i = 1; i <= Model.TotalPages; i++)
 		{
 			<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-				<a class="page-link" href="?PageNumber=@i&TitleKeyword=@Model.Filter.TitleKeyword&StatusId=@Model.Filter.StatusId">
+				<a class="page-link" href="?PageNumber=@i&TitleKeyword=@Model.Filter.TitleKeyword&StatusId=@Model.Filter.StatusId&UrgencyLevelId=@Model.Filter.UrgencyLevelId">
 					@i
 				</a>
 			</li>

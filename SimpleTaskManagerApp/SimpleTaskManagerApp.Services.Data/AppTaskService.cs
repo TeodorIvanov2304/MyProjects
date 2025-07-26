@@ -291,6 +291,11 @@ namespace SimpleTaskManagerApp.Services.Data
 				query = query.Where(t => t.DueDate <= toUtc);
 			}
 
+			if (filter.UrgencyLevelId.HasValue)
+			{
+				query = query.Where(u => u.UrgencyLevelId == filter.UrgencyLevelId);
+			}
+
 			return await query
 				.OrderByDescending(t => t.CreatedAt)
 				.Skip((filter.PageNumber - 1) * filter.PageSize)
@@ -302,7 +307,8 @@ namespace SimpleTaskManagerApp.Services.Data
 					Description = t.Description,
 					Status = t.Status.Name,
 					CreatedAt = t.CreatedAt,
-					DueDate = t.DueDate
+					DueDate = t.DueDate,
+					UrgencyLevelName = t.UrgencyLevel.Name
 				})
 				.ToListAsync();
 		}

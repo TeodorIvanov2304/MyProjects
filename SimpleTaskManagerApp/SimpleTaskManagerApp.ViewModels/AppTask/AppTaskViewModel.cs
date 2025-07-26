@@ -19,5 +19,6 @@ namespace SimpleTaskManagerApp.ViewModels.AppTask
 		public DateTime CreatedAt { get; set; }
 
 		public DateTime? DueDate { get; set; }
+		public string UrgencyLevelName { get; set; } = string.Empty;
 	}
 }

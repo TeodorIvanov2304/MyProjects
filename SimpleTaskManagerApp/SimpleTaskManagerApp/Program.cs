@@ -38,6 +38,9 @@ namespace SimpleTaskManagerApp
 			//Register LogEntryService
 			builder.Services.AddScoped<ILogEntryService, LogEntryService>();
 
+			//Register UrgencyLevelService
+			builder.Services.AddScoped<IUrgencyLevelService,UrgencyLevelService>();
+
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 			builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
