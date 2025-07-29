@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using SimpleTaskManagerApp.Data;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.AppTask;
 using SimpleTaskManagerApp.ViewModels.Status;
@@ -12,10 +14,12 @@ namespace SimpleTaskManagerApp.Controllers
 	{
 		private readonly IAppTaskService _appTaskService;
 		private readonly IStatusService _statusService;
-		public TasksController(IAppTaskService appTaskService, IStatusService statusService)
+		private readonly TaskManagerDbContext _context;
+		public TasksController(IAppTaskService appTaskService, IStatusService statusService, TaskManagerDbContext context)
         {
-            this._appTaskService = appTaskService;
-			this._statusService = statusService;
+            _appTaskService = appTaskService;
+			_statusService = statusService;
+			_context = context;
         }
 
 		[HttpGet]
@@ -44,6 +48,12 @@ namespace SimpleTaskManagerApp.Controllers
 				Text = s.Name
 			});
 
+			var urgencyLevels = await _context.UrgencyLevels.Select(u => new SelectListItem
+			{
+				Value = u.Id.ToString(),
+				Text = u.Name
+			})
+				.ToListAsync();
 
 			UserTasksIndexViewModel model = new UserTasksIndexViewModel
 			{
@@ -51,6 +61,7 @@ namespace SimpleTaskManagerApp.Controllers
 				Statuses = statusSelectList,
 				Tasks = tasks,
 				CurrentPage = filter.PageNumber,
+				UrgencyLevels = urgencyLevels,
 				TotalPages = (int)Math.Ceiling(totalTaskCount / (double)filter.PageSize)
 			};
 
