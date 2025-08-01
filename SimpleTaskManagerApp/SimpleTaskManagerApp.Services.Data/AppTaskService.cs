@@ -308,7 +308,8 @@ namespace SimpleTaskManagerApp.Services.Data
 					Status = t.Status.Name,
 					CreatedAt = t.CreatedAt,
 					DueDate = t.DueDate,
-					UrgencyLevelName = t.UrgencyLevel.Name
+					UrgencyLevelName = t.UrgencyLevel.Name,
+					UrgencyLevelColor = t.UrgencyLevel.Color!
 				})
 				.ToListAsync();
 		}

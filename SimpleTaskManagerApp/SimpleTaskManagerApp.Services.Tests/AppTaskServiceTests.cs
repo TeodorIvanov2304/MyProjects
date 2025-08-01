@@ -21,6 +21,7 @@ namespace SimpleTaskManagerApp.Services.Tests
 		private readonly AppTaskService _appTaskService;
 		private readonly ILogEntryService _logEntryService;
 		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly IUrgencyLevelService _urgencyLevelService;
 		public AppTaskServiceTests()
 		{
 			// Create an in-memory DbContext with a unique database name (using Guid)
@@ -42,13 +43,16 @@ namespace SimpleTaskManagerApp.Services.Tests
 
 			_userManager = MockUserManager();
 
+			_urgencyLevelService = new UrgencyLevelService(_context);
+
 			// Initialize the AppTaskService
 			_appTaskService = new AppTaskService(
 				_taskRepository,
 				_statusService,
 				_context,
 				_logEntryService,
-				_userManager
+				_userManager,
+				_urgencyLevelService
 			);
 
 			// Seed default statuses if not already present

@@ -81,7 +81,12 @@
 			<tr>
 				<td>@task.Title</td>
 				<td>@task.Status</td>
-				<td>@task.UrgencyLevelName</td>
+				<td>
+					<span class="badge"
+						  style="background-color: @task.UrgencyLevelColor; color: white;">
+						@task.UrgencyLevelName
+					</span>
+				</td>
 				<td>@task.CreatedAt</td>
 				<td>@task.DueDate</td>
 				<td>

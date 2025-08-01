@@ -20,5 +20,7 @@ namespace SimpleTaskManagerApp.ViewModels.AppTask
 
 		public DateTime? DueDate { get; set; }
 		public string UrgencyLevelName { get; set; } = string.Empty;
+
+		public string UrgencyLevelColor { get; set; } = "#000000";
 	}
 }
