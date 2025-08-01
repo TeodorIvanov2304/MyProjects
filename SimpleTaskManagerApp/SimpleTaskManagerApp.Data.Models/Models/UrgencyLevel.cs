@@ -18,7 +18,7 @@ namespace SimpleTaskManagerApp.Data.Models.Models
 
 		[MaxLength(UrgencyLevelColorMaxLength)]
 		[Comment("Urgency level color")]
-		public string? Color { get; set; }
+		public string? Color { get; set; } = "#000000";
 
 		[MaxLength(UrgencyLevelDescriptionrMaxLength)]
 		[Comment("Urgency level description")]
