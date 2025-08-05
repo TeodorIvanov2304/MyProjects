@@ -74,7 +74,7 @@ namespace SimpleTaskManagerApp.Controllers
 		[Authorize]
 		public async Task<IActionResult> Create()
 		{
-			AppTaskCreateViewModel model = await this._appTaskService.GetCreateViewModelAsync();
+			AppTaskCreateViewModel model = await _appTaskService.GetCreateViewModelAsync();
 			return View(model);
 		}
 
@@ -121,7 +121,8 @@ namespace SimpleTaskManagerApp.Controllers
 			if (!ModelState.IsValid)
 			{
 
-				model.Statuses = (IEnumerable<AppTaskStatusViewModel>)await this._statusService.GetAllStatusesAsync();
+				model.Statuses = (IEnumerable<AppTaskStatusViewModel>)await _statusService.GetAllStatusesAsync();
+				model.UrgencyLevels = await _urgencyLevelService.GetAllAsync();
 
 				return PartialView("_CreatePartial", model);
 			}
@@ -159,7 +160,7 @@ namespace SimpleTaskManagerApp.Controllers
 
 			bool isAdmin = User.IsInRole("Administrator");
 
-			EditTaskViewModel? model = await this._appTaskService.GetEditViewModelAsync(taskGuid, userGuid, isAdmin);
+			EditTaskViewModel? model = await _appTaskService.GetEditViewModelAsync(taskGuid, userGuid, isAdmin);
 
 			if (model == null) 
 			{
