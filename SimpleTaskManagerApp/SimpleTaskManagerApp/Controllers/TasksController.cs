@@ -15,11 +15,13 @@ namespace SimpleTaskManagerApp.Controllers
 		private readonly IAppTaskService _appTaskService;
 		private readonly IStatusService _statusService;
 		private readonly TaskManagerDbContext _context;
-		public TasksController(IAppTaskService appTaskService, IStatusService statusService, TaskManagerDbContext context)
+		private readonly IUrgencyLevelService _urgencyLevelService;
+		public TasksController(IAppTaskService appTaskService, IStatusService statusService, TaskManagerDbContext context, IUrgencyLevelService urgencyLevelService)
         {
             _appTaskService = appTaskService;
 			_statusService = statusService;
 			_context = context;
+			_urgencyLevelService = urgencyLevelService;
         }
 
 		[HttpGet]
@@ -102,7 +104,8 @@ namespace SimpleTaskManagerApp.Controllers
 		{
 			AppTaskCreateViewModel model = new AppTaskCreateViewModel
 			{
-				Statuses = (await _appTaskService.GetCreateViewModelAsync()).Statuses
+				Statuses = (await _appTaskService.GetCreateViewModelAsync()).Statuses,
+				UrgencyLevels = await _urgencyLevelService.GetAllAsync()
 			};
 
 

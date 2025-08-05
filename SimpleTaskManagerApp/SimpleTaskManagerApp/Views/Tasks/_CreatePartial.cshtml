@@ -33,6 +33,13 @@
 		<span asp-validation-for="StatusId" class="text-danger"></span>
 	</div>
 
+	<!-- UrgencyLevel -->
+	<div class="form-floating mb-r">
+		<select asp-for="UrgencyLevelId" class="form-control" asp-items="@(new SelectList(Model.UrgencyLevels,"Id","Name"))"></select>
+		<label asp-for="UrgencyLevelId"></label>
+		<span asp-validation-for="UrgencyLevelId" class="text-danger"></span>
+	</div>
+
 	<button type="submit" class="btn btn-success">Create</button>
 </form>
 
