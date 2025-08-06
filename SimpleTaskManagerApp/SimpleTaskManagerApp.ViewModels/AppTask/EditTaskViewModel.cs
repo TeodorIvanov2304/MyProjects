@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SimpleTaskManagerApp.ViewModels.UrgencyLevel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static SimpleTaskManagerApp.Common.EntityValidationConstants;
 
@@ -30,6 +31,11 @@ namespace SimpleTaskManagerApp.ViewModels.AppTask
 		[Display(Name = "Status")]
 		public int StatusId { get; set; }
 
+		[Required]
+		[Display(Name ="Urgency Level")]
+		public int UrgencyLevelId { get; set; }
+
 		public virtual IEnumerable<AppTaskStatusViewModel> Statuses { get; set; } = new List<AppTaskStatusViewModel>();
+		public IEnumerable<UrgencyLevelViewModel> UrgencyLevels { get; set; } = new List<UrgencyLevelViewModel>();
 	}
 }
