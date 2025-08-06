@@ -175,6 +175,7 @@ namespace SimpleTaskManagerApp.Services.Data
 				Description = task.Description,
 				DueDate = task.DueDate,
 				StatusId = task.StatusId,
+				UrgencyLevelId = task.UrgencyLevelId,
 				Statuses = statuses.Select(s => new AppTaskStatusViewModel
 				{
 					Id = s.Id,
