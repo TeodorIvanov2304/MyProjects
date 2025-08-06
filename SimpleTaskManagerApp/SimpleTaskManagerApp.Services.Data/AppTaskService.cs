@@ -230,12 +230,13 @@ namespace SimpleTaskManagerApp.Services.Data
 				return false;
 			}
 
-			IEnumerable<StatusViewModel> statuses = await this._statusService.GetAllStatusesAsync();
+			IEnumerable<StatusViewModel> statuses = await _statusService.GetAllStatusesAsync();
 
 			task.Title = model.Title;
 			task.Description = model.Description;
 			task.DueDate = EnsureUtc(model.DueDate);
 			task.StatusId = model.StatusId;
+			task.UrgencyLevelId = model.UrgencyLevelId;
 
 			try
 			{

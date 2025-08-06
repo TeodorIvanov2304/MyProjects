@@ -179,6 +179,8 @@ namespace SimpleTaskManagerApp.Controllers
 			if (!ModelState.IsValid) 
 			{
 				model.Statuses = (IEnumerable<AppTaskStatusViewModel>)await _statusService.GetAllStatusesAsync();
+				model.UrgencyLevels = await _urgencyLevelService.GetAllUrgencyLevelsAsync();
+
 				return PartialView("_EditPartial", model);
 			}
 
@@ -187,8 +189,6 @@ namespace SimpleTaskManagerApp.Controllers
 
 			if (!isTaskValid)
 			{
-
-				//return RedirectToAction("Custom404","Error");
 				return NotFound();
 			}
 
@@ -198,8 +198,6 @@ namespace SimpleTaskManagerApp.Controllers
 
 			if (!isUserValid)
 			{
-
-				//return RedirectToAction("Custom404","Error");
 				return NotFound();
 			}
 
@@ -259,8 +257,6 @@ namespace SimpleTaskManagerApp.Controllers
 
 			if (!isTaskValid)
 			{
-
-				//return RedirectToAction("Custom404","Error");
 				return NotFound();
 			}
 
