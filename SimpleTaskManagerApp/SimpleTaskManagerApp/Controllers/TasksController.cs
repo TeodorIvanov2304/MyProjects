@@ -105,7 +105,7 @@ namespace SimpleTaskManagerApp.Controllers
 			AppTaskCreateViewModel model = new AppTaskCreateViewModel
 			{
 				Statuses = (await _appTaskService.GetCreateViewModelAsync()).Statuses,
-				UrgencyLevels = await _urgencyLevelService.GetAllAsync()
+				UrgencyLevels = await _urgencyLevelService.GetAllUrgencyLevelsAsync()
 			};
 
 
@@ -122,7 +122,7 @@ namespace SimpleTaskManagerApp.Controllers
 			{
 
 				model.Statuses = (IEnumerable<AppTaskStatusViewModel>)await _statusService.GetAllStatusesAsync();
-				model.UrgencyLevels = await _urgencyLevelService.GetAllAsync();
+				model.UrgencyLevels = await _urgencyLevelService.GetAllUrgencyLevelsAsync();
 
 				return PartialView("_CreatePartial", model);
 			}

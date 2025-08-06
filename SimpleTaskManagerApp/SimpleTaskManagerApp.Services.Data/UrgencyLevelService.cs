@@ -14,7 +14,7 @@ namespace SimpleTaskManagerApp.Services.Data
 			_context = context;
 		}
 
-		public async Task<IEnumerable<UrgencyLevelViewModel>> GetAllAsync()
+		public async Task<IEnumerable<UrgencyLevelViewModel>> GetAllUrgencyLevelsAsync()
 		{
 			var levels =  await _context.UrgencyLevels
 			   .Select(u => new UrgencyLevelViewModel

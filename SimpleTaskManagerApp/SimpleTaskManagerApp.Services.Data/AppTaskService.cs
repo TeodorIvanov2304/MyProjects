@@ -105,7 +105,7 @@ namespace SimpleTaskManagerApp.Services.Data
 		public async Task<AppTaskCreateViewModel> GetCreateViewModelAsync()
 		{
 			IEnumerable<StatusViewModel> statuses = await _statusService.GetAllStatusesAsync();
-			IEnumerable<UrgencyLevelViewModel> urgency = await _urgencyLevelService.GetAllAsync();
+			IEnumerable<UrgencyLevelViewModel> urgency = await _urgencyLevelService.GetAllUrgencyLevelsAsync();
 
 			return new AppTaskCreateViewModel
 			{
@@ -151,7 +151,7 @@ namespace SimpleTaskManagerApp.Services.Data
 
 		public async Task<EditTaskViewModel?> GetEditViewModelAsync(Guid taskGuid, Guid userGuid, bool isAdmin)
 		{
-			var task = await this._taskRepository.GetByIdAsync(taskGuid);
+			AppTask? task = await _taskRepository.GetByIdAsync(taskGuid);
 
 			if (task == null || task.IsDeleted)
 			{
@@ -164,9 +164,11 @@ namespace SimpleTaskManagerApp.Services.Data
 				return null!;
 			}
 
-			var statuses = await this._statusService.GetAllStatusesAsync();
+			IEnumerable<StatusViewModel> statuses = await _statusService.GetAllStatusesAsync();
 
-			var model = new EditTaskViewModel
+			IEnumerable<UrgencyLevelViewModel> urgencyLevels = await _urgencyLevelService.GetAllUrgencyLevelsAsync();
+
+			EditTaskViewModel model = new EditTaskViewModel
 			{
 				Id = task.Id,
 				Title = task.Title,
@@ -177,6 +179,12 @@ namespace SimpleTaskManagerApp.Services.Data
 				{
 					Id = s.Id,
 					Name = s.Name
+				}),
+				UrgencyLevels = urgencyLevels.Select(u => new UrgencyLevelViewModel
+				{
+					Id = u.Id,
+					Name = u.Name,
+					Color = u.Color
 				})
 			};
 
