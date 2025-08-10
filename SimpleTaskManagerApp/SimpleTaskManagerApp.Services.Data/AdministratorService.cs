@@ -445,7 +445,9 @@ namespace SimpleTaskManagerApp.Services.Data
 				   CreatedAt = t.CreatedAt,
 				   DueDate = t.DueDate,
 				   IsDeleted = t.IsDeleted,
-				   CreatedByEmail = t.User.Email!
+				   CreatedByEmail = t.User.Email!,
+				   UrgencyLevelName = t.UrgencyLevel.Name,
+				   UrgencyLevelColor = t.UrgencyLevel.Color!
 			   })
 			   .ToListAsync();
 
