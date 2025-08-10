@@ -7,6 +7,7 @@ using SimpleTaskManagerApp.Data.Models.Models;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.Administrator;
 using SimpleTaskManagerApp.ViewModels.Status;
+using SimpleTaskManagerApp.ViewModels.UrgencyLevel;
 using static SimpleTaskManagerApp.Common.Utility;
 
 namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
@@ -20,11 +21,13 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 		private readonly IAdministratorService _administratorService;
 		private readonly IStatusService _statusService;
 		private readonly UserManager<ApplicationUser> _userManager;
-		public TasksController(IAdministratorService administratorService, IStatusService statusService, UserManager<ApplicationUser> userManager)
+		private readonly IUrgencyLevelService _urgencyLevelService;
+		public TasksController(IAdministratorService administratorService, IStatusService statusService, UserManager<ApplicationUser> userManager, IUrgencyLevelService urgencyLevelService)
 		{
-			this._administratorService = administratorService;
-			this._statusService = statusService;
-			this._userManager = userManager;
+			_administratorService = administratorService;
+			_statusService = statusService;
+			_userManager = userManager;
+			_urgencyLevelService = urgencyLevelService;
 		}
 		public async Task<IActionResult> Index(FilterAppTaskViewModelAdmin filter)
 		{
@@ -34,6 +37,7 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 
 			IEnumerable<AdminTaskViewModel> tasks = await _administratorService.GetFilteredTaskAsync(filter);
 			IEnumerable<StatusViewModel> statuses = await _statusService.GetAllStatusesAsync();
+			IEnumerable<UrgencyLevelViewModel> urgencyLevels = await _urgencyLevelService.GetAllUrgencyLevelsAsync();
 
 			IEnumerable<SelectListItem> statusSelectList = statuses.Select(s => new SelectListItem
 			{
@@ -41,11 +45,18 @@ namespace SimpleTaskManagerApp.Areas.Administrator.Controllers
 				Text = s.Name
 			});
 
+			var urgencyLevelSelectList = urgencyLevels.Select(u => new SelectListItem
+			{
+				Value = u.Id.ToString(),
+				Text = u.Name
+			});
+
 			AdminTasksIndexViewModel model = new AdminTasksIndexViewModel
 			{
 				Tasks = tasks,
 				Filter = filter,
 				Statuses = statusSelectList,
+				UrgencyLevels = urgencyLevelSelectList,
 				CurrentPage = filter.PageNumber,
 				TotalPages = (int)Math.Ceiling(totalTaskCount / (double)filter.PageSize)
 			};
