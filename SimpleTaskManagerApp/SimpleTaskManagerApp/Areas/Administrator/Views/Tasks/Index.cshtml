@@ -60,6 +60,7 @@
 					<th>Title</th>
 					<th>Description</th>
 					<th>Status</th>
+					<th>Urgency</th>
 					<th>Created At</th>
 					<th>Due Date</th>
 					<th>Is Deleted</th>
@@ -76,6 +77,12 @@
 						<td>@task.Title</td>
 						<td>@task.Description</td>
 						<td>@task.Status</td>
+						<td>
+							<span class="badge"
+								  style="background-color: @task.UrgencyLevelColor; color: white;">
+								@task.UrgencyLevelName
+							</span>
+						</td>
 						<td>@task.CreatedAt.ToString("g")</td>
 						<td>@task.DueDate?.ToString("g")</td>
 						<td>
