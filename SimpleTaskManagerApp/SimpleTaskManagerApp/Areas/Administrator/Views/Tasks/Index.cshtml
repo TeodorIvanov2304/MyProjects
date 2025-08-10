@@ -23,6 +23,16 @@
 		</div>
 
 		<div class="col-md-2">
+			<select name="UrgencyLevelId" class="form-select bg-dark text-white">
+				<option value="">All Urgencies</option>
+				@foreach (var urgency in Model.UrgencyLevels)
+				{
+					<option value="@urgency.Value" selected="@(urgency.Value == Model.Filter.UrgencyLevelId?.ToString())">@urgency.Text</option>
+				}
+			</select>
+		</div>
+
+		<div class="col-md-2">
 			<input type="date" name="CreatedAtFrom" class="form-control bg-dark text-white datepicker" value="@(Model.Filter.CreatedAtFrom?.ToString("yyyy-MM-dd"))" placeholder="Created From" />
 		</div>
 
