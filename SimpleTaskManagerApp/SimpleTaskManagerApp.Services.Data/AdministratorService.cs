@@ -386,6 +386,7 @@ namespace SimpleTaskManagerApp.Services.Data
 				.AsNoTracking()
 				.Include(t => t.Status)
 				.Include(t => t.User)
+				.Include(t => t.UrgencyLevel)
 				.AsQueryable();
 
 			if (!String.IsNullOrWhiteSpace(filter.TitleKeyword))
@@ -430,6 +431,11 @@ namespace SimpleTaskManagerApp.Services.Data
 			{
 				DateTime toUtc = DateTime.SpecifyKind(filter.DueDateTo.Value, DateTimeKind.Utc).ToUniversalTime();
 				query = query.Where(t => t.DueDate <= toUtc);
+			}
+
+			if (filter.UrgencyLevelId.HasValue)
+			{
+				query = query.Where(t => t.UrgencyLevelId == filter.UrgencyLevelId.Value);
 			}
 
 			List<AdminTaskViewModel> tasks = await query
