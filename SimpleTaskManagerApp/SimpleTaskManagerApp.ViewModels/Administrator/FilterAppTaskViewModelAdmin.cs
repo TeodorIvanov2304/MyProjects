@@ -6,6 +6,7 @@ namespace SimpleTaskManagerApp.ViewModels.Administrator
         public string? TitleKeyword { get; set; }
         public string? CreatedByEmail { get; set; }
         public int? StatusId { get; set; }
+		public int? UrgencyLevelId { get; set; }
         public bool? IsDeleted { get; set; }
         public DateTime? DueDateFrom { get; set; }
         public DateTime? DueDateTo { get; set; }
