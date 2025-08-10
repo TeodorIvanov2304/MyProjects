@@ -16,5 +16,8 @@ namespace SimpleTaskManagerApp.ViewModels.Administrator
 		public string Status = null!;
 		public string CreatedByEmail { get; set; } = null!;
 		public bool IsDeleted { get; set; }
+		public string UrgencyLevelName { get; set; } = string.Empty;
+
+		public string UrgencyLevelColor = "#000000";
 	}
 }
