@@ -5,6 +5,7 @@ using SimpleTaskManagerApp.Data.Models.Models;
 using SimpleTaskManagerApp.Services.Data.Interfaces;
 using SimpleTaskManagerApp.ViewModels.Administrator;
 using SimpleTaskManagerApp.ViewModels.AppTask;
+using SimpleTaskManagerApp.ViewModels.UrgencyLevel;
 using static SimpleTaskManagerApp.Common.Utility;
 
 namespace SimpleTaskManagerApp.Services.Data
@@ -361,7 +362,16 @@ namespace SimpleTaskManagerApp.Services.Data
 				return null!;
 			}
 
-			var statuses = await this._statusService.GetAllStatusesAsync();
+			var statuses = await _statusService.GetAllStatusesAsync();
+
+			var urgencies = await _context.UrgencyLevels
+				.AsNoTracking()
+				.Select(u => new UrgencyLevelViewModel
+				{
+					Id = u.Id,
+					Name = u.Name
+				})
+				.ToListAsync();
 
 			var model = new EditTaskViewModel
 			{
@@ -374,7 +384,9 @@ namespace SimpleTaskManagerApp.Services.Data
 				{
 					Id = s.Id,
 					Name = s.Name
-				})
+				}),
+				UrgencyLevelId = task.UrgencyLevelId,
+				UrgencyLevels = urgencies
 			};
 
 			return model;

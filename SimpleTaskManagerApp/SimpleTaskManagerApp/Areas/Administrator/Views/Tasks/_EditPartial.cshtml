@@ -25,6 +25,17 @@
 			<span asp-validation-for="StatusId" class="text-danger"></span>
 		</div>
 
+		<!-- Urgency -->
+		<div class="mb-3">
+			<label asp-for="UrgencyLevelId" class="form-label"></label>
+			<select asp-for="UrgencyLevelId"
+					class="form-select bg-secondary text-white"
+					asp-items="@(new SelectList(Model.UrgencyLevels, "Id", "Name", Model.UrgencyLevelId))">
+				<option value="">-- Select Urgency --</option>
+			</select>
+			<span asp-validation-for="UrgencyLevelId" class="text-danger"></span>
+		</div>
+
 		<div class="mb-3">
 			<label asp-for="DueDate" class="form-label"></label>
 			<input asp-for="DueDate" class="form-control bg-secondary text-white datepicker" type="text"
